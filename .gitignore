@@ -1,3 +1,12 @@
+*.swp
+*.txt
+*.pdf
+vscode
+*.json
+*SAV*
+*test*
+*.xlsx
+
 # Prerequisites
 *.d
 
