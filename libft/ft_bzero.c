@@ -1,23 +1,25 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Created: 2024/09/18 15:08:05 by jsayerza          #+#    #+#             */
+/*   Updated: 2024/09/18 15:24:43 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int ac, char **av)
+void	ft_bzero(void *s, size_t n)
 {
-	for (int i = 0; i < ac; i++)
+	size_t	i;
+
+	i = 0;
+	while (n != 0)
 	{
-		printf("av[%d]:%s\n", i, av[i]);
+		((char *)s)[i++] = 0;
+		n--;
 	}
-	printf("num:%d\n", ft_atoi(av[3]));
-	return (EXIT_SUCCESS);
 }

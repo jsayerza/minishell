@@ -1,23 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strjoin.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Created: 2024/09/19 17:16:44 by jsayerza          #+#    #+#             */
+/*   Updated: 2024/09/19 17:38:11 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int ac, char **av)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
-	for (int i = 0; i < ac; i++)
+	char	*ptr;
+	int		i;
+	int		j;
+
+	if (!s2)
+		return ((char *)s1);
+	ptr = malloc(sizeof(s1) * (ft_strlen(s1) + ft_strlen(s2) + 1));
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (s1[i])
 	{
-		printf("av[%d]:%s\n", i, av[i]);
+		ptr[i] = s1[i];
+		i++;
 	}
-	printf("num:%d\n", ft_atoi(av[3]));
-	return (EXIT_SUCCESS);
+	j = 0;
+	while (s2[j])
+	{
+		ptr[i] = s2[j];
+		i++;
+		j++;
+	}
+	ptr[i] = 0;
+	return (ptr);
 }

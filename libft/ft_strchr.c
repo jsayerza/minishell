@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strchar.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Created: 2024/09/16 19:22:09 by jsayerza          #+#    #+#             */
+/*   Updated: 2024/09/16 19:32:04 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int ac, char **av)
+char	*ft_strchr(const char *s, int c)
 {
-	for (int i = 0; i < ac; i++)
+	int	i;
+
+	i = 0;
+	while (s[i])
 	{
-		printf("av[%d]:%s\n", i, av[i]);
+		if (s[i] == (char)c)
+			return ((char *)s + i);
+		i++;
 	}
-	printf("num:%d\n", ft_atoi(av[3]));
-	return (EXIT_SUCCESS);
+	return (NULL);
 }
+/*
+int	main(void)
+{
+	printf("Res:%s\n", ft_strchr("1234536", '3'));
+	return (0);
+}*/

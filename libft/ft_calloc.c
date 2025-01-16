@@ -1,23 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_calloc.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Created: 2024/09/19 13:48:36 by jsayerza          #+#    #+#             */
+/*   Updated: 2024/09/19 14:35:48 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int ac, char **av)
+void	*ft_calloc(size_t nmemb, size_t size)
 {
-	for (int i = 0; i < ac; i++)
-	{
-		printf("av[%d]:%s\n", i, av[i]);
-	}
-	printf("num:%d\n", ft_atoi(av[3]));
-	return (EXIT_SUCCESS);
+	int	*ptr;
+
+	if (size == 0)
+		return (NULL);
+	if (nmemb >= SIZE_MAX / size)
+		return (NULL);
+	ptr = malloc(sizeof(nmemb) * size);
+	if (!ptr)
+		return (NULL);
+	ft_memset(ptr, 0, size);
+	return (ptr);
 }

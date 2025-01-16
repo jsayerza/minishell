@@ -1,23 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Created: 2024/09/19 14:39:13 by jsayerza          #+#    #+#             */
+/*   Updated: 2024/09/19 15:17:02 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int	main(int ac, char **av)
+char	*ft_strdup(const char *s)
 {
-	for (int i = 0; i < ac; i++)
+	char	*ptr;
+	int		i;
+
+	ptr = malloc(ft_strlen(s) + 1);
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (s[i])
 	{
-		printf("av[%d]:%s\n", i, av[i]);
+		ptr[i] = s[i];
+		i++;
 	}
-	printf("num:%d\n", ft_atoi(av[3]));
-	return (EXIT_SUCCESS);
+	ptr[i] = 0;
+	return (ptr);
 }

@@ -18,6 +18,7 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <ctype.h>
+# include "libft/libft.h"
 
 # define RESET    "\033[0m"
 # define RED      "\033[31m"
