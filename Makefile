@@ -1,10 +1,10 @@
 CC				=	cc
-FLAGS			=	-g -Wextra -Werror -Wall --sanitize=address
+FLAGS			=	-g -Wextra -Werror -Wall #--sanitize=address
 RM				=	rm -f
 INCLUDES		=	-I. -Ilibft
 
 NAME			=	minishell
-PROG_SRC		=	minishell.c
+PROG_SRC		=	minishell.c parse_lexer.c tokens.c collector.c
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
 
 UTILS_SRC       =	parse_utils.c
@@ -24,7 +24,7 @@ $(LIBFT):
 	$(MAKE) -C $(LIBFT_DIR)
 
 $(NAME):	$(PROG_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT)
-	@echo "Construint $(NAME)..."
+#	@echo "Construint $(NAME)..."
 	$(CC) $(FLAGS) $(INCLUDES) $(PROG_OBJ) $(UTILS_OBJ) -L$(LIBFT_DIR) -lft -o $(NAME)	
 	
 %.o: %.c Makefile $(HEADERS)

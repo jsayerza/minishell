@@ -12,14 +12,16 @@
 
 #include "minishell.h"
 
-//Acarranz
-
-int	main(int ac, char **av)
+int main(void)
 {
-	for (int i = 0; i < ac; i++)
-	{
-		printf("av[%d]:%s\n", i, av[i]);
-	}
-	printf("num:%d\n", ft_atoi(av[3]));
-	return (EXIT_SUCCESS);
+    t_collector *collector;
+    t_token     *tokens;
+
+    const char *input = "echo \"$USER\" 'hello world' | grep test >> output.txt";
+    collector = NULL;
+    tokens = NULL;
+    tokens = lexer(input, &collector, &tokens);
+    tokens_print(tokens);
+    collector_cleanup(&collector);
+    return (EXIT_SUCCESS);
 }

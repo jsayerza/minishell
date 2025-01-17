@@ -1,24 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*   ft_strndup.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/20 15:50:30 by jsayerza         ###   ########.fr       */
+/*   Created: 2025/01/17 19:30:00 by jsayerza          #+#    #+#             */
+/*   Updated: 2025/01/17 19:30:00 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int is_operator(char c)
+char	*ft_strndup(const char *s, size_t n)
 {
-    return (c == '|' || c == '<' || c == '>');
-}
+	char	*ptr;
+	size_t	i;
+	size_t	len;
 
-int is_space(char c)
-{
-    return (c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'
-        || c == ' ');
+	len = ft_strlen(s);
+	if (n > len)
+		n = len;
+	ptr = malloc(n + 1);
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	while (i < n && s[i])
+	{
+		ptr[i] = s[i];
+		i++;
+	}
+	ptr[i] = '\0';
+	return (ptr);
 }

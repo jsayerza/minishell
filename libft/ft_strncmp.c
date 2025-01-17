@@ -27,12 +27,3 @@ int	ft_strncmp(const char *s1, const char *s2, size_t n)
 		return (0);
 	return (*s1 - *s2);
 }
-/*
-int	main(void)
-{
-	#include <string.h>
-
-	printf("Res:%d\n", ft_strncmp("1234536", "123536", 3));
-	printf("Ofi:%d\n", strncmp("1234536", "123536", 3));
-	return (0);
-}*/
