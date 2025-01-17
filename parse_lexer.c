@@ -24,15 +24,13 @@ static void    get_expand_var(const char *input, t_collector **collector, \
     //TODO: change isalnum x ft_isalnum
     while (isalnum(input[*i]) || input[*i] == '_')
         (*i)++;
-    //TODO: change strndup x ft_strndup
-    var_name = strndup(input + start, *i - start);
+    var_name = ft_strndup(input + start, *i - start);
     value = getenv(var_name);
     free(var_name);
-    //TODO: change strndup x ft_strndup
     if (value)
-        expanded = strdup(value);
+        expanded = ft_strdup(value);
     else
-        expanded = strdup("");
+        expanded = ft_strdup("");
     token_create(collector, TOKEN_WORD, expanded, head);
     free(expanded);
 }
@@ -48,8 +46,7 @@ static void    get_quoted_str(const char *input, t_collector **collector, \
     start = ++(*i);
     while (input[*i] && input[*i] != quote_type)
         (*i)++;
-    //TODO: change strndup x ft_strndup
-    quoted = strndup(input + start, *i - start);
+    quoted = ft_strndup(input + start, *i - start);
     (*i)++;
     token_create(collector, TOKEN_WORD, quoted, head);
     free(quoted);
@@ -88,8 +85,7 @@ static void    get_word(const char *input, t_collector **collector, \
     while (input[*i]
         && (ft_strchr(" \f\r\n\t\v|<>'\"$", input[*i]) == NULL))
         (*i)++;
-    //TODO: canviar strndup x ft_strndup
-    value = strndup(input + istart, *i - istart);
+    value = ft_strndup(input + istart, *i - istart);
     token_create(collector, TOKEN_WORD, value, head);
     free(value);
 }

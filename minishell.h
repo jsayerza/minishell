@@ -47,8 +47,9 @@ typedef struct  s_collector {
     struct s_collector  *next;
 }   t_collector;
 
-// lexer.c
+// parse_lexer.c
 t_token *lexer(const char *input, t_collector **collector, t_token **head);
+
 
 // collector.c
 void    collector_cleanup(t_collector **collector);

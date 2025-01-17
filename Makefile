@@ -4,7 +4,7 @@ RM				=	rm -f
 INCLUDES		=	-I. -Ilibft
 
 NAME			=	minishell
-PROG_SRC		=	minishell.c
+PROG_SRC		=	minishell.c parse_lexer.c tokens.c collector.c
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
 
 UTILS_SRC       =	parse_utils.c

@@ -64,11 +64,10 @@ void    token_create(t_collector **collector, t_token_type type, \
     }
     collector_append(collector, token_new);
     token_new->type = type;
-    //TODO: canviar strdup x ft_strdup
-    token_new->value = strdup(value);
+    token_new->value = ft_strdup(value);
     if (!token_new->value)
     {
-        //TODO: clean collector befor exit
+        //TODO: clean collector before exit
         perror("strdup");
         exit(EXIT_FAILURE);
     }

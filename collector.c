@@ -35,7 +35,7 @@ void    collector_append(t_collector **collector, void *ptr)
     new_node = malloc(sizeof(t_collector));
     if (!new_node)
     {
-        //TODO: clean collector befor exit
+        //TODO: clean collector before exit
         perror("malloc");
         exit(EXIT_FAILURE);
     }
