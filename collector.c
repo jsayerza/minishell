@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minishell.c                                        :+:      :+:    :+:   */
+/*   collector.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -12,16 +12,34 @@
 
 #include "minishell.h"
 
-int main(void)
+void    collector_cleanup(t_collector **collector)
 {
-    t_collector *collector;
-    t_token     *tokens;
+    t_collector *current;
+    t_collector *next;
 
-    const char *input = "echo \"$USER\" 'hello world' | grep test >> output.txt";
-    collector = NULL;
-    tokens = NULL;
-    tokens = lexer(input, &collector, &tokens);
-    tokens_print(tokens);
-    collector_cleanup(&collector);
-    return (EXIT_SUCCESS);
+    current = *collector;
+    while (current)
+    {
+        next = current->next;
+        free(current->ptr);
+        free(current);
+        current = next;
+    }
+    *collector = NULL;
+}
+
+void    collector_append(t_collector **collector, void *ptr)
+{
+    t_collector *new_node;
+
+    new_node = malloc(sizeof(t_collector));
+    if (!new_node)
+    {
+        //TODO: clean collector befor exit
+        perror("malloc");
+        exit(EXIT_FAILURE);
+    }
+    new_node->ptr = ptr;
+    new_node->next = *collector;
+    *collector = new_node;
 }
