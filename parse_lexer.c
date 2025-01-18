@@ -21,8 +21,7 @@ static void    get_expand_var(const char *input, t_collector **collector, \
     char    *expanded;
 
     start = ++(*i);
-    //TODO: change isalnum x ft_isalnum
-    while (isalnum(input[*i]) || input[*i] == '_')
+    while (ft_isalnum(input[*i]) || input[*i] == '_')
         (*i)++;
     var_name = ft_strndup(input + start, *i - start);
     value = getenv(var_name);
