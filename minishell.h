@@ -67,4 +67,7 @@ void    tokens_free(t_token *head);
 int     is_operator(char c);
 int     is_space(char c);
 
+// utils.c
+void	exit_program(t_collector *collector, char *msg, bool exit_failure);
+
 #endif

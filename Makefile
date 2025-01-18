@@ -7,7 +7,7 @@ NAME			=	minishell
 PROG_SRC		=	minishell.c parse_lexer.c tokens.c collector.c
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
 
-UTILS_SRC       =	parse_utils.c
+UTILS_SRC       =	parse_utils.c utils.c
 UTILS_OBJ       =	$(UTILS_SRC:.c=.o)
 
 LIBFT_DIR       =	libft
@@ -31,12 +31,12 @@ $(NAME):	$(PROG_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT)
 	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
 
 clean:
-	@echo "Cleaning object files..."
+	@echo "Eliminant object files..."
 	$(MAKE) clean -C $(LIBFT_DIR)
 	$(RM) $(PROG_OBJ) $(UTILS_OBJ)
 
 fclean:	clean
-	@echo "Removing $(NAME) and libft.a..."
+	@echo "Eliminant $(NAME) i libft.a..."
 	$(MAKE) fclean -C $(LIBFT_DIR)
 	$(RM) $(NAME)
 

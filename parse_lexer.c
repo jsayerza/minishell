@@ -24,14 +24,20 @@ static void    get_expand_var(const char *input, t_collector **collector, \
     while (ft_isalnum(input[*i]) || input[*i] == '_')
         (*i)++;
     var_name = ft_strndup(input + start, *i - start);
+    if (!var_name)
+		exit_program(collector, "Error malloc get value for token", true); 
     value = getenv(var_name);
     free(var_name);
+    var_name = NULL;
     if (value)
         expanded = ft_strdup(value);
     else
         expanded = ft_strdup("");
+    if (!expanded)
+		exit_program(collector, "Error malloc get value for token", true);
     token_create(collector, TOKEN_WORD, expanded, head);
     free(expanded);
+    expanded = NULL;
 }
 
 static void    get_quoted_str(const char *input, t_collector **collector, \
@@ -46,6 +52,8 @@ static void    get_quoted_str(const char *input, t_collector **collector, \
     while (input[*i] && input[*i] != quote_type)
         (*i)++;
     quoted = ft_strndup(input + start, *i - start);
+    if (!quoted)
+		exit_program(collector, "Error malloc get value for token", true);
     (*i)++;
     token_create(collector, TOKEN_WORD, quoted, head);
     free(quoted);
@@ -85,6 +93,8 @@ static void    get_word(const char *input, t_collector **collector, \
         && (ft_strchr(" \f\r\n\t\v|<>'\"$", input[*i]) == NULL))
         (*i)++;
     value = ft_strndup(input + istart, *i - istart);
+    if (!value)
+		exit_program(collector, "Error malloc get value for token", true); 
     token_create(collector, TOKEN_WORD, value, head);
     free(value);
 }
