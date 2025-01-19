@@ -1,24 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_utils.c                                      :+:      :+:    :+:   */
+/*   ft_strcmp.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/16 09:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/20 15:50:30 by jsayerza         ###   ########.fr       */
+/*   Created: 2025/01/19 11:00:00 by jsayerza          #+#    #+#             */
+/*   Updated: 2025/01/19 11:00:00 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "libft.h"
 
-int is_operator(char c)
+int	ft_strcmp(const char *s1, const char *s2)
 {
-    return (c == '|' || c == '<' || c == '>');
-}
-
-int is_space(char c)
-{
-    return (c == '\f' || c == '\n' || c == '\r' || c == '\t' || c == '\v'
-        || c == ' ');
+	while (*s1 && *s2 && *s1 == *s2)
+	{
+		s1++;
+		s2++;
+	}
+	return (*s1 - *s2);
 }
