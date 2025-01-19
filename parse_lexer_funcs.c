@@ -60,19 +60,19 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 }
 
 void	get_operator(const char *input, t_collector **collector, \
-	int i, t_token **head)
+	int *i, t_token **head)
 {
 	t_token_type	type;
 	char			op[3];
 
-	op[0] = input[i];
+	op[0] = input[*i];
 	op[1] = '\0';
 	op[2] = '\0';
-	if ((ft_strchr("<>", input[i]) != NULL)
-		&& input[i + 1] == input[i])
+	if ((ft_strchr("<>", input[*i]) != NULL)
+		&& input[*i + 1] == input[*i])
 	{
-		op[1] = input[i];
-		i++;
+		op[1] = input[*i];
+		(*i)++;
 	}
 	type = TOKEN_PIPE;
 	if ((ft_strcmp(op, ">>") == 0))
