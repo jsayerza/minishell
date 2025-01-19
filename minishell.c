@@ -18,7 +18,7 @@ int	main(void)
 	t_token		*tokens;
 	const char	*input;
 
-	input = "echo \"$USER\" 'hello world' | grep test >> output.txt";
+	input = "echo \"$USER\" 'hello world' | grep hello >> output.txt";
 	collector = NULL;
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);
