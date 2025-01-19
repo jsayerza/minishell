@@ -27,7 +27,7 @@ static int	handle_operator(const char *input, t_collector **collector, \
 {
 	if (ft_strchr("|<>", input[*i]))
 	{
-		get_operator(input, collector, *i, head);
+		get_operator(input, collector, i, head);
 		(*i)++;
 		return (1);
 	}

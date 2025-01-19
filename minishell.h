@@ -58,7 +58,7 @@ void	get_expand_var(const char *input, t_collector **collector, \
 void	get_quoted_str(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 void	get_operator(const char *input, t_collector **collector, \
-	int i, t_token **head);
+	int *i, t_token **head);
 void	get_word(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
