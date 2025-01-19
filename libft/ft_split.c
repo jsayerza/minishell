@@ -25,7 +25,8 @@ int	words_count(char const *s, char c)
 		{
 			wcount++;
 			word = 1;
-		} else if (*s == c && word)
+		}
+		else if (*s == c && word)
 			word = 0;
 		s++;
 	}
@@ -50,11 +51,26 @@ void	free_mem(char **array, int i)
 	free(array);
 }
 
+int	word_proc(char const *s, char c, char **array, int i)
+{
+	int	wordlen;
+
+	wordlen = word_len((char *)s, c);
+	array[i] = malloc(sizeof(s) * wordlen + 1);
+	if (!array[i])
+	{
+		free_mem(array, i);
+		return (NULL);
+	}
+	ft_strlcpy(array[i++], (char *)s, wordlen + 1);
+	return (wordlen);
+}
+
 char	**ft_split(char const *s, char c)
 {
 	char	**array;
-	int		wordlen;
 	int		i;
+	int		wordlen;
 
 	array = (char **)malloc(sizeof(char *) * words_count(s, c) + 1);
 	if (!array)
@@ -64,17 +80,11 @@ char	**ft_split(char const *s, char c)
 	{
 		if (*s != c)
 		{
-			wordlen = word_len((char *)s, c);
-			array[i] = malloc(sizeof(s) * wordlen + 1);
-			if (!array[i])
-			{
-				free_mem(array, i);
-				return (NULL);
-			}
-			ft_strlcpy(array[i++], (char *)s, wordlen + 1);
+			wordlen = word_proc(s, c, array, i);
 			s = s + wordlen;
-		} else
-		s++;
+		}
+		else
+			s++;
 	}
 	array[i] = 0;
 	return (array);

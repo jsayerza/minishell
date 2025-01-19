@@ -12,34 +12,39 @@
 
 #include "minishell.h"
 
-void    collector_cleanup(t_collector **collector)
+void	collector_cleanup(t_collector **collector)
 {
-    t_collector *current;
-    t_collector *next;
+	t_collector	*current;
+	t_collector	*next;
 
-    current = *collector;
-    while (current)
-    {
-        next = current->next;
-        free(current->ptr);
-        free(current);
-        current = next;
-    }
-    *collector = NULL;
+	current = *collector;
+	while (current)
+	{
+		next = current->next;
+		free(current->ptr);
+		free(current);
+		current = next;
+	}
+	*collector = NULL;
 }
 
-void    collector_append(t_collector **collector, void *ptr)
+void	collector_append(t_collector **collector, void *ptr)
 {
-    t_collector *new_node;
+	t_collector	*new_node;
 
-    new_node = malloc(sizeof(t_collector));
-    if (!new_node)
-    {
-        //TODO: clean collector before exit
-        perror("malloc");
-        exit(EXIT_FAILURE);
-    }
-    new_node->ptr = ptr;
-    new_node->next = *collector;
-    *collector = new_node;
+	new_node = malloc(sizeof(t_collector));
+	if (!new_node)
+		exit_program(collector, "Error malloc collector", true);
+	new_node->ptr = ptr;
+	new_node->next = *collector;
+	*collector = new_node;
+}
+
+void	exit_program(t_collector **collector, char *msg, bool exit_failure)
+{
+	collector_cleanup(collector);
+	if (msg)
+		perror(msg);
+	if (exit_failure)
+		exit(EXIT_FAILURE);
 }
