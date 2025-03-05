@@ -20,7 +20,6 @@
 #include <unistd.h>
 #include <fcntl.h>
 #include "libft.h"
-#include "ft_printf.h"
 
 typedef enum e_token_error
 {

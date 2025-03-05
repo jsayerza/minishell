@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_split.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/19 17:40:36 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/09/19 18:02:08 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/02/24 19:53:54 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ int	word_proc(char const *s, char c, char **array, int i)
 	if (!array[i])
 	{
 		free_mem(array, i);
-		return (NULL);
+		return (-1);
 	}
 	ft_strlcpy(array[i++], (char *)s, wordlen + 1);
 	return (wordlen);
