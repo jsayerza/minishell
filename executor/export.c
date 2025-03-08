@@ -28,13 +28,15 @@ void add_to_export(char ***export, char *var)
 		new_export[i] = (*export)[i];
 		i++;
 	}
-	new_export[len] = ft_strdup(var);
+	new_export[len] = malloc(ft_strlen("declare -x ") + ft_strlen(var) + 1);
 	if (!new_export[len])
 	{
-		perror("strdup");
+		perror("malloc");
 		free(new_export);
 		return;
 	}
+	ft_strlcpy(new_export[len], "declare -x ", ft_strlen("declare -x ") + 1);
+	ft_strlcat(new_export[len], var, ft_strlen("declare -x ") + ft_strlen(var) + 1);
 	new_export[len + 1] = NULL;
 	free(*export);
 	*export = new_export;
@@ -58,10 +60,11 @@ int find_in_env(char **env, char *var)
 void process_export_var(t_constructor *node, char *arg)
 {
 	int index;
-	index = find_in_env(node->shell->env, arg);
+	index = find_in_env(node->shell->export, arg);
 	if (index == -1)
 	{
 		add_to_export(&(node->shell->export), arg);
+		sort_export(node->shell);
 	}
 	else
 		add_to_export(&(node->shell->export), node->shell->env[index]);
@@ -71,23 +74,31 @@ void export(t_constructor *node)
 {
 	printf("Dins de export\n");
 	int i;
-	if (node->size == 0 && !node->executable[1])
+	int j;
+
+	if (node->shell->node_size == 1 && !node->executable[1])
 		print_export(node->shell);
 	else
 	{
 		printf("mes de un exec\n");
 		i = 0;
-		while (i <= node->size && node->executable[i + 1])
+		printf("size->node_list : %d\n", node->shell->node_size);
+		while (i < node->shell->node_size )
 		{
-			if (!(ft_isalpha(node->executable[i][0]) || node->executable[i + 1][0] == '_'))
+			j = 1;
+			while (j < node->size_exec)
 			{
-				printf("minishell: export: `%s': not a valid identifier\n",
-					   node->executable[i]);
-				node->error = ERROR_SYNTAX_ERROR;
-			}
-			else
-			{
-				process_export_var(node, node->executable[i + 1]);
+				if (!(ft_isalpha(node->executable[i][0]) || node->executable[j][0] == '_'))
+				{
+					printf("minishell: export: `%s': not a valid identifier\n",
+						   node->executable[i]);
+					node->error = ERROR_SYNTAX_ERROR;
+				}
+				else
+				{
+					process_export_var(node, node->executable[j]);
+				}
+				j++;
 			}
 			i++;
 		}

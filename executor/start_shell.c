@@ -36,10 +36,10 @@ char	*read_input(void)
 void	start_shell(t_shell *shell)
 {
 	char			*input;
-	t_constructor	*constructor;
 
 	while (1)
 	{
+		shell->node_size = 0;
 		printf("~/minishell: ");
 		input = read_input();
 		if (!input)
@@ -52,15 +52,12 @@ void	start_shell(t_shell *shell)
 			free(input);
 			break ;
 		}
-		constructor = fill_constructor_manually(input);
-		if (!constructor)
+		if (shell->constructor)
 		{
-			fprintf(stderr, "Error al crear el constructor.\n");
-			free(input);
-			clean_shell(shell);
-			exit(1);
+			clean_constructor(shell->constructor);
+			shell->constructor = NULL;
 		}
-		shell->constructor = constructor;
+		shell->constructor = fill_constructor_manually(shell);
 		print_constructor(shell);
 		display_shell(shell);
 		free(input);

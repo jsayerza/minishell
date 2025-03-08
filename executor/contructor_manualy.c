@@ -1,5 +1,7 @@
 #include "../minishell.h"
 
+#include "../minishell.h"
+
 t_constructor *create_single_constructor_node(int node_number)
 {
     t_constructor *new_node = (t_constructor *)malloc(sizeof(t_constructor));
@@ -10,7 +12,7 @@ t_constructor *create_single_constructor_node(int node_number)
 
     new_node->paths = NULL;
     new_node->executable = NULL;
-    new_node->size = 0;
+    new_node->size_exec = 0; // Inicializar el número de ejecutables
     new_node->builtin = BUILTIN_NONE; // Valor por defecto
     new_node->type = TOKEN_COMMAND; // Valor por defecto
     new_node->error = NO_ERROR;
@@ -91,11 +93,12 @@ t_constructor *create_single_constructor_node(int node_number)
         }
     }
     new_node->executable[executable_count] = NULL;
+    new_node->size_exec = executable_count; // Guardar el número de ejecutables
 
     return new_node;
 }
 
-t_constructor *fill_constructor_manually() {
+t_constructor *fill_constructor_manually(t_shell *shell) {
     int size;
     printf("¿Cuántos nodos desea crear? ");
     if (scanf("%d", &size) != 1 || size < 0) {
@@ -103,7 +106,7 @@ t_constructor *fill_constructor_manually() {
         return NULL;
     }
     getchar(); // Consumir el salto de línea
-
+    shell->node_size = size;
     t_constructor *head = NULL;
     t_constructor *tail = NULL;
 

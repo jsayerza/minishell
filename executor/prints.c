@@ -22,6 +22,7 @@ void print_export(t_shell *shell)
 }
 
 
+
 void print_constructor(t_shell *shell) {
     if (!shell || !shell->constructor) {
         fprintf(stderr, "Error: Constructor no inicializado.\n");
@@ -36,6 +37,7 @@ void print_constructor(t_shell *shell) {
         printf("Tipo de token: %d\n", current->type);
         printf("Tipo de builtin: %d\n", current->builtin);
         printf("Estado de error: %d\n", current->error);
+        printf("Número de ejecutables: %d\n", current->size_exec); // Mostrar el número de ejecutables
         printf("Ejecutables: ");
         for (int i = 0; current->executable[i]; i++) {
             printf("\"%s\" ", current->executable[i]);
@@ -54,3 +56,4 @@ void print_constructor(t_shell *shell) {
         node_number++;
     }
 }
+

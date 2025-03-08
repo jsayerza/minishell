@@ -8,5 +8,7 @@ void	token_builtins(t_constructor *node)
 		export(node);
 	if (node->builtin == BUILTIN_ENV)
 		env(node);
+	if (node->builtin == BUILTIN_PWD)
+		pwd();
 
 }

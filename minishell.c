@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/08 11:37:29 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/03/08 12:27:13 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	main(int argc,char **argv, char **env)
 	collector = NULL;
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);
-	tokens_print(tokens);
+	//tokens_print(tokens);
 	collector_cleanup(&collector);
 	start_shell(shell);
 	return (EXIT_SUCCESS);

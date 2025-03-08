@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/08 11:25:48 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/03/08 18:06:16 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,8 @@ typedef struct s_constructor
 {
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	char			**executable;   	// array de str de ejecutables
-	int				size;				// tamanyo lista
+	int				size_exec;			// Elemntos  a ejecutar
+	int				fd;					// File descriptor
 	e_builtin		builtin;			// si es buitlin , que tipo
 	e_token_type	type;				// typo de ejecutable
 	e_token_error	error;				// Estado de error
@@ -104,6 +105,7 @@ typedef struct s_shell
 	char			*pwd;				// Directorio actual
 	char			*oldpwd;			// Directorio anterior
 	char			*output;			// Salida de shell
+	int				node_size;
 	t_constructor	*constructor;		// Estructura de ejecución
 }					t_shell;
 
@@ -168,9 +170,10 @@ t_constructor	*init_constructor(void);
 void	copy_env_to_shell (t_shell *shell, char **envv);
 void	env_to_export(t_shell *shell);
 void	create_export(t_shell *shell);
+char	*concatenate_export(char *export, char *temp, char *declare);
 
 //manual list
-t_constructor *fill_constructor_manually();
+t_constructor *fill_constructor_manually(t_shell *shell);
 
 //display shell
 void display_shell(t_shell *shell);
@@ -179,6 +182,9 @@ void display_shell(t_shell *shell);
 void	token_builtins(t_constructor *node);
 void	env(t_constructor *node);
 void	export(t_constructor *node);
+void	sort_export(t_shell *shell);
+void	finish_export(t_shell *shell);
+void	pwd();
 
 //print functions
 void	print_env(t_shell *shell);

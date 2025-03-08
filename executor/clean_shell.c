@@ -1,6 +1,5 @@
 #include "../minishell.h"
 
-
 void clean_constructor(t_constructor *constructor)
 {
 	t_constructor *current;
@@ -22,9 +21,19 @@ void clean_constructor(t_constructor *constructor)
 			free(current->paths);
 		}
 
-		free(current->executable);
-		free(current);
+		// Fix memory leak: free each string in the executable array
+		if (current->executable)
+		{
+			i = 0;
+			while (current->executable[i])
+			{
+				free(current->executable[i]);
+				i++;
+			}
+			free(current->executable);
+		}
 
+		free(current);
 		current = next;
 	}
 }
