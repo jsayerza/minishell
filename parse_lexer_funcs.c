@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_lexer_funcs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/03/08 10:47:17 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,7 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head)
 {
-	t_token_type	type;
+	e_token_type	type;
 	char			op[3];
 
 	op[0] = input[*i];

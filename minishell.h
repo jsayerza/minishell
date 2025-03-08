@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/20 15:50:30 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/03/08 11:25:48 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,6 +25,89 @@
 # define RED      "\033[31m"
 # define GREEN    "\033[32m"
 
+typedef struct s_constructor t_constructor;
+typedef struct s_shell t_shell;
+
+
+// Enum representing various token error types in the minishell application
+typedef enum e_token_error
+{
+	NO_ERROR,                      // No error occurred
+	ERROR_NOT_FOUND,               // Token not found
+	ERROR_NOT_ACCESS,              // Token not accessible
+	ERROR_NOT_EXEC,                // Token not executable
+	ERROR_NOT_PIPE,                // Pipe operation failed
+	ERROR_NOT_FORK,                // Fork operation failed
+	ERROR_NOT_DUP,                 // Duplication operation failed
+	ERROR_NOT_CLOSE,               // Close operation failed
+	ERROR_NOT_WAIT,                // Wait operation failed
+	ERROR_NOT_OPEN,                // Open operation failed
+	ERROR_NOT_READ,                // Read operation failed
+	ERROR_NOT_WRITE,               // Write operation failed
+	ERROR_NOT_MALLOC,              // Memory allocation failed
+	ERROR_NOT_FREE,                // Memory deallocation failed
+	ERROR_SYNTAX_ERROR,            // Syntax error in token
+	ERROR_VAR_NOT_FOUND,           // Variable not found
+	ERROR_REDIRECT_AMBIGUOUS,      // Ambiguous redirection
+	ERROR_PIPE_INVALID,            // Invalid pipe
+	ERROR_BUILTIN_ERROR,           // Built-in command error
+	ERROR_EOF,                     // End of file reached
+	ERROR_STDIN_CLOSED,            // Standard input closed
+	ERROR_SIGNAL_FAILED            // Signal operation failed
+} e_token_error;
+
+
+// De moment deixo este enum perque es amb el que treballo
+typedef enum e_token_type
+{
+	TOKEN_WORD,
+	TOKEN_COMMAND,
+    TOKEN_BUILTIN,
+    TOKEN_PIPE,
+    TOKEN_REDIRECT_IN,
+    TOKEN_REDIRECT_OUT,
+	TOKEN_APPEND,
+    TOKEN_HEREDOC,
+	TOKEN_EOF
+} e_token_type;
+
+typedef enum e_builtin
+{
+    BUILTIN_NONE,
+    BUILTIN_ECHO,
+    BUILTIN_CD,
+    BUILTIN_PWD,
+    BUILTIN_EXPORT,
+    BUILTIN_UNSET,
+    BUILTIN_ENV,
+    BUILTIN_EXIT
+} e_builtin;
+
+typedef struct s_constructor
+{
+	char			**paths;			// Lista de paths donde buscar ejecutables
+	char			**executable;   	// array de str de ejecutables
+	int				size;				// tamanyo lista
+	e_builtin		builtin;			// si es buitlin , que tipo
+	e_token_type	type;				// typo de ejecutable
+	e_token_error	error;				// Estado de error
+	t_shell			*shell;				//enlace a shell
+	t_constructor	*next;				//sigueinte nodo o ejecutable
+}					t_constructor;
+
+typedef struct s_shell
+{
+	char			**env;				// Variables de entorno
+	char			**export;			// export
+	int				last_exit;			// Último código de salida
+	int				interactive;		// 1 si es interactivo, 0 si es un script
+	char			*pwd;				// Directorio actual
+	char			*oldpwd;			// Directorio anterior
+	char			*output;			// Salida de shell
+	t_constructor	*constructor;		// Estructura de ejecución
+}					t_shell;
+
+/*
 typedef enum e_token_type
 {
 	TOKEN_WORD,
@@ -34,11 +117,11 @@ typedef enum e_token_type
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
 	TOKEN_EOF
-}	t_token_type;
-
+}	e_token_type;
+*/
 typedef struct s_token
 {
-	t_token_type	type;
+	e_token_type	type;
 	char			*value;
 	struct s_token	*next;
 }	t_token;
@@ -68,11 +151,44 @@ void	collector_append(t_collector **collector, void *ptr);
 void	exit_program(t_collector **collector, char *msg, bool exit_failure);
 
 // tokens.c
-void	token_create(t_collector **collector, t_token_type type, \
+void	token_create(t_collector **collector, e_token_type type, \
 	const char *value, t_token **head);
 t_token	*ft_lasttoken(t_token *lst);
 void	tokens_print(t_token *token);
 void	token_print(t_token *token);
 void	tokens_free(t_token *head);
+
+
+//init functions
+void	start_shell(t_shell *shell);
+t_shell			*init_shell(t_shell *shell, char **env);
+t_constructor	*init_constructor(void);
+
+//void	construct_shell_data(t_shell *shell, char **env);
+void	copy_env_to_shell (t_shell *shell, char **envv);
+void	env_to_export(t_shell *shell);
+void	create_export(t_shell *shell);
+
+//manual list
+t_constructor *fill_constructor_manually();
+
+//display shell
+void display_shell(t_shell *shell);
+
+//builtins
+void	token_builtins(t_constructor *node);
+void	env(t_constructor *node);
+void	export(t_constructor *node);
+
+//print functions
+void	print_env(t_shell *shell);
+void	print_export(t_shell *shell);
+void	print_token_list(t_shell *shell);
+void 	print_constructor(t_shell *shell);
+
+
+//clean functions
+void	clean_shell(t_shell *shell);
+void	clean_constructor(t_constructor *constructor);
 
 #endif

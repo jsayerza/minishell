@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   tokens.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/03/08 10:47:17 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ t_token	*ft_lasttoken(t_token *lst)
 	return (lst);
 }
 
-void	token_create(t_collector **collector, t_token_type type, \
+void	token_create(t_collector **collector, e_token_type type, \
 	const char *value, t_token **head)
 {
 	t_token	*token_new;
