@@ -20,8 +20,6 @@ void clean_constructor(t_constructor *constructor)
 			}
 			free(current->paths);
 		}
-
-		// Fix memory leak: free each string in the executable array
 		if (current->executable)
 		{
 			i = 0;
