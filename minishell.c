@@ -12,13 +12,19 @@
 
 #include "minishell.h"
 
-int	main(void)
+int	main(int ac, char *av[])
 {
 	t_collector	*collector;
 	t_token		*tokens;
-	const char	*input;
+	char	*input;
 
-	input = "echo \"$USER\" 'hello world' | grep hello >> output.txt";
+	if (ac == 2)
+		input = av[1];
+	else
+	{
+		printf("Posa params!!!!\n");
+		return (EXIT_SUCCESS);	
+	}
 	collector = NULL;
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);

@@ -27,13 +27,18 @@
 
 typedef enum e_token_type
 {
+	TOKEN_EOF,
 	TOKEN_WORD,
 	TOKEN_PIPE,
 	TOKEN_REDIRECT_IN,
 	TOKEN_REDIRECT_OUT,
 	TOKEN_APPEND,
 	TOKEN_HEREDOC,
-	TOKEN_EOF
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_WILDCARD,
+	TOKEN_DOLLAR,
+	TOKEN_ESCAPE
 }	t_token_type;
 
 typedef struct s_token
@@ -65,7 +70,7 @@ void	get_word(const char *input, t_collector **collector, \
 // collector.c
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
-void	exit_program(t_collector **collector, char *msg, bool exit_failure);
+void	exit_program(t_collector **collector, char *msg, int exit_type);
 
 // tokens.c
 void	token_create(t_collector **collector, t_token_type type, \
