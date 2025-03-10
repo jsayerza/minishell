@@ -16,8 +16,12 @@ EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/contructor_manualy.c \
 			$(EXEC_DIR)/builtins.c \
 			$(EXEC_DIR)/export.c \
+			$(EXEC_DIR)/export_utils00.c \
+			$(EXEC_DIR)/export_utils01.c \
+			$(EXEC_DIR)/export_utils02.c \
 			$(EXEC_DIR)/env.c \
 			$(EXEC_DIR)/pwd.c \
+			$(EXEC_DIR)/echo.c \
 			$(EXEC_DIR)/clean_shell.c
 
 

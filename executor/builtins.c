@@ -10,5 +10,7 @@ void	token_builtins(t_constructor *node)
 		env(node);
 	if (node->builtin == BUILTIN_PWD)
 		pwd();
+	if (node->builtin == BUILTIN_ECHO)
+		echo(node);
 
 }
