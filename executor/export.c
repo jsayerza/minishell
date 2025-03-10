@@ -42,33 +42,118 @@ void add_to_export(char ***export, char *var)
 	*export = new_export;
 }
 
+int var_value(char *var)
+{
+	int i = 0;
+
+	while (var[i] && var[i] != '=')
+		i++;
+
+	if (var[i] == '=')
+		return 1;
+	else
+		return -1;
+}
+
+char *process_value(char *new_var, char *var)
+{
+	int len;
+	int i = 0;
+	int j = 0;
+
+	len = ft_strlen(var);
+	new_var = (char *)malloc(sizeof(char) * (len + 3));
+	if (!new_var)
+		return NULL;
+	while (var[i] && var[i] != '=')
+		new_var[j++] = var[i++];
+	if (var[i] == '=')
+	{
+		new_var[j++] = var[i++];
+		new_var[j++] = '\"';
+		while (var[i])
+			new_var[j++] = var[i++];
+		new_var[j++] = '\"';
+	}
+	new_var[j] = '\0';
+	return new_var;
+}
 int find_in_env(char **env, char *var)
 {
-	int i;
-	i = 0;
+	int i = 0;
+	size_t var_len = ft_strlen(var);
+
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], var, ft_strlen(var)) == 0 && env[i][ft_strlen(var)] == '=')
-			return (i);
+		if (ft_strncmp(env[i], var, var_len) == 0 && env[i][var_len] == '=')
+			return i;
 		i++;
 	}
-	if (env[i] == NULL)
-		i = -1;
-	return (i);
+	return -1;
 }
+void add_to_env(char ***env, char *var)
+{
+	int len = 0;
+	int i = 0;
+	char **new_env;
+
+	while ((*env)[len])
+		len++;
+	int index = find_in_env(*env, var);
+	if (index != -1)
+	{
+		free((*env)[index]);
+		(*env)[index] = strdup(var);
+		return;
+	}
+	new_env = (char **)malloc(sizeof(char *) * (len + 2));
+	if (!new_env)
+	{
+		perror("malloc");
+		return;
+	}
+	while (i < len)
+	{
+		new_env[i] = (*env)[i];
+		i++;
+	}
+	new_env[i++] = strdup(var);
+	new_env[i] = NULL;
+	free(*env);
+	*env = new_env;
+}
+
+
 
 void process_export_var(t_constructor *node, char *arg)
 {
 	int index;
-	index = find_in_env(node->shell->export, arg);
+	char *new_var = NULL;
+
+	// Buscar en env en vez de export (mejor sincronización)
+	index = find_in_env(node->shell->env, arg);
+
 	if (index == -1)
 	{
-		add_to_export(&(node->shell->export), arg);
+		if (var_value(arg))
+		{
+			new_var = process_value(new_var, arg);
+			add_to_env(&(node->shell->env), new_var);
+			add_to_export(&(node->shell->export), new_var);
+			free(new_var);
+		}
+		else
+			add_to_export(&(node->shell->export), arg);
 		sort_export(node->shell);
 	}
 	else
-		add_to_export(&(node->shell->export), node->shell->env[index]);
+	{
+		// Si la variable ya existe, reemplazar en export
+		free(node->shell->export[index]);
+		node->shell->export[index] = strdup(arg);
+	}
 }
+
 
 void export(t_constructor *node)
 {
