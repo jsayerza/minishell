@@ -12,5 +12,7 @@ void	token_builtins(t_constructor *node)
 		pwd();
 	if (node->builtin == BUILTIN_ECHO)
 		echo(node);
+	if (node->builtin == BUILTIN_UNSET)
+		unset(node);
 
 }

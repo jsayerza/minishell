@@ -22,6 +22,7 @@ EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/env.c \
 			$(EXEC_DIR)/pwd.c \
 			$(EXEC_DIR)/echo.c \
+			$(EXEC_DIR)/unset.c \
 			$(EXEC_DIR)/clean_shell.c
 
 

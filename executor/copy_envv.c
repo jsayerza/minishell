@@ -1,7 +1,7 @@
 #include "../minishell.h"
 
 
-void	free_env(char **env, int count)
+void	free_envv(char **env, int count)
 {
 	int i;
 
@@ -57,7 +57,7 @@ void copy_env_to_shell(t_shell *shell, char **envv)
 	{
 		if (!copy_env_variable(env, envv[i], i))
 		{
-			free_env(env, i);
+			free_envv(env, i);
 			return;
 		}
 		i++;
