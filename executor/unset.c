@@ -97,5 +97,5 @@ void	unset(t_constructor *node)
 	new_env[j] = NULL;
 	free_env(node->shell->env);
 	node->shell->env = new_env;
-//	process_export(node);
+	unset_export(node);
 }

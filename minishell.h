@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/12 12:19:33 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:09:22 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -199,8 +199,14 @@ char	**create_new_env(int len);
 void	add_new_element(char **new_env, char *var, int len);
 void	pwd();
 void	echo(t_constructor *node);
-
 void	unset(t_constructor *node);
+void	unset_export(t_constructor *node);
+void	finish_export(t_shell *shell);
+char	*get_var_name(char *env_var);
+int		should_delete(char *env_var, char **cmds);
+int		len(char **arr);
+void	free_env(char **env);
+
 //print functions
 void	print_env(t_shell *shell);
 void	print_export(t_shell *shell);
