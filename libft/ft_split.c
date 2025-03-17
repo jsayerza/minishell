@@ -60,7 +60,7 @@ int	word_proc(char const *s, char c, char **array, int i)
 	if (!array[i])
 	{
 		free_mem(array, i);
-		return (NULL);
+		return (0);
 	}
 	ft_strlcpy(array[i++], (char *)s, wordlen + 1);
 	return (wordlen);
