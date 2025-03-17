@@ -1,88 +1,3 @@
-<<<<<<< HEAD
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   minishell.h                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/20 15:50:30 by jsayerza         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
-
-#ifndef MINISHELL_H
-# define MINISHELL_H
-
-# include <unistd.h>
-# include <stdio.h>
-# include <stdlib.h>
-# include <stdbool.h>
-# include <string.h>
-# include <ctype.h>
-# include "libft/libft.h"
-
-# define RESET    "\033[0m"
-# define RED      "\033[31m"
-# define GREEN    "\033[32m"
-
-typedef enum e_token_type
-{
-	TOKEN_EOF,
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,
-	TOKEN_REDIRECT_OUT,
-	TOKEN_APPEND,
-	TOKEN_HEREDOC,
-	TOKEN_AND,
-	TOKEN_OR,
-	TOKEN_WILDCARD,
-	TOKEN_DOLLAR,
-	TOKEN_ESCAPE
-}	t_token_type;
-
-typedef struct s_token
-{
-	t_token_type	type;
-	char			*value;
-	struct s_token	*next;
-}	t_token;
-
-typedef struct s_collector
-{
-	void				*ptr;
-	struct s_collector	*next;
-}	t_collector;
-
-// parse_lexer.c
-t_token	*lexer(const char *input, t_collector **collector, t_token **head);
-
-// parse_lexer_funcs.c
-void	get_expand_var(const char *input, t_collector **collector, \
-	int *i, t_token **head);
-void	get_quoted_str(const char *input, t_collector **collector, \
-	int *i, t_token **head);
-void	get_operator(const char *input, t_collector **collector, \
-	int *i, t_token **head);
-void	get_word(const char *input, t_collector **collector, \
-	int *i, t_token **head);
-
-// collector.c
-void	collector_cleanup(t_collector **collector);
-void	collector_append(t_collector **collector, void *ptr);
-void	exit_program(t_collector **collector, char *msg, int exit_type);
-
-// tokens.c
-void	token_create(t_collector **collector, t_token_type type, \
-	const char *value, t_token **head);
-t_token	*ft_lasttoken(t_token *lst);
-void	tokens_print(t_token *token);
-void	token_print(t_token *token);
-void	tokens_free(t_token *head);
-
-#endif
-=======
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
@@ -142,19 +57,24 @@ typedef enum e_token_error
 } e_token_error;
 
 
-// De moment deixo este enum perque es amb el que treballo
 typedef enum e_token_type
 {
+	TOKEN_EOF,
 	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIRECT_IN,
+	TOKEN_REDIRECT_OUT,
+	TOKEN_APPEND,
+	TOKEN_HEREDOC,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_WILDCARD,
+	TOKEN_DOLLAR,
+	TOKEN_ESCAPE,
 	TOKEN_COMMAND,
     TOKEN_BUILTIN,
-    TOKEN_PIPE,
-    TOKEN_REDIRECT_IN,
-    TOKEN_REDIRECT_OUT,
-	TOKEN_APPEND,
-    TOKEN_HEREDOC,
-	TOKEN_EOF
-} e_token_type;
+
+}	t_token_type;
 
 typedef enum e_builtin
 {
@@ -168,6 +88,14 @@ typedef enum e_builtin
     BUILTIN_EXIT
 } e_builtin;
 
+
+typedef struct s_token
+{
+	t_token_type	type;
+	char			*value;
+	struct s_token	*next;
+}	t_token;
+
 typedef struct s_constructor
 {
 	char			**paths;			// Lista de paths donde buscar ejecutables
@@ -175,7 +103,7 @@ typedef struct s_constructor
 	int				size_exec;			// Elemntos  a ejecutar
 	int				fd;					// File descriptor
 	e_builtin		builtin;			// si es buitlin , que tipo
-	e_token_type	type;				// typo de ejecutable
+	t_token_type	type;				// typo de ejecutable
 	e_token_error	error;				// Estado de error
 	t_shell			*shell;				//enlace a shell
 	t_constructor	*next;				//sigueinte nodo o ejecutable
@@ -194,24 +122,6 @@ typedef struct s_shell
 	t_constructor	*constructor;		// Estructura de ejecución
 }					t_shell;
 
-/*
-typedef enum e_token_type
-{
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,
-	TOKEN_REDIRECT_OUT,
-	TOKEN_APPEND,
-	TOKEN_HEREDOC,
-	TOKEN_EOF
-}	e_token_type;
-*/
-typedef struct s_token
-{
-	e_token_type	type;
-	char			*value;
-	struct s_token	*next;
-}	t_token;
 
 typedef struct s_collector
 {
@@ -235,10 +145,10 @@ void	get_word(const char *input, t_collector **collector, \
 // collector.c
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
-void	exit_program(t_collector **collector, char *msg, bool exit_failure);
+void	exit_program(t_collector **collector, char *msg, int exit_type);
 
 // tokens.c
-void	token_create(t_collector **collector, e_token_type type, \
+void	token_create(t_collector **collector, t_token_type type, \
 	const char *value, t_token **head);
 t_token	*ft_lasttoken(t_token *lst);
 void	tokens_print(t_token *token);
@@ -283,4 +193,3 @@ void	clean_shell(t_shell *shell);
 void	clean_constructor(t_constructor *constructor);
 
 #endif
->>>>>>> acarranz
