@@ -6,29 +6,35 @@
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/03/08 12:27:13 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(int ac, char *av[])
+int	main(int argc,char **argv, char **env)
 {
 	t_collector	*collector;
 	t_token		*tokens;
-	char	*input;
+	const char	*input;
+	t_shell *shell;
 
-	if (ac == 2)
-		input = av[1];
-	else
+	(void)argv;
+	if (argc != 1)
+		return (-1);
+	shell = NULL;
+	shell = init_shell(shell, env);
+	if (!shell)
 	{
-		printf("Posa params!!!!\n");
-		return (EXIT_SUCCESS);	
+		perror("Error al inicializar la shell.\n");
+		exit(1);
 	}
+	input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
 	collector = NULL;
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);
-	tokens_print(tokens);
+	//tokens_print(tokens);
 	collector_cleanup(&collector);
+	start_shell(shell);
 	return (EXIT_SUCCESS);
 }
