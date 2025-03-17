@@ -34,17 +34,16 @@ void	collector_append(t_collector **collector, void *ptr)
 
 	new_node = malloc(sizeof(t_collector));
 	if (!new_node)
-		exit_program(collector, "Error malloc collector", true);
+		exit_program(collector, "Error malloc collector", EXIT_FAILURE);
 	new_node->ptr = ptr;
 	new_node->next = *collector;
 	*collector = new_node;
 }
 
-void	exit_program(t_collector **collector, char *msg, bool exit_failure)
+void	exit_program(t_collector **collector, char *msg, int exit_type)
 {
 	collector_cleanup(collector);
 	if (msg)
-		perror(msg);
-	if (exit_failure)
-		exit(EXIT_FAILURE);
+		printf("%s\n", msg);
+	exit(exit_type);
 }

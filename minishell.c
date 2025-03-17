@@ -3,22 +3,28 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/01/16 17:44:28 by acarranz         ###   ########.fr       */
+/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-int	main(void)
+int	main(int ac, char *av[])
 {
 	t_collector	*collector;
 	t_token		*tokens;
-	const char	*input;
+	char	*input;
 
-	input = "echo \"$USER\" 'hello world' | grep test >> output.txt";
+	if (ac == 2)
+		input = av[1];
+	else
+	{
+		printf("Posa params!!!!\n");
+		return (EXIT_SUCCESS);	
+	}
 	collector = NULL;
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);

@@ -16,7 +16,11 @@ LIBFT           =	$(LIBFT_DIR)/libft.a
 
 HEADERS			=	minishell.h
 
-PARAMS			= 
+#PARAMS			= "nonexistent_command"
+#PARAMS			= "echo \"$USER\" || $$USER$ 'hello & *world' | *** grep hello >> output*.txt && < test.txt"
+#PARAMS			= "echo $USER | grep jsay >> output*.txt"
+PARAMS			= "echo \\"
+
 
 all:	$(LIBFT) $(NAME)
 

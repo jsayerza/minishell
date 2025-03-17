@@ -12,6 +12,16 @@
 
 #include "minishell.h"
 
+static int	handle_invalidchars(const char *input, int i)
+{
+	printf("handle_invalidchars in-input[%d]:%c\n", i, input[i]);
+	if (ft_strchr(";\\", input[i]))
+	{
+		return (1);
+	}
+	return (0);
+}
+
 static int	handle_whitespace(const char *input, int *i)
 {
 	if (ft_strchr(" \f\r\n\t\v", input[*i]))
@@ -25,7 +35,7 @@ static int	handle_whitespace(const char *input, int *i)
 static int	handle_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head)
 {
-	if (ft_strchr("|<>", input[*i]))
+	if (ft_strchr("<>|&*$", input[*i]))
 	{
 		get_operator(input, collector, i, head);
 		(*i)++;
@@ -63,6 +73,9 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 	i = 0;
 	while (input[i])
 	{
+		printf("lexer-input[%d]:%c\n", i, input[i]);
+		if (handle_invalidchars(input, i))
+			exit_program(collector, "Invalid char in input", EXIT_SUCCESS);
 		if (handle_whitespace(input, &i)
 			|| handle_operator(input, collector, &i, head)
 			|| handle_quotes(input, collector, &i, head)
