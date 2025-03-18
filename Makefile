@@ -26,7 +26,6 @@ EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/unset_export.c \
 			$(EXEC_DIR)/clean_shell.c
 
-
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
 EXEC_OBJ		=	$(EXEC_SRC:.c=.o)
 
