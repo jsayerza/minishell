@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/08 18:06:16 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/03/13 18:09:22 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -179,7 +179,28 @@ void	env(t_constructor *node);
 void	export(t_constructor *node);
 void	sort_export(t_shell *shell);
 void	finish_export(t_shell *shell);
+int		get_export_length(char **export);
+char	*extract_var_name(char *arg);
+char	**create_new_export(int len);
+void	copy_elements(char **new_arr, char **old_arr, int len);
+int		create_export_element(char **new_export, int len, char *var);
+void	add_to_export(char ***export, char *var);
+int		var_value(char *var);
+char	*process_value(char *new_var, char *var);
+int		find_in_env(char **env, char *var_name);
+int		find_in_export(char **export, char *var_name);
+int		update_existing_var(char ***env, char *var, int index);
+char	**create_new_env(int len);
+void	add_new_element(char **new_env, char *var, int len);
 void	pwd();
+void	echo(t_constructor *node);
+void	unset(t_constructor *node);
+void	unset_export(t_constructor *node);
+void	finish_export(t_shell *shell);
+char	*get_var_name(char *env_var);
+int		should_delete(char *env_var, char **cmds);
+int		len(char **arr);
+void	free_env(char **env);
 
 //print functions
 void	print_env(t_shell *shell);

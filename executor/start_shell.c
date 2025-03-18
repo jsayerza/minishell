@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-#include "minishell.h"
-
 char	*read_input(void)
 {
 	char	*input;

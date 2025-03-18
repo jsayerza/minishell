@@ -1,106 +1,125 @@
 #include "../minishell.h"
 
-int get_export_length(char **export)
+void	add_to_env(char ***env, char *var)
 {
-	int len = 0;
+	int		len;
+	int		index;
+	char	**new_env;
 
-	while (export[len])
+	if (var_value(var) == -1)
+		return ;
+
+	len = 0;
+	while ((*env)[len])
 		len++;
 
-	return len;
+	index = find_in_env(*env, var);
+	if (update_existing_var(env, var, index))
+		return ;
+
+	new_env = create_new_env(len);
+	if (!new_env)
+		return ;
+
+	copy_elements(new_env, *env, len);
+	add_new_element(new_env, var, len);
+
+	free(*env);
+	*env = new_env;
 }
 
-void add_to_export(char ***export, char *var)
+void	update_env_var(t_constructor *node, char *arg, int index_env)
 {
-	int len = 0;
-	char **new_export;
-	int i = 0;
-
-	len = get_export_length(*export);
-	new_export = malloc((len + 2) * sizeof(char *));
-	if (!new_export)
+	if (index_env != -1)
 	{
-		perror("malloc");
-		return;
-	}
-	while (i < len)
-	{
-		new_export[i] = (*export)[i];
-		i++;
-	}
-	new_export[len] = malloc(ft_strlen("declare -x ") + ft_strlen(var) + 1);
-	if (!new_export[len])
-	{
-		perror("malloc");
-		free(new_export);
-		return;
-	}
-	ft_strlcpy(new_export[len], "declare -x ", ft_strlen("declare -x ") + 1);
-	ft_strlcat(new_export[len], var, ft_strlen("declare -x ") + ft_strlen(var) + 1);
-	new_export[len + 1] = NULL;
-	free(*export);
-	*export = new_export;
-}
-
-int find_in_env(char **env, char *var)
-{
-	int i;
-	i = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], var, ft_strlen(var)) == 0 && env[i][ft_strlen(var)] == '=')
-			return (i);
-		i++;
-	}
-	if (env[i] == NULL)
-		i = -1;
-	return (i);
-}
-
-void process_export_var(t_constructor *node, char *arg)
-{
-	int index;
-	index = find_in_env(node->shell->export, arg);
-	if (index == -1)
-	{
-		add_to_export(&(node->shell->export), arg);
-		sort_export(node->shell);
+		free(node->shell->env[index_env]);
+		node->shell->env[index_env] = strdup(arg);
 	}
 	else
-		add_to_export(&(node->shell->export), node->shell->env[index]);
+	{
+		add_to_env(&(node->shell->env), arg);
+	}
 }
 
-void export(t_constructor *node)
+void	update_export_var(t_constructor *node, char *new_var, int index_export)
 {
-	printf("Dins de export\n");
-	int i;
-	int j;
+	if (index_export != -1)
+	{
+		free(node->shell->export[index_export]);
+		node->shell->export[index_export] = malloc(ft_strlen("declare -x ") +
+								ft_strlen(new_var) + 1);
+		if (node->shell->export[index_export])
+		{
+			ft_strlcpy(node->shell->export[index_export], "declare -x ",
+					ft_strlen("declare -x ") + 1);
+			ft_strlcat(node->shell->export[index_export], new_var,
+					ft_strlen("declare -x ") + ft_strlen(new_var) + 1);
+		}
+	}
+	else
+	{
+		add_to_export(&(node->shell->export), new_var);
+	}
+}
+
+void	process_var_with_value(t_constructor *node, char *arg,
+						int index_env, int index_export)
+{
+	char	*new_var;
+
+	new_var = NULL;
+	update_env_var(node, arg, index_env);
+	new_var = process_value(new_var, arg);
+	update_export_var(node, new_var, index_export);
+	free(new_var);
+}
+
+void	process_export_var(t_constructor *node, char *arg)
+{
+	int		index_env;
+	int		index_export;
+	char	*var_name;
+
+	var_name = extract_var_name(arg);
+	index_env = find_in_env(node->shell->env, var_name);
+	index_export = find_in_export(node->shell->export, var_name);
+
+	if (var_value(arg) == 1)
+	{
+		process_var_with_value(node, arg, index_env, index_export);
+	}
+	else if (index_export == -1)
+	{
+		add_to_export(&(node->shell->export), arg);
+	}
+
+	free(var_name);
+	sort_export(node->shell);
+}
+
+void	export(t_constructor *node)
+{
+	int	j;
 
 	if (node->shell->node_size == 1 && !node->executable[1])
 		print_export(node->shell);
 	else
 	{
-		printf("mes de un exec\n");
-		i = 0;
-		printf("size->node_list : %d\n", node->shell->node_size);
-		while (i < node->shell->node_size )
+		j = 1;
+		while (j < node->size_exec)
 		{
-			j = 1;
-			while (j < node->size_exec)
+			if (!(ft_isalpha(node->executable[j][0]) ||
+				node->executable[j][0] == '_'))
 			{
-				if (!(ft_isalpha(node->executable[i][0]) || node->executable[j][0] == '_'))
-				{
-					printf("minishell: export: `%s': not a valid identifier\n",
-						   node->executable[i]);
-					node->error = ERROR_SYNTAX_ERROR;
-				}
-				else
-				{
-					process_export_var(node, node->executable[j]);
-				}
-				j++;
+				printf("minishell: export: `%s': not a valid identifier\n",
+					node->executable[j]);
+				node->error = ERROR_SYNTAX_ERROR;
 			}
-			i++;
+			else
+			{
+				process_export_var(node, node->executable[j]);
+			}
+			j++;
 		}
 	}
 }
