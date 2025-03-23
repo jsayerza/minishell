@@ -19,17 +19,21 @@ EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/export_utils00.c \
 			$(EXEC_DIR)/export_utils01.c \
 			$(EXEC_DIR)/export_utils02.c \
+			$(EXEC_DIR)/export_utils03.c \
 			$(EXEC_DIR)/env.c \
 			$(EXEC_DIR)/pwd.c \
 			$(EXEC_DIR)/echo.c \
 			$(EXEC_DIR)/unset.c \
 			$(EXEC_DIR)/unset_export.c \
+			$(EXEC_DIR)/path.c \
+			$(EXEC_DIR)/path_utils00.c \
+			$(EXEC_DIR)/path_utils01.c \
 			$(EXEC_DIR)/clean_shell.c
 
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
 EXEC_OBJ		=	$(EXEC_SRC:.c=.o)
 
-UTILS_SRC       =	
+UTILS_SRC       =
 UTILS_OBJ       =	$(UTILS_SRC:.c=.o)
 
 LIBFT_DIR       =	libft
@@ -75,7 +79,7 @@ valgrind1: $(NAME)
 #	For memory leaks and invalid accesses:
 	valgrind -s --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(PARAMS)
 
-.PHONY:	all clean fclean re run valgrind1 
+.PHONY:	all clean fclean re run valgrind1
 
 
 # source ~/norminette_env/bin/activate

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 export_utils00.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:12 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:12 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	find_in_env(char **env, char *var_name)
@@ -7,15 +19,13 @@ int	find_in_env(char **env, char *var_name)
 
 	i = 0;
 	var_len = ft_strlen(var_name);
-
 	while (env[i])
 	{
-		if (ft_strncmp(env[i], var_name, var_len) == 0 &&
-			(env[i][var_len] == '=' || env[i][var_len] == '\0'))
+		if (ft_strncmp(env[i], var_name, var_len) == 0
+			&& (env[i][var_len] == '=' || env[i][var_len] == '\0'))
 			return (i);
 		i++;
 	}
-
 	return (-1);
 }
 
@@ -28,16 +38,12 @@ int	find_in_export(char **export, char *var_name)
 	while (export[i])
 	{
 		export_var = export[i] + ft_strlen("declare -x ");
-
-		if (ft_strncmp(export_var, var_name, ft_strlen(var_name)) == 0 &&
-			(export_var[ft_strlen(var_name)] == '=' ||
-			export_var[ft_strlen(var_name)] == '\0'))
-		{
+		if (ft_strncmp(export_var, var_name, ft_strlen(var_name)) == 0
+			&& (export_var[ft_strlen(var_name)] == '='
+				|| export_var[ft_strlen(var_name)] == '\0'))
 			return (i);
-		}
 		i++;
 	}
-
 	return (-1);
 }
 

@@ -1,9 +1,21 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 unset.c											:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:54 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:54 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 int	len(char **arr)
 {
 	int	i;
+
 	i = 0;
 	while (arr[i])
 		i++;
@@ -21,7 +33,6 @@ char	*get_var_name(char *env_var)
 	name = malloc(sizeof(char) * (i + 1));
 	if (!name)
 		return (NULL);
-
 	i = 0;
 	while (env_var[i] && env_var[i] != '=')
 	{
@@ -41,7 +52,6 @@ int	should_delete(char *env_var, char **cmds)
 	var_name = get_var_name(env_var);
 	if (!var_name)
 		return (0);
-
 	result = 0;
 	j = 1;
 	while (cmds[j])
@@ -49,14 +59,13 @@ int	should_delete(char *env_var, char **cmds)
 		if (ft_strcmp(var_name, cmds[j]) == 0)
 		{
 			result = 1;
-			break;
+			break ;
 		}
 		j++;
 	}
 	free(var_name);
 	return (result);
 }
-
 
 void	free_env(char **env)
 {
@@ -71,7 +80,6 @@ void	free_env(char **env)
 	free(env);
 }
 
-//void	process_export(t_constructor *node);
 void	unset(t_constructor *node)
 {
 	char	**new_env;
@@ -82,7 +90,7 @@ void	unset(t_constructor *node)
 	env_len = len(node->shell->env);
 	new_env = malloc(sizeof(char *) * (env_len + 1));
 	if (!new_env)
-		return;
+		return ;
 	i = 0;
 	j = 0;
 	while (node->shell->env[i])

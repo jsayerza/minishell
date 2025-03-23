@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/13 18:09:22 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:04:48 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,7 +98,6 @@ typedef struct s_token
 
 typedef struct s_constructor
 {
-	char			**paths;			// Lista de paths donde buscar ejecutables
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
 	int				fd;					// File descriptor
@@ -113,6 +112,7 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
+	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
 	int				interactive;		// 1 si es interactivo, 0 si es un script
 	char			*pwd;				// Directorio actual
@@ -201,12 +201,33 @@ char	*get_var_name(char *env_var);
 int		should_delete(char *env_var, char **cmds);
 int		len(char **arr);
 void	free_env(char **env);
+void	copy_declare(char *export, char *declare, int *i);
+void	copy_temp(char *export, char *temp, int *i);
+void	update_export_var(t_constructor *node, char *new_var, int index_export);
+void	path(t_shell *shell);
+
+/* Función principal exportada */
+void path(t_shell *shell);
+
+/* Funciones estáticas internas */
+int		len_path(char **path);
+char	**find_path(char **env);
+char	**copy_path(char **path);
+int		count_segments(char *path_str);
+int		allocate_result(char ***result, int count);
+int		handle_allocation_error(char **result, int i);
+int		process_segment(char **result, int i, char **temp);
+char	**manual_split_path(char *path_str);
+void	free_path_array(char **path);
+char	*get_path_value(char **env);
+char	**try_alternative_path(char **env);
 
 //print functions
 void	print_env(t_shell *shell);
 void	print_export(t_shell *shell);
 void	print_token_list(t_shell *shell);
-void 	print_constructor(t_shell *shell);
+void	print_constructor(t_shell *shell);
+void	print_path(t_shell *shell);
 
 
 //clean functions

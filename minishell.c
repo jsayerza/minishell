@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/08 12:27:13 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/03/23 16:17:34 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 
 int	main(int argc,char **argv, char **env)
 {
-	t_collector	*collector;
-	t_token		*tokens;
-	const char	*input;
+	//t_collector	*collector;
+	//t_token		*tokens;
+	//const char	*input;
 	t_shell *shell;
 
 	(void)argv;
@@ -29,12 +29,12 @@ int	main(int argc,char **argv, char **env)
 		perror("Error al inicializar la shell.\n");
 		exit(1);
 	}
-	input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
-	collector = NULL;
-	tokens = NULL;
-	tokens = lexer(input, &collector, &tokens);
+//	input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
+//	collector = NULL;
+//	tokens = NULL;
+	//tokens = lexer(input, &collector, &tokens);
 	//tokens_print(tokens);
-	collector_cleanup(&collector);
+	//collector_cleanup(&collector);
 	start_shell(shell);
 	return (EXIT_SUCCESS);
 }

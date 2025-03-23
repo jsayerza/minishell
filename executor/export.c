@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 export.c											:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:08 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:08 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	add_to_env(char ***env, char *var)
@@ -8,22 +20,17 @@ void	add_to_env(char ***env, char *var)
 
 	if (var_value(var) == -1)
 		return ;
-
 	len = 0;
 	while ((*env)[len])
 		len++;
-
 	index = find_in_env(*env, var);
 	if (update_existing_var(env, var, index))
 		return ;
-
 	new_env = create_new_env(len);
 	if (!new_env)
 		return ;
-
 	copy_elements(new_env, *env, len);
 	add_new_element(new_env, var, len);
-
 	free(*env);
 	*env = new_env;
 }
@@ -38,27 +45,6 @@ void	update_env_var(t_constructor *node, char *arg, int index_env)
 	else
 	{
 		add_to_env(&(node->shell->env), arg);
-	}
-}
-
-void	update_export_var(t_constructor *node, char *new_var, int index_export)
-{
-	if (index_export != -1)
-	{
-		free(node->shell->export[index_export]);
-		node->shell->export[index_export] = malloc(ft_strlen("declare -x ") +
-								ft_strlen(new_var) + 1);
-		if (node->shell->export[index_export])
-		{
-			ft_strlcpy(node->shell->export[index_export], "declare -x ",
-					ft_strlen("declare -x ") + 1);
-			ft_strlcat(node->shell->export[index_export], new_var,
-					ft_strlen("declare -x ") + ft_strlen(new_var) + 1);
-		}
-	}
-	else
-	{
-		add_to_export(&(node->shell->export), new_var);
 	}
 }
 
@@ -83,16 +69,10 @@ void	process_export_var(t_constructor *node, char *arg)
 	var_name = extract_var_name(arg);
 	index_env = find_in_env(node->shell->env, var_name);
 	index_export = find_in_export(node->shell->export, var_name);
-
 	if (var_value(arg) == 1)
-	{
 		process_var_with_value(node, arg, index_env, index_export);
-	}
 	else if (index_export == -1)
-	{
 		add_to_export(&(node->shell->export), arg);
-	}
-
 	free(var_name);
 	sort_export(node->shell);
 }
@@ -108,8 +88,8 @@ void	export(t_constructor *node)
 		j = 1;
 		while (j < node->size_exec)
 		{
-			if (!(ft_isalpha(node->executable[j][0]) ||
-				node->executable[j][0] == '_'))
+			if (!(ft_isalpha(node->executable[j][0])
+				|| node->executable[j][0] == '_'))
 			{
 				printf("minishell: export: `%s': not a valid identifier\n",
 					node->executable[j]);

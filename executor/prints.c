@@ -1,13 +1,44 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 prints.c											:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:36 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:36 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void print_env(t_shell *shell)
 {
-    printf("Print Env\n");
+	printf("Print Env\n");
 	int	i;
 
 	i = 0;
 	while (shell->env[i])
 		printf("%s\n", shell->env[i++]);
+}
+
+void	print_path(t_shell *shell)
+{
+	int i;
+
+	i = 0;
+	if (!shell || !shell->paths)
+	{
+		printf("No hay paths para imprimir\n");
+		return;
+	}
+	printf("DEBUG - Contenido de shell->paths:\n");
+	while (shell->paths[i])
+	{
+		printf("[%d]: '%s'\n", i, shell->paths[i]);
+		i++;
+	}
+	printf("Total de paths: %d\n", i);
 }
 
 void print_export(t_shell *shell)
@@ -39,16 +70,6 @@ void print_constructor(t_shell *shell)
 		printf("Ejecutables: ");
 		for (int i = 0; current->executable[i]; i++)
 			printf("\"%s\" ", current->executable[i]);
-		printf("\nPaths: ");
-		if (current->paths)
-		{
-			for (int i = 0; current->paths[i]; i++)
-			{
-				printf("\"%s\" ", current->paths[i]);
-			}
-		}
-		else
-			printf("NULL");
 		printf("\n========================\n");
 		current = current->next;
 		node_number++;

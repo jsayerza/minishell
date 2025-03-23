@@ -1,20 +1,33 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 env_to_export.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:13:59 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:13:59 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 void	free_exp(char **exp, int count)
 {
-	int i;
+	int	i;
 
-	for (i = 0; i < count; i++)
+	i = 0;
+	while (i < count)
 	{
 		free(exp[i]);
+		i++;
 	}
 	free(exp);
 }
 
 char	**allocate_exp(int env_count)
 {
-	char **exp;
+	char	**exp;
 
 	exp = malloc(sizeof(char *) * (env_count + 1));
 	if (!exp)
@@ -37,23 +50,23 @@ int	copy_exp_variable(char **exp, char *envv, int index)
 
 void	env_to_export(t_shell *shell)
 {
-	int i;
-	int env_count;
-	char **exp;
+	int		i;
+	int		env_count;
+	char	**exp;
 
 	env_count = 0;
 	while (shell->env && shell->env[env_count])
 		env_count++;
 	exp = allocate_exp(env_count);
 	if (!exp)
-		return;
+		return ;
 	i = 0;
 	while (i < env_count)
 	{
 		if (!copy_exp_variable(exp, shell->env[i], i))
 		{
 			free_exp(exp, i);
-			return;
+			return ;
 		}
 		i++;
 	}

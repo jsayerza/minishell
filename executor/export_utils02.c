@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 export_utils02.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:27 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:27 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 int	get_export_length(char **export)
@@ -20,7 +32,6 @@ char	*extract_var_name(char *arg)
 	while (var_name[i] && var_name[i] != '=')
 		i++;
 	var_name[i] = '\0';
-
 	return (var_name);
 }
 
@@ -59,7 +70,7 @@ int	create_export_element(char **new_export, int len, char *var)
 		return (0);
 	}
 	ft_strlcpy(new_export[len], "declare -x ", ft_strlen("declare -x ") + 1);
-	ft_strlcat(new_export[len], var, ft_strlen("declare -x ") + ft_strlen(var) + 1);
+	ft_strlcat(new_export[len], var, ft_strlen("declare -x ")
+		+ ft_strlen(var) + 1);
 	return (1);
 }
-

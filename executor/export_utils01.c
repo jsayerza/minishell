@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 export_utils01.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:19 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:19 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	add_to_export(char ***export, char *var)
@@ -9,12 +21,9 @@ void	add_to_export(char ***export, char *var)
 	new_export = create_new_export(len);
 	if (!new_export)
 		return ;
-
 	copy_elements(new_export, *export, len);
-
 	if (!create_export_element(new_export, len, var))
 		return ;
-
 	new_export[len + 1] = NULL;
 	free(*export);
 	*export = new_export;

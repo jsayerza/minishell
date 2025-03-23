@@ -40,12 +40,12 @@ void	start_shell(t_shell *shell)
 		shell->node_size = 0;
 		printf("~/minishell: ");
 		input = read_input();
-		if (!input)
+		if (input == NULL)
 		{
-			printf("\n");
-			break ;
+			printf("exit\n");
+			break;
 		}
-		if (strcmp(input, "exit") == 0)
+	if (strcmp(input, "exit") == 0)
 		{
 			free(input);
 			break ;

@@ -1,20 +1,30 @@
-#include "../minishell.h"
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 copy_envv.c										:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:13:39 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:13:39 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
 
+#include "../minishell.h"
 
 void	free_envv(char **env, int count)
 {
-	int i;
+	int	i;
 
-	for (i = 0; i < count; i++)
-	{
-		free(env[i]);
-	}
+	i = 0;
+	while (i < count)
+		free(env[i++]);
 	free(env);
 }
 
 char	**allocate_env(int env_count)
 {
-	char **env;
+	char	**env;
 
 	env = malloc(sizeof(char *) * (env_count + 1));
 	if (!env)
@@ -35,11 +45,25 @@ int	copy_env_variable(char **env, char *envv, int index)
 	return (1);
 }
 
-void copy_env_to_shell(t_shell *shell, char **envv)
+int	copy_env_variables(char **env, char **envv, int env_count)
 {
-	int i;
-	int env_count;
-	char **env;
+	int	i;
+
+	i = 0;
+	while (i < env_count)
+	{
+		if (!copy_env_variable(env, envv[i], i))
+			return (0);
+		i++;
+	}
+	env[i] = NULL;
+	return (1);
+}
+
+void	copy_env_to_shell(t_shell *shell, char **envv)
+{
+	int		env_count;
+	char	**env;
 
 	env_count = 0;
 	while (envv && envv[env_count])
@@ -47,21 +71,15 @@ void copy_env_to_shell(t_shell *shell, char **envv)
 	if (env_count == 0)
 	{
 		fprintf(stderr, "Error: El entorno está vacío.\n");
-		return;
+		return ;
 	}
 	env = allocate_env(env_count);
 	if (!env)
-		return;
-	i = 0;
-	while (i < env_count)
+		return ;
+	if (!copy_env_variables(env, envv, env_count))
 	{
-		if (!copy_env_variable(env, envv[i], i))
-		{
-			free_envv(env, i);
-			return;
-		}
-		i++;
+		free_envv(env, env_count);
+		return ;
 	}
-	env[i] = NULL;
 	shell->env = env;
 }

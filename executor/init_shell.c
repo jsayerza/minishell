@@ -1,13 +1,24 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 init_shell.c										:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:31 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:31 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
-t_constructor *init_constructor(void)
+t_constructor	*init_constructor(void)
 {
-	t_constructor *new;
+	t_constructor	*new;
 
 	new = (t_constructor *)malloc(sizeof(t_constructor));
 	if (!new)
 		return (NULL);
-	new->paths = NULL;
 	new->executable = NULL;
 	new->size_exec = 0;
 	new->fd = 0;
@@ -19,7 +30,7 @@ t_constructor *init_constructor(void)
 	return (new);
 }
 
-t_shell *init_shell(t_shell *shell, char **env)
+t_shell	*init_shell(t_shell *shell, char **env)
 {
 	if (shell != NULL)
 		clean_shell(shell);
@@ -29,6 +40,8 @@ t_shell *init_shell(t_shell *shell, char **env)
 	copy_env_to_shell(shell, env);
 	env_to_export(shell);
 	create_export(shell);
+	path(shell);
+	shell->paths = NULL;
 	shell->last_exit = 0;
 	shell->interactive = 1;
 	shell->pwd = getcwd(NULL, 0);

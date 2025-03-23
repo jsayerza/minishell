@@ -1,9 +1,21 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 unset_export.c										:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:15:03 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:15:03 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 char	*extract_export_name(char *export_str)
 {
-	char *var_name;
-	char *export_name;
+	char	*var_name;
+	char	*export_name;
 
 	if (ft_strncmp(export_str, "declare -x ", 11) != 0)
 		return (NULL);
@@ -17,8 +29,8 @@ char	*extract_export_name(char *export_str)
 
 int	should_keep_export(char *export_str, char **cmds)
 {
-	char *var_name;
-	int keep;
+	char	*var_name;
+	int		keep;
 
 	var_name = extract_export_name(export_str);
 	if (!var_name)
@@ -30,15 +42,15 @@ int	should_keep_export(char *export_str, char **cmds)
 
 void	unset_export(t_constructor *node)
 {
-	char **new_export;
-	int export_len;
-	int i, j;
+	char	**new_export;
+	int		export_len;
+	int		i;
+	int		j;
 
 	export_len = len(node->shell->export);
 	new_export = malloc(sizeof(char *) * (export_len + 1));
 	if (!new_export)
-		return;
-
+		return ;
 	i = 0;
 	j = 0;
 	while (node->shell->export[i])
