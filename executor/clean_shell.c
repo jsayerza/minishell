@@ -61,6 +61,8 @@ void	clean_constructor(t_constructor *constructor)
 
 void	clean_all(t_shell *shell)
 {
+	if (shell->paths)
+		free_path_array(shell->paths);
 	free(shell->pwd);
 	free(shell->oldpwd);
 	free(shell->output);
@@ -74,8 +76,6 @@ void	clean_shell(t_shell *shell)
 
 	if (!shell)
 		return ;
-	if (shell->paths)
-		free_path_array(shell->paths);
 	if (shell->env)
 	{
 		i = 0;

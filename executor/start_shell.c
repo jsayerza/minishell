@@ -31,9 +31,27 @@ char	*read_input(void)
 	return (input);
 }
 
+void	process_input(t_shell *shell, char *input)
+{
+	if (strcmp(input, "exit") == 0)
+	{
+		free(input);
+		exit(0);
+	}
+	if (shell->constructor)
+	{
+		clean_constructor(shell->constructor);
+		shell->constructor = NULL;
+	}
+	shell->constructor = fill_constructor_manually(shell);
+	print_constructor(shell);
+	display_shell(shell);
+	free(input);
+}
+
 void	start_shell(t_shell *shell)
 {
-	char			*input;
+	char	*input;
 
 	while (1)
 	{
@@ -43,22 +61,9 @@ void	start_shell(t_shell *shell)
 		if (input == NULL)
 		{
 			printf("exit\n");
-			break;
-		}
-	if (strcmp(input, "exit") == 0)
-		{
-			free(input);
 			break ;
 		}
-		if (shell->constructor)
-		{
-			clean_constructor(shell->constructor);
-			shell->constructor = NULL;
-		}
-		shell->constructor = fill_constructor_manually(shell);
-		print_constructor(shell);
-		display_shell(shell);
-		free(input);
+		process_input(shell, input);
 	}
 	clean_shell(shell);
 }

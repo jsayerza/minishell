@@ -36,7 +36,7 @@ char	**find_path(char **env)
 	if (!result || !result[0])
 	{
 		free_path_array(result);
-		return NULL;
+		return (NULL);
 	}
 	return (result);
 }
