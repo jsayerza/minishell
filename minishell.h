@@ -54,7 +54,7 @@ typedef enum e_token_error
 	ERROR_EOF,                     // End of file reached
 	ERROR_STDIN_CLOSED,            // Standard input closed
 	ERROR_SIGNAL_FAILED            // Signal operation failed
-} e_token_error;
+} t_token_error;
 
 
 typedef enum e_token_type
@@ -86,7 +86,7 @@ typedef enum e_builtin
     BUILTIN_UNSET,
     BUILTIN_ENV,
     BUILTIN_EXIT
-} e_builtin;
+} t_builtin;
 
 
 typedef struct s_token
@@ -101,9 +101,9 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
 	int				fd;					// File descriptor
-	e_builtin		builtin;			// si es buitlin , que tipo
+	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
-	e_token_error	error;				// Estado de error
+	t_token_error	error;				// Estado de error
 	t_shell			*shell;				//enlace a shell
 	t_constructor	*next;				//sigueinte nodo o ejecutable
 }					t_constructor;

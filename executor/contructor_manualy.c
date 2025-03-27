@@ -45,7 +45,7 @@ t_constructor *create_single_constructor_node(int node_number)
             return NULL;
         }
         getchar();
-        new_node->builtin = (e_builtin)builtin;
+        new_node->builtin = (t_builtin)builtin;
         printf("Builtin type entered: %d\n", builtin); // Depuración
         printf("Node builtin assigned: %d\n", new_node->builtin); // Depuración
     }
