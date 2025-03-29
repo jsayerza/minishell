@@ -129,10 +129,10 @@ typedef struct s_collector
 	struct s_collector	*next;
 }	t_collector;
 
-// parse_lexer.c
+// lexer.c
 t_token	*lexer(const char *input, t_collector **collector, t_token **head);
 
-// parse_lexer_funcs.c
+// lexer_funcs.c
 int		handle_invalidchars(const char *input, int i);
 void	get_expand_var(const char *input, t_collector **collector, \
 	int *i, t_token **head);
@@ -141,7 +141,7 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 void	get_word(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
-// parse_lexer_funcs_operator.c
+// lexer_funcs_operator.c
 void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
