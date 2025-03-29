@@ -25,15 +25,15 @@
 # define RED      "\033[31m"
 # define GREEN    "\033[32m"
 
-typedef struct s_constructor t_constructor;
-typedef struct s_shell t_shell;
+typedef struct s_constructor	t_constructor;
 
+typedef struct s_shell			t_shell;
 
 // Enum representing various token error types in the minishell application
 typedef enum e_token_error
 {
-	NO_ERROR,                      // No error occurred
-	ERROR_NOT_FOUND,               // Token not found
+	NO_ERROR,						// No error occurred
+	ERROR_NOT_FOUND,				// Token not found
 	ERROR_NOT_ACCESS,              // Token not accessible
 	ERROR_NOT_EXEC,                // Token not executable
 	ERROR_NOT_PIPE,                // Pipe operation failed
@@ -133,13 +133,16 @@ typedef struct s_collector
 t_token	*lexer(const char *input, t_collector **collector, t_token **head);
 
 // parse_lexer_funcs.c
+int		handle_invalidchars(const char *input, int i);
 void	get_expand_var(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 void	get_quoted_str(const char *input, t_collector **collector, \
 	int *i, t_token **head);
-void	get_operator(const char *input, t_collector **collector, \
-	int *i, t_token **head);
 void	get_word(const char *input, t_collector **collector, \
+	int *i, t_token **head);
+
+// parse_lexer_funcs_operator.c
+void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
 // collector.c
@@ -157,15 +160,14 @@ void	tokens_free(t_token *head);
 
 
 //init functions
-void	start_shell(t_shell *shell);
+void			start_shell(t_shell *shell);
 t_shell			*init_shell(t_shell *shell, char **env);
 t_constructor	*init_constructor(void);
-
 //void	construct_shell_data(t_shell *shell, char **env);
-void	copy_env_to_shell (t_shell *shell, char **envv);
-void	env_to_export(t_shell *shell);
-void	create_export(t_shell *shell);
-char	*concatenate_export(char *export, char *temp, char *declare);
+void			copy_env_to_shell (t_shell *shell, char **envv);
+void			env_to_export(t_shell *shell);
+void			create_export(t_shell *shell);
+char			*concatenate_export(char *export, char *temp, char *declare);
 
 //manual list
 t_constructor *fill_constructor_manually(t_shell *shell);

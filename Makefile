@@ -4,8 +4,9 @@ RM				=	rm -f
 INCLUDES		=	-I. -Ilibft
 EXEC_DIR		=	executor
 NAME			=	minishell
-PROG_SRC		=	minishell.c parse_lexer.c parse_lexer_funcs.c \
-					tokens.c collector.c
+PROG_SRC		=	minishell.c collector.c \
+					lexer/parse_lexer.c lexer/parse_lexer_funcs.c \
+					lexer/parse_lexer_funcs_operator.c lexer/tokens.c 
 EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \
@@ -44,7 +45,7 @@ HEADERS			=	minishell.h
 #PARAMS			= "nonexistent_command"
 #PARAMS			= "echo \"$USER\" || $$USER$ 'hello & *world' | *** grep hello >> output*.txt && < test.txt"
 #PARAMS			= "echo $USER | grep jsay >> output*.txt"
-PARAMS			= "echo \\"
+PARAMS			= 
 
 
 all:	$(LIBFT) $(NAME)

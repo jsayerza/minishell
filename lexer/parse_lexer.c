@@ -12,16 +12,6 @@
 
 #include "minishell.h"
 
-static int	handle_invalidchars(const char *input, int i)
-{
-	printf("handle_invalidchars in-input[%d]:%c\n", i, input[i]);
-	if (ft_strchr(";\\", input[i]))
-	{
-		return (1);
-	}
-	return (0);
-}
-
 static int	handle_whitespace(const char *input, int *i)
 {
 	if (ft_strchr(" \f\r\n\t\v", input[*i]))
