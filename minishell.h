@@ -25,9 +25,25 @@
 # define RED      "\033[31m"
 # define GREEN    "\033[32m"
 
-typedef struct s_constructor	t_constructor;
+// typedef struct s_shell			t_shell; --> està redefinit, innnecessari?
 
-typedef struct s_shell			t_shell;
+typedef enum e_token_type
+{
+	TOKEN_EOF,
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIRECT_IN,
+	TOKEN_REDIRECT_OUT,
+	TOKEN_APPEND,
+	TOKEN_HEREDOC,
+	TOKEN_AND,
+	TOKEN_OR,
+	TOKEN_WILDCARD,
+	TOKEN_DOLLAR,
+	TOKEN_ESCAPE,
+	TOKEN_COMMAND,
+    TOKEN_BUILTIN,
+}	t_token_type;
 
 // Enum representing various token error types in the minishell application
 typedef enum e_token_error
@@ -54,27 +70,7 @@ typedef enum e_token_error
 	ERROR_EOF,                     // End of file reached
 	ERROR_STDIN_CLOSED,            // Standard input closed
 	ERROR_SIGNAL_FAILED            // Signal operation failed
-} t_token_error;
-
-
-typedef enum e_token_type
-{
-	TOKEN_EOF,
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,
-	TOKEN_REDIRECT_OUT,
-	TOKEN_APPEND,
-	TOKEN_HEREDOC,
-	TOKEN_AND,
-	TOKEN_OR,
-	TOKEN_WILDCARD,
-	TOKEN_DOLLAR,
-	TOKEN_ESCAPE,
-	TOKEN_COMMAND,
-    TOKEN_BUILTIN,
-
-}	t_token_type;
+}	t_token_error;
 
 typedef enum e_builtin
 {
@@ -86,8 +82,7 @@ typedef enum e_builtin
     BUILTIN_UNSET,
     BUILTIN_ENV,
     BUILTIN_EXIT
-} t_builtin;
-
+}	t_builtin;
 
 typedef struct s_token
 {
@@ -96,17 +91,24 @@ typedef struct s_token
 	struct s_token	*next;
 }	t_token;
 
-typedef struct s_constructor
-{
-	char			**executable;   	// array de str de ejecutables
-	int				size_exec;			// Elemntos  a ejecutar
-	int				fd;					// File descriptor
-	t_builtin		builtin;			// si es buitlin , que tipo
-	t_token_type	type;				// typo de ejecutable
-	t_token_error	error;				// Estado de error
-	t_shell			*shell;				//enlace a shell
-	t_constructor	*next;				//sigueinte nodo o ejecutable
-}					t_constructor;
+// typedef enum e_node_type {
+// 	CMD,			// Represents a simple command (e.g., ls -l).
+// 	PIPE,			// Represents a pipe (|).
+// 	REDIRECT_IN,	// Handle <, <<.
+// 	REDIRECT_OUT,	// Handle >, >>.
+// 	HEREDOC,
+// 	APPEND
+// }	t_node_type;
+
+typedef struct s_ast {
+	t_token_type	type;
+	char			**args;	// Stores command arguments.
+	char			*file;	// Stores file names for redirections.
+	struct s_ast	*left;	// Represent child nodes for pipes & redirections
+	struct s_ast	*right;	// Represent child nodes for pipes & redirections
+}	t_ast;
+
+typedef struct s_constructor	t_constructor;
 
 typedef struct s_shell
 {
@@ -120,8 +122,19 @@ typedef struct s_shell
 	char			*output;			// Salida de shell
 	int				node_size;
 	t_constructor	*constructor;		// Estructura de ejecución
-}					t_shell;
+}	t_shell;
 
+typedef struct s_constructor
+{
+	char			**executable;   	// array de str de ejecutables
+	int				size_exec;			// Elemntos  a ejecutar
+	int				fd;					// File descriptor
+	t_builtin		builtin;			// si es buitlin , que tipo
+	t_token_type	type;				// typo de ejecutable
+	t_token_error	error;				// Estado de error
+	t_shell			*shell;				//enlace a shell
+	t_constructor	*next;				//sigueinte nodo o ejecutable
+}	t_constructor;
 
 typedef struct s_collector
 {
@@ -129,10 +142,16 @@ typedef struct s_collector
 	struct s_collector	*next;
 }	t_collector;
 
-// parse_lexer.c
+// Function prototypes ///////////////////////////////////////////////////////
+// collector.c
+void	collector_cleanup(t_collector **collector);
+void	collector_append(t_collector **collector, void *ptr);
+void	exit_program(t_collector **collector, char *msg, int exit_type);
+
+// lexer/lexer.c
 t_token	*lexer(const char *input, t_collector **collector, t_token **head);
 
-// parse_lexer_funcs.c
+// lexer/lexer_funcs.c
 int		handle_invalidchars(const char *input, int i);
 void	get_expand_var(const char *input, t_collector **collector, \
 	int *i, t_token **head);
@@ -141,16 +160,11 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 void	get_word(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
-// parse_lexer_funcs_operator.c
+// lexer/lexer_funcs_operator.c
 void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
-// collector.c
-void	collector_cleanup(t_collector **collector);
-void	collector_append(t_collector **collector, void *ptr);
-void	exit_program(t_collector **collector, char *msg, int exit_type);
-
-// tokens.c
+// lexer/tokens.c
 void	token_create(t_collector **collector, t_token_type type, \
 	const char *value, t_token **head);
 t_token	*ft_lasttoken(t_token *lst);
@@ -158,6 +172,11 @@ void	tokens_print(t_token *token);
 void	token_print(t_token *token);
 void	tokens_free(t_token *head);
 
+// parser/parser.c
+t_ast	*parse(t_token *tokens);
+
+// parser/parser_funcs.c // Abstract Syntax Tree (AST)
+void	ast_print(t_ast *root, int depth);
 
 //init functions
 void			start_shell(t_shell *shell);
@@ -230,7 +249,6 @@ void	print_export(t_shell *shell);
 void	print_token_list(t_shell *shell);
 void	print_constructor(t_shell *shell);
 void	print_path(t_shell *shell);
-
 
 //clean functions
 void	clean_shell(t_shell *shell);

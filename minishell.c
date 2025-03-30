@@ -17,7 +17,8 @@ int	main(int argc,char **argv, char **env)
 	t_collector	*collector;
 	t_token		*tokens;
 	const char	*input;
-	t_shell *shell;
+	t_shell		*shell;
+	t_ast		*ast;
 
 	(void)argv;
 	if (argc != 1)
@@ -29,11 +30,14 @@ int	main(int argc,char **argv, char **env)
 		perror("Error al inicializar la shell.\n");
 		exit(1);
 	}
-	input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
+	// input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
+	input = "echo hello | grep h > output.txt";
 	collector = NULL;
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);
 	tokens_print(tokens);
+	ast = parse(tokens);
+	ast_print(ast, 0);
 	collector_cleanup(&collector);
 	// start_shell(shell);
 	return (EXIT_SUCCESS);

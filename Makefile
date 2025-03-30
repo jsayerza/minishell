@@ -5,8 +5,9 @@ INCLUDES		=	-I. -Ilibft
 EXEC_DIR		=	executor
 NAME			=	minishell
 PROG_SRC		=	minishell.c collector.c \
-					lexer/parse_lexer.c lexer/parse_lexer_funcs.c \
-					lexer/parse_lexer_funcs_operator.c lexer/tokens.c 
+					lexer/lexer.c lexer/lexer_funcs.c \
+					lexer/lexer_funcs_operator.c lexer/tokens.c \
+					parser/parser.c parser/parser_funcs.c
 EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \
