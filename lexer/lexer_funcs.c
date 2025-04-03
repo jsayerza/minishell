@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_lexer_funcs.c                                :+:      :+:    :+:   */
+/*   lexer_funcs.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,6 +11,16 @@
 /* ************************************************************************** */
 
 #include "minishell.h"
+
+int	handle_invalidchars(const char *input, int i)
+{
+	// printf("handle_invalidchars in-input[%d]:%c\n", i, input[i]);
+	if (ft_strchr(";\\", input[i]))
+	{
+		return (1);
+	}
+	return (0);
+}
 
 void	get_expand_var(const char *input, t_collector **collector, \
 	int *i, t_token **head)
@@ -28,7 +38,7 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	}
 	var_name = ft_strndup(input + start, *i - start);
 	if (!var_name)
-		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+		exit_program(collector, "Error malloc get value token", EXIT_FAILURE);
 	value = getenv(var_name);
 	free(var_name);
 	var_name = NULL;
@@ -37,7 +47,7 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	else
 		expanded = ft_strdup("");
 	if (!expanded)
-		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+		exit_program(collector, "Error malloc get value token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, expanded, head);
 	free(expanded);
 	expanded = NULL;
@@ -60,41 +70,6 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 	(*i)++;
 	token_create(collector, TOKEN_WORD, quoted, head);
 	free(quoted);
-}
-
-void	get_operator(const char *input, t_collector **collector, \
-	int *i, t_token **head)
-{
-	t_token_type	type;
-	char			op[3];
-
-	op[0] = input[*i];
-	op[1] = '\0';
-	op[2] = '\0';
-	if ((ft_strchr("<>|&", input[*i]) != NULL)
-		&& input[*i + 1] == input[*i])
-	{
-		op[1] = input[*i];
-		(*i)++;
-	}
-	type = TOKEN_PIPE;
-	if ((ft_strcmp(op, ">>") == 0))
-		type = TOKEN_APPEND;
-	else if ((ft_strcmp(op, "<<") == 0))
-		type = TOKEN_HEREDOC;
-	else if (op[0] == '>')
-		type = TOKEN_REDIRECT_OUT;
-	else if (op[0] == '<')
-		type = TOKEN_REDIRECT_IN;
-	else if (op[0] == '*')
-		type = TOKEN_WILDCARD;
-	else if (op[0] == '$')
-		type = TOKEN_DOLLAR;
-	else if ((ft_strcmp(op, "||") == 0))
-		type = TOKEN_OR;
-	else if ((ft_strcmp(op, "&&") == 0))
-		type = TOKEN_AND;
-	token_create(collector, type, op, head);
 }
 
 void	get_word(const char *input, t_collector **collector, \
