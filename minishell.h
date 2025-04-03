@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/23 16:04:48 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/03 20:17:02 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,6 +115,7 @@ typedef struct s_shell
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
 	int				interactive;		// 1 si es interactivo, 0 si es un script
+	char			*home;				// Directorio home
 	char			*pwd;				// Directorio actual
 	char			*oldpwd;			// Directorio anterior
 	char			*output;			// Salida de shell
@@ -158,7 +159,7 @@ void	tokens_free(t_token *head);
 
 //init functions
 void	start_shell(t_shell *shell);
-t_shell			*init_shell(t_shell *shell, char **env);
+t_shell	*init_shell(t_shell *shell, char **env);
 t_constructor	*init_constructor(void);
 
 //void	construct_shell_data(t_shell *shell, char **env);
@@ -205,6 +206,9 @@ void	copy_declare(char *export, char *declare, int *i);
 void	copy_temp(char *export, char *temp, int *i);
 void	update_export_var(t_constructor *node, char *new_var, int index_export);
 void	path(t_shell *shell);
+char	*get_home(t_shell *shell);
+void	refresh_directori(t_shell *shell, char *pwd);
+void	cd(t_constructor *node);
 
 /* Función principal exportada */
 void path(t_shell *shell);

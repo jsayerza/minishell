@@ -25,4 +25,6 @@ void	token_builtins(t_constructor *node)
 		echo(node);
 	if (node->builtin == BUILTIN_UNSET)
 		unset(node);
+	if (node->builtin == BUILTIN_CD)
+		cd(node);
 }

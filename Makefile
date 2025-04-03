@@ -28,6 +28,8 @@ EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/path.c \
 			$(EXEC_DIR)/path_utils00.c \
 			$(EXEC_DIR)/path_utils01.c \
+			$(EXEC_DIR)/cd.c \
+			$(EXEC_DIR)/cd_utils.c \
 			$(EXEC_DIR)/clean_shell.c
 
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
