@@ -53,6 +53,16 @@ void	cd_oldpwd(t_constructor *node)
 	}
 }
 
+void	cd_directori(t_constructor *node)
+{
+	if (chdir(node->executable[1]) == -1)
+	{
+		node->error = ERROR_NOT_ACCESS;
+		return ;
+	}
+	refresh_directori(node->shell, node->executable[1]);
+}
+
 void	cd(t_constructor *node)
 {
 	if (node->size_exec == 1)
@@ -60,6 +70,6 @@ void	cd(t_constructor *node)
 	else if (node->size_exec == 2
 		&& ft_strncmp(node->executable[1], "-", 1) == 0)
 		cd_oldpwd(node);
-	//else
-	//	cd_new(node); // Add logic for new directory handling
+	else
+		cd_directori(node);
 }

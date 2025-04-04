@@ -32,19 +32,6 @@ char	*extract_home_path(const char *env_entry)
 	return (home);
 }
 
-char	*get_home(t_shell *shell)
-{
-	int		i;
-
-	i = 0;
-	while (shell->env[i])
-	{
-		if (ft_strncmp("HOME=", shell->env[i], 5) == 0)
-			return (extract_home_path(shell->env[i]));
-		i++;
-	}
-	return (NULL);
-}
 
 void	refresh_directori(t_shell *shell, char *pwd)
 {

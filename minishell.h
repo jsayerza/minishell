@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/03 20:25:34 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/04 20:37:31 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -230,7 +230,13 @@ void	copy_temp(char *export, char *temp, int *i);
 void	update_export_var(t_constructor *node, char *new_var, int index_export);
 void	path(t_shell *shell);
 char	*get_home(t_shell *shell);
+char	*get_pwd(t_shell *shell);
+char	*get_oldpwd(t_shell *shell);
+char	*extract_home_path(const char *env_entry);
+char	*extract_pwd_path(const char *env_entry);
+char	*extract_oldpwd_path(const char *env_entry);
 void	refresh_directori(t_shell *shell, char *pwd);
+void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 
 /* Función principal exportada */
