@@ -12,59 +12,102 @@
 
 #include "minishell.h"
 
+static int	is_token_invalid(t_token *curr)
+{
+	if ((curr->type == TOKEN_PIPE && (!curr->next ||
+			curr->next->type == TOKEN_PIPE)) ||
+		(curr->type >= TOKEN_REDIRECT_IN &&
+			(!curr->next || curr->next->type >= TOKEN_REDIRECT_IN)))
+	{
+		printf("Syntax error near unexpected token `%s`\n", curr->value);
+		return (1);
+	}
+	return (0);
+}
+
 static int	tokens_validate(t_token *tokens)
 {
-	t_token	*curr = tokens;
+	t_token	*curr;
 
+	curr = tokens;
 	while (curr)
 	{
-		if ((curr->type == TOKEN_PIPE && (!curr->next ||
-			 curr->next->type == TOKEN_PIPE)) ||
-			(curr->type >= TOKEN_REDIRECT_IN &&
-				(!curr->next || curr->next->type >= TOKEN_REDIRECT_IN)))
-		{
-			printf("Syntax error near unexpected token `%s`\n", curr->value);
-			return (false);
-		}
+		if (is_token_invalid(curr))
+			return (0);
 		curr = curr->next;
 	}
-	return (true);
+	return (1);
+}
+
+static t_ast	*create_redirect_node(t_token *curr, t_token *next, t_ast *cmd)
+{
+	t_ast	*redir;
+
+	redir = malloc(sizeof(t_ast));
+	if (!redir)
+		return (NULL);
+	redir->type = curr->type;
+	redir->file = strdup(next->value);
+	redir->left = cmd;
+	redir->right = NULL;
+	return (redir);
 }
 
 static t_ast	*parse_redirection(t_token **tokens, t_ast *cmd)
 {
-	t_token	*curr = *tokens;
+	t_token	*curr;
+	t_ast	*redir;
 
-	while (curr && curr->type >= TOKEN_REDIRECT_IN)
+	while (*tokens && (*tokens)->type >= TOKEN_REDIRECT_IN)
 	{
+		curr = *tokens;
 		*tokens = curr->next;
 		if (!(*tokens) || (*tokens)->type != TOKEN_WORD)
 		{
 			printf("Syntax error: expected file after `%s`\n", curr->value);
 			return (NULL);
 		}
-		t_ast *redir = malloc(sizeof(t_ast));
-		redir->type = curr->type;
-		redir->file = strdup((*tokens)->value);
-		redir->left = cmd;
-		redir->right = NULL;
+		redir = create_redirect_node(curr, *tokens, cmd);
+		if (!redir)
+			return (NULL);
 		cmd = redir;
 		*tokens = (*tokens)->next;
-		curr = *tokens;
 	}
 	return (cmd);
 }
 
+static t_ast	*init_command_node(void)
+{
+	t_ast	*node;
+
+	node = malloc(sizeof(t_ast));
+	if (!node)
+		return (NULL);
+	node->type = TOKEN_COMMAND;
+	node->args = malloc(sizeof(char *) * 256);
+	if (!node->args)
+	{
+		free(node);
+		return (NULL);
+	}
+	return (node);
+}
+
 static t_ast	*parse_command(t_token **tokens)
 {
-	t_ast	*node = malloc(sizeof(t_ast));
-	node->type = TOKEN_COMMAND;
-	node->args = malloc(sizeof(char *) * 10); // Adjust dynamically
-	int i = 0;
+	t_ast	*node;
+	int		i;
 
+	if (!(*tokens) || (*tokens)->type != TOKEN_WORD)
+		return (NULL);
+	node = init_command_node();
+	if (!node)
+		return (NULL);
+	i = 0;
 	while (*tokens && (*tokens)->type == TOKEN_WORD)
 	{
-		node->args[i++] = strdup((*tokens)->value);
+		node->args[i] = strdup((*tokens)->value);
+		i++;
 		*tokens = (*tokens)->next;
 	}
 	node->args[i] = NULL;
@@ -73,15 +116,27 @@ static t_ast	*parse_command(t_token **tokens)
 
 static t_ast	*parse_pipeline(t_token **tokens)
 {
-	t_ast	*left = parse_command(tokens);
-	t_token	*curr = *tokens;
+	t_ast	*left;
+	t_ast	*right;
+	t_ast	*node;
+	t_token	*curr;
 
+	left = parse_command(tokens);
+	if (!left)
+		return (NULL);
+	curr = *tokens;
 	while (curr && curr->type == TOKEN_PIPE)
 	{
 		*tokens = curr->next;
-		t_ast *right = parse_command(tokens);
-		// TODO: usar collector x fer malloc
-		t_ast *node = malloc(sizeof(t_ast));
+		right = parse_pipeline(tokens);
+		if (!right)
+		{
+			printf("Syntax error: unexpected token after `|`\n");
+			return (NULL);
+		}
+		node = malloc(sizeof(t_ast));
+		if (!node)
+			return (NULL);
 		node->type = TOKEN_PIPE;
 		node->left = left;
 		node->right = right;

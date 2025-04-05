@@ -24,6 +24,12 @@
 # define RESET    "\033[0m"
 # define RED      "\033[31m"
 # define GREEN    "\033[32m"
+# define YELLOW   "\033[33m"
+# define BLUE     "\033[34m"
+# define MAGENTA  "\033[35m"
+# define CYAN     "\033[36m"
+# define BOLD     "\033[1m"
+
 
 // typedef struct s_shell			t_shell; --> està redefinit, innnecessari?
 
@@ -90,15 +96,6 @@ typedef struct s_token
 	char			*value;
 	struct s_token	*next;
 }	t_token;
-
-// typedef enum e_node_type {
-// 	CMD,			// Represents a simple command (e.g., ls -l).
-// 	PIPE,			// Represents a pipe (|).
-// 	REDIRECT_IN,	// Handle <, <<.
-// 	REDIRECT_OUT,	// Handle >, >>.
-// 	HEREDOC,
-// 	APPEND
-// }	t_node_type;
 
 typedef struct s_ast {
 	t_token_type	type;
@@ -172,10 +169,10 @@ void	tokens_print(t_token *token);
 void	token_print(t_token *token);
 void	tokens_free(t_token *head);
 
-// parser/parser.c
+// parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parse(t_token *tokens);
 
-// parser/parser_funcs.c // Abstract Syntax Tree (AST)
+// parser/parser_ast_print.c
 void	ast_print(t_ast *root, int depth);
 
 //init functions
