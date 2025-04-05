@@ -30,13 +30,15 @@ int	main(int argc,char **argv, char **env)
 		perror("Error al inicializar la shell.\n");
 		exit(1);
 	}
-	input = "echo hello | grep h > output.txt";
 	collector = NULL;
-	tokens = build_test_tokens();
+	//// Usarem build_test_tokens() per entrar tokens manualment dins "token"
+	// tokens = build_test_tokens();
+	//// Usarem aquest imput temporalment per simular l'entrada des de shell
+	input = "echo hello | grep h > output.txt";
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);
 	tokens_print(tokens);
-	ast = parse(tokens);
+	ast = parser(&collector, tokens);
 	if (ast)
 	{
 		printf("\n=== AST ===\n");

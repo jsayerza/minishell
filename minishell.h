@@ -171,7 +171,7 @@ void	token_print(t_token *token);
 void	tokens_free(t_token *head);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
-t_ast	*parse(t_token *tokens);
+t_ast	*parser(t_collector **collector, t_token *tokens);
 
 // parser/parser_test.c
 t_token	*build_test_tokens(void);
