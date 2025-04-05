@@ -50,6 +50,7 @@ static t_ast	*create_redirect_node(t_token *curr, t_token *next, t_ast *cmd)
 	redir->file = strdup(next->value);
 	redir->left = cmd;
 	redir->right = NULL;
+	redir->args = NULL;
 	return (redir);
 }
 
@@ -84,6 +85,9 @@ static t_ast	*init_command_node(void)
 	if (!node)
 		return (NULL);
 	node->type = TOKEN_COMMAND;
+	node->left = NULL;
+	node->right = NULL;
+	node->file = NULL;
 	node->args = malloc(sizeof(char *) * 256);
 	if (!node->args)
 	{

@@ -41,7 +41,8 @@ static void	ast_print_type(t_ast *root)
 	if (root->type == TOKEN_COMMAND)
 	{
 		printf(BOLD GREEN "CMD:" RESET);
-		ast_print_args(root->args);
+		if (root->args)
+			ast_print_args(root->args);
 		printf("\n");
 	}
 	else if (root->type == TOKEN_PIPE)

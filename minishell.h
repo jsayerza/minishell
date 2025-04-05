@@ -173,6 +173,9 @@ void	tokens_free(t_token *head);
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parse(t_token *tokens);
 
+// parser/parser_test.c
+t_token	*build_test_tokens(void);
+
 // parser/parser_ast_print.c
 void	ast_print(t_ast *root, int depth);
 
