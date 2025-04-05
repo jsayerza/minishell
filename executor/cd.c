@@ -14,21 +14,12 @@
 
 void	cd_home(t_constructor *node)
 {
-	char	*pwd;
-	int		i;
+	char	*home;
 
-	pwd = malloc((ft_strlen(node->shell->home) + 1) * sizeof(char));
-	if (!pwd)
-		return ;
-	i = 0;
-	while (node->shell->home[i])
-	{
-		pwd[i] = node->shell->home[i];
-		i++;
-	}
-	pwd[i] = '\0';
-	chdir(pwd);
-	refresh_directori(node->shell, pwd);
+	home = get_home(node->shell);
+	printf("%s\n", home);
+	chdir(home);
+	refresh_directori(node->shell, home, 1);
 }
 
 void	cd_oldpwd(t_constructor *node)
@@ -45,7 +36,7 @@ void	cd_oldpwd(t_constructor *node)
 		return ;
 	strcpy(pwd, node->shell->oldpwd);
 	if (chdir(pwd) == 0)
-		refresh_directori(node->shell, pwd);
+		refresh_directori(node->shell, pwd, 1);
 	else
 	{
 		printf("cd: %s: No such file or directory\n", pwd);
@@ -60,7 +51,7 @@ void	cd_directori(t_constructor *node)
 		node->error = ERROR_NOT_ACCESS;
 		return ;
 	}
-	refresh_directori(node->shell, node->executable[1]);
+	refresh_directori(node->shell, node->executable[1], 0);
 }
 
 void	cd(t_constructor *node)

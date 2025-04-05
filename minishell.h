@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/04 20:37:31 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/05 17:16:18 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -235,7 +235,7 @@ char	*get_oldpwd(t_shell *shell);
 char	*extract_home_path(const char *env_entry);
 char	*extract_pwd_path(const char *env_entry);
 char	*extract_oldpwd_path(const char *env_entry);
-void	refresh_directori(t_shell *shell, char *pwd);
+void	refresh_directori(t_shell *shell, char *pwd, int type);
 void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 
