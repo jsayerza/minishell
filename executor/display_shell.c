@@ -22,6 +22,8 @@ void	display_shell(t_shell *shell)
 		current_node->shell = shell;
 		if (current_node->type == TOKEN_BUILTIN)
 			token_builtins(current_node);
+		if (current_node->type == TOKEN_COMMAND)
+			token_commands(current_node);
 		current_node = current_node->next;
 	}
 }

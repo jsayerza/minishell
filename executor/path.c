@@ -84,7 +84,7 @@ void	path(t_shell *shell)
 			shell->paths = NULL;
 		return ;
 	}
-	path = find_path(shell->env);
+	path = find_path(shell);
 	if (!path || len_path(path) == 0)
 	{
 		free_path_array(path);
@@ -97,6 +97,4 @@ void	path(t_shell *shell)
 		return ;
 	}
 	shell->paths = copy_path(path);
-	print_path(shell);
-	free_path_array(path);
 }

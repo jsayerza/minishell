@@ -41,7 +41,6 @@ t_shell	*init_shell(t_shell *shell, char **env)
 	env_to_export(shell);
 	create_export(shell);
 	path(shell);
-	shell->paths = NULL;
 	shell->last_exit = 0;
 	shell->interactive = 1;
 	shell->home = get_home(shell);
