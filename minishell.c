@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/03/23 16:17:34 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/03 20:31:59 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,11 @@
 
 int	main(int argc,char **argv, char **env)
 {
-	t_collector	*collector;
-	t_token		*tokens;
-	const char	*input;
+	//t_collector	*collector;
+	//t_token		*tokens;
+	//const char	*input;
 	t_shell		*shell;
-	t_ast		*ast;
+	//t_ast		*ast;
 
 	(void)argv;
 	if (argc != 1)
@@ -31,6 +31,7 @@ int	main(int argc,char **argv, char **env)
 		exit(1);
 	}
 	// input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
+	/*
 	input = "echo hello | grep h > output.txt";
 	collector = NULL;
 	tokens = NULL;
@@ -39,6 +40,7 @@ int	main(int argc,char **argv, char **env)
 	ast = parse(tokens);
 	ast_print(ast, 0);
 	collector_cleanup(&collector);
-	// start_shell(shell);
+	*/
+	start_shell(shell);
 	return (EXIT_SUCCESS);
 }
