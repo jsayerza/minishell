@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/05 17:16:18 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/05 18:38:28 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,6 +114,7 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
+	char			*path;			// Lista de paths donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
 	int				interactive;		// 1 si es interactivo, 0 si es un script
@@ -239,12 +240,15 @@ void	refresh_directori(t_shell *shell, char *pwd, int type);
 void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 
+//Funciones comandos
+void	token_commands(t_constructor *node);
+
 /* Función principal exportada */
 void path(t_shell *shell);
 
 /* Funciones estáticas internas */
 int		len_path(char **path);
-char	**find_path(char **env);
+char	**find_path(t_shell *shell);
 char	**copy_path(char **path);
 int		count_segments(char *path_str);
 int		allocate_result(char ***result, int count);
