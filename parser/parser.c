@@ -52,7 +52,11 @@ static t_ast	*create_redirect_node(t_collector **collector, \
 		EXIT_FAILURE);
 	collector_append(collector, redir);
 	redir->type = curr->type;
-	redir->file = strdup(next->value);
+	redir->file = ft_strdup(next->value);
+	if (!redir->file)
+		exit_program(collector, \
+			"Error malloc parser redirect node", EXIT_FAILURE);
+	collector_append(collector, redir->file);
 	redir->left = cmd;
 	redir->right = NULL;
 	redir->args = NULL;
@@ -124,8 +128,11 @@ static t_ast	*parse_command(t_collector **collector, t_token **tokens)
 	i = 0;
 	while (*tokens && (*tokens)->type == TOKEN_WORD)
 	{
-		//TODO: canviar strdup x ftstrdup
-		node->args[i] = strdup((*tokens)->value);
+		node->args[i] = ft_strdup((*tokens)->value);
+		if (!node->args[i])
+			exit_program(collector, \
+				"Error malloc parser command args node", EXIT_FAILURE);
+		collector_append(collector, node->args[i]);
 		i++;
 		*tokens = (*tokens)->next;
 	}
