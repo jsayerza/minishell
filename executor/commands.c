@@ -45,16 +45,35 @@ char	*acces_path(t_constructor *node)
 	return (NULL);
 }
 
-void	token_commands(t_constructor *node)
+void token_commands(t_constructor *node)
 {
-	char	*path;
+	pid_t pid;
+	int status;
+	char *path;
 
 	path = acces_path(node);
-	if (path)
+	if (!path)
+	{
+		printf("Command not found\n");
+		return;
+	}
+	pid = fork();
+	if (pid == -1)
+	{
+		perror("Error al crear el proceso hijo");
+		free(path);
+		return;
+	}
+	if (pid == 0)
 	{
 		execve(path, node->executable, node->shell->env);
+		perror("Error al ejecutar el comando");
 		free(path);
+		exit(1);
 	}
 	else
-		printf("Command not found\n");
+	{
+		waitpid(pid, &status, 0);
+		free(path);
+	}
 }

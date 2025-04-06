@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/05 18:38:28 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/06 11:50:22 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 # define MINISHELL_H
 
 # include <unistd.h>
+#include <sys/wait.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdbool.h>
@@ -114,7 +115,7 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
-	char			*path;			// Lista de paths donde buscar ejecutables
+	char			*path;				// Lista de paths donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
 	int				interactive;		// 1 si es interactivo, 0 si es un script
@@ -130,7 +131,8 @@ typedef struct s_constructor
 {
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
-	int				fd;					// File descriptor
+	int				read_fd;		// File descriptor
+	int				write_fd;		// File descriptor
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
 	t_token_error	error;				// Estado de error
