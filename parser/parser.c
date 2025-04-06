@@ -45,17 +45,15 @@ static t_ast	*create_redirect_node(t_collector **collector, \
 	t_ast	*redir;
 
 	redir = malloc(sizeof(t_ast));
-	// if (!redir)
-	// 	return (NULL);
 	if (!redir)
-	exit_program(collector, "Error malloc parser redirect node", \
-		EXIT_FAILURE);
+		exit_program(collector, \
+			"Error malloc parser redirect node", EXIT_FAILURE);
 	collector_append(collector, redir);
 	redir->type = curr->type;
 	redir->file = ft_strdup(next->value);
 	if (!redir->file)
 		exit_program(collector, \
-			"Error malloc parser redirect node", EXIT_FAILURE);
+			"Error malloc parser redirect file node", EXIT_FAILURE);
 	collector_append(collector, redir->file);
 	redir->left = cmd;
 	redir->right = NULL;
@@ -92,8 +90,6 @@ static t_ast	*init_command_node(t_collector **collector)
 	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
-	// if (!node)
-	// 	return (NULL);
 	if (!node)
 		exit_program(collector, "Error malloc parser command node", \
 			EXIT_FAILURE);
@@ -161,10 +157,9 @@ static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens)
 			return (NULL);
 		}
 		node = malloc(sizeof(t_ast));
-		// if (!node)
-		// 	return (NULL);
 		if (!node)
-			exit_program(collector, "Error malloc parser node", EXIT_FAILURE);
+			exit_program(collector, \
+				"Error malloc parser command node", EXIT_FAILURE);
 		collector_append(collector, node);
 		node->type = TOKEN_PIPE;
 		node->left = left;
