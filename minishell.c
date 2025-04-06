@@ -14,11 +14,11 @@
 
 int	main(int argc,char **argv, char **env)
 {
-	//t_collector	*collector;
-	//t_token		*tokens;
-	//const char	*input;
+	t_collector	*collector;
+	t_token		*tokens;
+	const char	*input;
 	t_shell		*shell;
-	//t_ast		*ast;
+	t_ast		*ast;
 
 	(void)argv;
 	if (argc != 1)
@@ -30,17 +30,23 @@ int	main(int argc,char **argv, char **env)
 		perror("Error al inicializar la shell.\n");
 		exit(1);
 	}
-	// input = " % echo \"$USER\" 'hello world' | wc -l >> output.txt";
-	/*
-	input = "echo hello | grep h > output.txt";
 	collector = NULL;
+	//// Usarem build_test_tokens() per entrar tokens manualment dins "token"
+	// tokens = build_test_tokens();
+	//// Usarem aquest imput temporalment per simular l'entrada des de shell
+	input = "echo hello | grep h > output.txt";
 	tokens = NULL;
 	tokens = lexer(input, &collector, &tokens);
 	tokens_print(tokens);
-	ast = parse(tokens);
-	ast_print(ast, 0);
+	ast = parser(&collector, tokens);
+	if (ast)
+	{
+		printf("\n=== AST ===\n");
+		ast_print(ast, 0);
+	}
+	else
+		printf("Parse failed.\n");
+	// start_shell(shell);
 	collector_cleanup(&collector);
-	*/
-	start_shell(shell);
 	return (EXIT_SUCCESS);
 }
