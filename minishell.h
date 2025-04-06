@@ -128,8 +128,9 @@ typedef struct s_constructor
 {
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
-	int				read_fd;		// File descriptor
-	int				write_fd;		// File descriptor
+	int				fd[2];		// File descriptor
+	int				pipe_out;		// File descriptor
+	int				pipe_in;		// File descriptor
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
 	t_token_error	error;				// Estado de error

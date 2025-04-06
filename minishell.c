@@ -41,12 +41,12 @@ int	main(int argc,char **argv, char **env)
 	ast = parser(&collector, tokens);
 	if (ast)
 	{
-		printf("\n=== AST ===\n");
+		printf("\n=== AST ===\n/");
 		ast_print(ast, 0);
 	}
-	else
+	else//////
 		printf("Parse failed.\n");
-	// start_shell(shell);
+	start_shell(shell);
 	collector_cleanup(&collector);
-	return (EXIT_SUCCESS);
+	return (EXIT_SUCCESS);///////
 }
