@@ -15,8 +15,8 @@ t_constructor *create_single_constructor_node(int node_number)
     new_node->type = TOKEN_COMMAND;
     new_node->error = NO_ERROR;
     new_node->next = NULL;
-    new_node->pipe_in = -1;  // Initialize pipe_in to 0
-    new_node->pipe_out = -1; // Initialize pipe_out to 0
+    new_node->pipe_in = 0;  // Initialize pipe_in to 0
+    new_node->pipe_out = 0; // Initialize pipe_out to 0
     
     printf("\n----- Nodo %d -----\n", node_number);
     printf("Ingrese el tipo de token (0-13):\n");

@@ -14,7 +14,7 @@
 # define MINISHELL_H
 
 # include <unistd.h>
-#include <sys/wait.h>
+# include <sys/wait.h>
 # include <stdio.h>
 # include <stdlib.h>
 # include <stdbool.h>
@@ -128,9 +128,9 @@ typedef struct s_constructor
 {
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
-	int				fd[2];		// File descriptor
-	int				pipe_out;		// File descriptor
-	int				pipe_in;		// File descriptor
+	int				fd[2];				// File descriptor
+	int				pipe_out;			// File descriptor
+	int				pipe_in;			// File descriptor
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
 	t_token_error	error;				// Estado de error
