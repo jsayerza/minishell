@@ -47,9 +47,9 @@ char	*acces_path(t_constructor *node)
 
 void execute_command(t_constructor *node)
 {
-    pid_t pid;
-    int status;
-    char *path;
+    pid_t   pid;
+    int     status;
+    char   *path;
 
     path = acces_path(node);
     if (!path)
@@ -82,15 +82,14 @@ void execute_command(t_constructor *node)
     }
 }
 
-
 void token_commands(t_constructor *node)
 {
     if (node->pipe_in == 0 && node->pipe_out == 0)
         execute_command(node);
     //else if (node->pipe_in == 0 && node->pipe_out != 0)
-    //    execute_command_first(node);
-    //else if (node->pipe_in != 0 && node->pipe_out != 0)
-    //    execute_command_middle(node);
+    //  execute_fisrt_command(node);
+    // else if (node->pipe_in != 0 && node->pipe_out != 0)
+    //   execute_command_middle(node);
     //else if (node->pipe_in != 0 && node->pipe_out == 0)
-    //    execute_command_last(node);
+    //  execute_last_command(node);
 }
