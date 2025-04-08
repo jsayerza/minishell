@@ -1,5 +1,26 @@
 #include "../minishell.h"
 
+#include "../minishell.h"
+// Función auxiliar para añadir nodos a la lista
+void add_constructor_node(t_shell *shell, t_constructor *new_node)
+{
+    t_constructor *current;
+
+    if (!shell->constructor)
+    {
+        shell->constructor = new_node;
+        shell->node_size = 1;
+        return;
+    }
+
+    current = shell->constructor;
+    while (current->next)
+        current = current->next;
+
+    current->next = new_node;
+    new_node->prev = current;
+    shell->node_size++;
+}
 t_constructor *create_single_constructor_node(int node_number)
 {
     t_constructor *new_node = (t_constructor *)malloc(sizeof(t_constructor));
@@ -15,9 +36,10 @@ t_constructor *create_single_constructor_node(int node_number)
     new_node->type = TOKEN_COMMAND;
     new_node->error = NO_ERROR;
     new_node->next = NULL;
+    new_node->prev = NULL;  // Inicializar prev a NULL para lista doblemente enlazada
     new_node->pipe_in = 0;  // Initialize pipe_in to 0
     new_node->pipe_out = 0; // Initialize pipe_out to 0
-    
+
     printf("\n----- Nodo %d -----\n", node_number);
     printf("Ingrese el tipo de token (0-13):\n");
     printf("0: TOKEN_EOF\n1: TOKEN_WORD\n2: TOKEN_PIPE\n3: TOKEN_REDIRECT_IN\n");
@@ -35,7 +57,7 @@ t_constructor *create_single_constructor_node(int node_number)
     new_node->type = (t_token_type)token_type;
     printf("Token type entered: %d\n", token_type); // Depuración
     printf("Node type assigned: %d\n", new_node->type); // Depuración
-    
+
     if (new_node->type == TOKEN_BUILTIN)
     {
         printf("Ingrese el tipo de builtin (0-7):\n");
@@ -53,7 +75,7 @@ t_constructor *create_single_constructor_node(int node_number)
         printf("Builtin type entered: %d\n", builtin); // Depuración
         printf("Node builtin assigned: %d\n", new_node->builtin); // Depuración
     }
-    
+
     // Get pipe_in value
     printf("Ingrese el valor de pipe_in (0 si no existe): ");
     int pipe_in;
@@ -66,7 +88,7 @@ t_constructor *create_single_constructor_node(int node_number)
     getchar();
     new_node->pipe_in = pipe_in;
     printf("Pipe_in value entered: %d\n", pipe_in); // Depuración
-    
+
     // Get pipe_out value
     printf("Ingrese el valor de pipe_out (0 si no existe): ");
     int pipe_out;
@@ -79,7 +101,7 @@ t_constructor *create_single_constructor_node(int node_number)
     getchar();
     new_node->pipe_out = pipe_out;
     printf("Pipe_out value entered: %d\n", pipe_out); // Depuración
-    
+
     printf("¿Cuántos ejecutables desea ingresar? ");
     int executable_count;
     if (scanf("%d", &executable_count) != 1 || executable_count < 0)
@@ -166,9 +188,11 @@ t_constructor *fill_constructor_manually(t_shell *shell)
         else
         {
             tail->next = new_node;
+            new_node->prev = tail;  // Establecer el puntero prev al nodo anterior
             tail = new_node;
         }
     }
 
     return head;
 }
+

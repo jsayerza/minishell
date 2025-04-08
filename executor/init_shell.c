@@ -28,6 +28,7 @@ t_constructor	*init_constructor(void)
 	new->error = NO_ERROR;
 	new->shell = NULL;
 	new->next = NULL;
+	new->prev = NULL;
 	return (new);
 }
 

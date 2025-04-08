@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/06 11:50:22 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/08 18:04:10 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -136,6 +136,7 @@ typedef struct s_constructor
 	t_token_error	error;				// Estado de error
 	t_shell			*shell;				//enlace a shell
 	t_constructor	*next;				//sigueinte nodo o ejecutable
+	t_constructor	*prev;				//sigueinte nodo o ejecutable
 }	t_constructor;
 
 typedef struct s_collector

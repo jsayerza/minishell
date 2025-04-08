@@ -12,10 +12,27 @@
 
 #include "../minishell.h"
 
+void	assign_pipes(t_shell *shell)
+{
+	t_constructor	*current;
+
+	current = shell->constructor;
+	while (current)
+	{
+		if (current->pipe_out == 1)
+		{
+			pipe(current->fd);
+			printf("Creacion de pipe\n");
+		}
+		current = current->next;
+	}
+}
+
 void	display_shell(t_shell *shell)
 {
 	t_constructor	*current_node;
 
+	assign_pipes(shell);
 	current_node = shell->constructor;
 	while (current_node)
 	{
