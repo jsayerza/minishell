@@ -144,6 +144,9 @@ typedef struct s_collector
 }	t_collector;
 
 // Function prototypes ///////////////////////////////////////////////////////
+// utils.c
+void    freer(char *ptr);
+
 // collector.c
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
@@ -176,11 +179,19 @@ void	tokens_free(t_token *head);
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens);
 
+// parser/parser_funcs.c
+t_ast	*parse_redirection(t_collector **collector, \
+	t_token **tokens, t_ast *cmd);
+t_ast	*parse_command(t_collector **collector, t_token **tokens);
+
 // parser/parser_test.c
 t_token	*build_test_tokens(void);
 
 // parser/parser_ast_print.c
 void	ast_print(t_ast *root, int depth);
+
+// parser/parser_utils.c
+int	tokens_validate(t_token *tokens);
 
 //init functions
 void	start_shell(t_shell *shell);

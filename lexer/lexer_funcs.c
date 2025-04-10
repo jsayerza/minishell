@@ -14,7 +14,6 @@
 
 int	handle_invalidchars(const char *input, int i)
 {
-	// printf("handle_invalidchars in-input[%d]:%c\n", i, input[i]);
 	if (ft_strchr(";\\", input[i]))
 	{
 		return (1);
@@ -40,8 +39,7 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	if (!var_name)
 		exit_program(collector, "Error malloc get value token", EXIT_FAILURE);
 	value = getenv(var_name);
-	free(var_name);
-	var_name = NULL;
+	freer(var_name);
 	if (value)
 		expanded = ft_strdup(value);
 	else
@@ -49,8 +47,7 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	if (!expanded)
 		exit_program(collector, "Error malloc get value token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, expanded, head);
-	free(expanded);
-	expanded = NULL;
+	freer(expanded);
 }
 
 void	get_quoted_str(const char *input, t_collector **collector, \
@@ -66,7 +63,8 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 		(*i)++;
 	quoted = ft_strndup(input + start, *i - start);
 	if (!quoted)
-		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+		exit_program(collector, \
+			"Error malloc get value for token", EXIT_FAILURE);
 	(*i)++;
 	token_create(collector, TOKEN_WORD, quoted, head);
 	free(quoted);
@@ -85,7 +83,8 @@ void	get_word(const char *input, t_collector **collector, \
 	value = ft_strndup(input + istart, *i - istart);
 	printf("get_word-value:%s\n", value);
 	if (!value)
-		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+		exit_program(collector, \
+			"Error malloc get value for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, value, head);
 	free(value);
 }
