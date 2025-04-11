@@ -19,6 +19,7 @@ int	main(int argc, char **argv, char **env)
 	const char	*input;
 	t_shell		*shell;
 	t_ast		*ast;
+	t_constructor	*constructor;
 
 	(void)argv;
 	if (argc != 1)
@@ -46,6 +47,8 @@ int	main(int argc, char **argv, char **env)
 	}
 	else
 		printf("Parse failed.\n");
+	constructor = ast_to_constructor(&collector, ast, shell);
+	constructor_print(constructor);
 	// start_shell(shell);
 	collector_cleanup(&collector);
 	return (EXIT_SUCCESS);

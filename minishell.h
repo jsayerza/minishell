@@ -127,8 +127,8 @@ typedef struct s_constructor
 {
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
-	int				read_fd;		// File descriptor
-	int				write_fd;		// File descriptor
+	int				read_fd;			// File descriptor
+	int				write_fd;			// File descriptor
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
 	t_token_error	error;				// Estado de error
@@ -191,6 +191,13 @@ void	ast_print(t_ast *root, int depth);
 
 // parser/parser_utils.c
 int	tokens_validate(t_token *tokens);
+
+// conversor/conversor.c
+t_constructor	*ast_to_constructor(t_collector **collector, \
+	t_ast *ast, t_shell *shell);
+
+// conversor/conversor_constructor_print.c
+void	constructor_print(t_constructor *list);
 
 //init functions
 void	start_shell(t_shell *shell);
