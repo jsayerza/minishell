@@ -71,12 +71,7 @@ static t_ast	*init_command_node(t_collector **collector)
 	node->left = NULL;
 	node->right = NULL;
 	node->file = NULL;
-	node->args = malloc(sizeof(char *) * 256);
-	// if (!node->args)
-	// {
-	// 	free(node);
-	// 	return (NULL);
-	// }
+	node->args = malloc(sizeof(char *) * MAX_CMD_ARGS);
 	if (!node->args)
 		exit_program(collector, "Error malloc parser command node args", \
 			EXIT_FAILURE);

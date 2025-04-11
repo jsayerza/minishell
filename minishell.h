@@ -31,8 +31,7 @@
 # define CYAN     "\033[36m"
 # define BOLD     "\033[1m"
 
-
-// typedef struct s_shell			t_shell; --> està redefinit, innnecessari?
+# define MAX_CMD_ARGS 256	//Permet fins 256 args per a un command
 
 typedef enum e_token_type
 {

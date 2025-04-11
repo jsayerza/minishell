@@ -14,10 +14,10 @@
 
 static int	is_token_invalid(t_token *curr)
 {
-	if ((curr->type == TOKEN_PIPE && (!curr->next ||
-			curr->next->type == TOKEN_PIPE)) ||
-		(curr->type >= TOKEN_REDIRECT_IN &&
-			(!curr->next || curr->next->type >= TOKEN_REDIRECT_IN)))
+	if ((curr->type == TOKEN_PIPE
+			&& (!curr->next || curr->next->type == TOKEN_PIPE))
+		|| (curr->type >= TOKEN_REDIRECT_IN
+			&& (!curr->next || curr->next->type >= TOKEN_REDIRECT_IN)))
 	{
 		printf("Syntax error near unexpected token `%s`\n", curr->value);
 		return (1);

@@ -12,19 +12,26 @@
 
 #include "minishell.h"
 
-// static void	parse_pipeline_init(t_ast *left, t_ast *right, t_ast *node)
-// {
-// 	node->type = TOKEN_PIPE;
-// 	node->left = left;
-// 	node->right = right;
-// 	left = node;
-// }
+static void	parse_pipeline_add_node(t_collector **collector, \
+	t_ast **left, t_ast *right)
+{
+	t_ast	*node;
+
+	node = malloc(sizeof(t_ast));
+	if (!node)
+		exit_program(collector, \
+			"Error malloc parser command node", EXIT_FAILURE);
+	collector_append(collector, node);
+	node->type = TOKEN_PIPE;
+	node->left = *left;
+	node->right = right;
+	*left = node;
+}
 
 static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens)
 {
 	t_ast	*left;
 	t_ast	*right;
-	t_ast	*node;
 	t_token	*curr;
 
 	left = parse_command(collector, tokens);
@@ -40,16 +47,7 @@ static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens)
 			printf("Syntax error: unexpected token after `|`\n");
 			return (NULL);
 		}
-		node = malloc(sizeof(t_ast));
-		if (!node)
-			exit_program(collector, \
-				"Error malloc parser command node", EXIT_FAILURE);
-		collector_append(collector, node);
-		node->type = TOKEN_PIPE;
-		node->left = left;
-		node->right = right;
-		left = node;
-		// parse_pipeline_init(left, right, node);
+		parse_pipeline_add_node(collector, &left, right);
 		curr = *tokens;
 	}
 	return (left);

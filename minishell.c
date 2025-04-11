@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-int	main(int argc,char **argv, char **env)
+int	main(int argc, char **argv, char **env)
 {
 	t_collector	*collector;
 	t_token		*tokens;
@@ -31,7 +31,7 @@ int	main(int argc,char **argv, char **env)
 		exit(1);
 	}
 	collector = NULL;
-	//// Usarem build_test_tokens() per entrar tokens manualment dins "token"
+	//// Usarem build_test_toks() temporalm. x enter tokens manualm dins token
 	// tokens = build_test_tokens();
 	//// Usarem aquest imput temporalment per simular l'entrada des de shell
 	input = "echo hello | grep h > output.txt";

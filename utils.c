@@ -12,8 +12,8 @@
 
 #include "minishell.h"
 
-void    freer(char *ptr)
+void	freer(char *ptr)
 {
-    free(ptr);
-    ptr = NULL;
+	free(ptr);
+	ptr = NULL;
 }
