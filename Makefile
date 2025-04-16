@@ -4,10 +4,16 @@ RM				=	rm -f
 INCLUDES		=	-I. -Ilibft
 EXEC_DIR		=	executor
 NAME			=	minishell
-PROG_SRC		=	minishell.c collector.c \
+PROG_SRC		=	minishell.c collector.c utils.c \
 					lexer/lexer.c lexer/lexer_funcs.c \
 					lexer/lexer_funcs_operator.c lexer/tokens.c \
 					parser/parser.c parser/parser_ast_print.c
+					parser/parser.c parser/parser_funcs.c \
+					parser/parser_utils.c \
+					parser/parser_ast_print.c \
+					conversor/conversor.c \
+					conversor/conversor_constructor_print.c
+
 EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \
@@ -82,7 +88,6 @@ run: $(NAME)
 	./$(NAME) $(PARAMS)
 
 valgrind1: $(NAME)
-#	For memory leaks and invalid accesses:
 	valgrind -s --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(PARAMS)
 
 .PHONY:	all clean fclean re run valgrind1

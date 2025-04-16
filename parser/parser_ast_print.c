@@ -46,7 +46,7 @@ static void	ast_print_type(t_ast *root)
 		printf("\n");
 	}
 	else if (root->type == TOKEN_PIPE)
-		printf(BOLD BLUE "PIPE\n" RESET);
+		printf(BOLD RED "PIPE\n" RESET);
 	else if (root->type == TOKEN_REDIRECT_IN)
 		printf(YELLOW "REDIRECT_IN: %s\n" RESET, root->file);
 	else if (root->type == TOKEN_REDIRECT_OUT)

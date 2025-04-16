@@ -31,8 +31,7 @@
 # define CYAN     "\033[36m"
 # define BOLD     "\033[1m"
 
-
-// typedef struct s_shell			t_shell; --> està redefinit, innnecessari?
+# define MAX_CMD_ARGS 256	//Permet fins 256 args per a un command
 
 typedef enum e_token_type
 {
@@ -126,17 +125,19 @@ typedef struct s_shell
 
 typedef struct s_constructor
 {
-	char			**executable;   	// array de str de ejecutables
+	char				**executable;   		// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
 	int				fd[2];				// File descriptor
 	int				pipe_out;			// File descriptor
 	int				pipe_in;			// File descriptor
-	t_builtin		builtin;			// si es buitlin , que tipo
-	t_token_type	type;				// typo de ejecutable
-	t_token_error	error;				// Estado de error
-	t_shell			*shell;				//enlace a shell
-	t_constructor	*next;				//sigueinte nodo o ejecutable
-	t_constructor	*prev;				//sigueinte nodo o ejecutable
+	int				read_fd;			// File descriptor
+	int				write_fd;			// File descriptor
+	t_builtin			builtin;			// si es buitlin , que tipo
+	t_token_type			type;				// typo de ejecutable
+	t_token_error			error;				// Estado de error
+	t_shell				*shell;				//enlace a shell
+	t_constructor			*next;				//sigueinte nodo o ejecutable
+	t_constructor			*prev;				//sigueinte nodo o ejecutable
 }	t_constructor;
 
 typedef struct s_collector
@@ -145,7 +146,9 @@ typedef struct s_collector
 	struct s_collector	*next;
 }	t_collector;
 
-// Function prototypes ///////////////////////////////////////////////////////
+// utils.c
+void    freer(char *ptr);
+
 // collector.c
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
@@ -178,11 +181,26 @@ void	tokens_free(t_token *head);
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens);
 
+// parser/parser_funcs.c
+t_ast	*parse_redirection(t_collector **collector, \
+	t_token **tokens, t_ast *cmd);
+t_ast	*parse_command(t_collector **collector, t_token **tokens);
+
 // parser/parser_test.c
 t_token	*build_test_tokens(void);
 
 // parser/parser_ast_print.c
 void	ast_print(t_ast *root, int depth);
+
+// parser/parser_utils.c
+int	tokens_validate(t_token *tokens);
+
+// conversor/conversor.c
+t_constructor	*ast_to_constructor(t_collector **collector, \
+	t_ast *ast, t_shell *shell);
+
+// conversor/conversor_constructor_print.c
+void	constructor_print(t_constructor *list);
 
 //init functions
 void	start_shell(t_shell *shell);
