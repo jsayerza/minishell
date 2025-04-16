@@ -7,7 +7,6 @@ NAME			=	minishell
 PROG_SRC		=	minishell.c collector.c utils.c \
 					lexer/lexer.c lexer/lexer_funcs.c \
 					lexer/lexer_funcs_operator.c lexer/tokens.c \
-					parser/parser.c parser/parser_ast_print.c
 					parser/parser.c parser/parser_funcs.c \
 					parser/parser_utils.c \
 					parser/parser_ast_print.c \
