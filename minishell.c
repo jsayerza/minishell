@@ -20,12 +20,12 @@ int	main(int argc, char **argv, char **envp)
 	t_ast			*ast;
 	t_constructor	*constructor;
 	char			*line;
-	int				g_is_interactive;
+	int				interact;
 
 	(void)argc;
 	(void)argv;
 	// Modo interactivo si es terminal
-	g_is_interactive = isatty(STDIN_FILENO);
+	interact = isatty(STDIN_FILENO);
 
 	// Init shell
 	shell = init_shell(NULL, envp);
@@ -37,7 +37,7 @@ int	main(int argc, char **argv, char **envp)
 	while (1)
 	{
 		// Leer input interactivo o desde redirección
-		if (g_is_interactive)
+		if (interact)
 			line = readline("minishell$ ");
 		else
 			line = get_next_line(STDIN_FILENO);
@@ -53,7 +53,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 
 		// Guardar en historial si readline (solo en modo interactivo)
-		if (g_is_interactive)
+		if (interact)
 			add_history(line);
 
 		// Tokenizar y parsear
@@ -61,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 		tokens = lexer(line, &collector, &tokens);
 		tokens_print(tokens);
 
-		ast = parser(&collector, tokens, g_is_interactive);
+		ast = parser(&collector, tokens, interact);
 		if (ast)
 		{
 			printf("\n=== AST ===\n");

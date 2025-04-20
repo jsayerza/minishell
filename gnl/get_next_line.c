@@ -68,31 +68,22 @@ char	*fill_line_buffer(int fd, char *stash)
 	char	*buffer;
 	int		count;
 
-	// printf("IN fill_line_buffer\n");
 	buffer = malloc(BUFFER_SIZE + 1);
 	if (!buffer)
 		return (NULL);
 	count = 1;
-	// printf(" fill_line_buffer-1 Stash:%s Buffer:%s count:%d\n", stash, buffer, count);
 	while (count > 0 && !(ft_strchr(stash, '\n')))
 	{
-		// printf(" fill_line_buffer- Buffer:%s\n", buffer);
 		count = read(fd, buffer, BUFFER_SIZE);
-		// printf(" fill_line_buffer-2\n");
 		if (count == -1)
 		{
 			free(buffer);
 			return (NULL);
 		}
 		buffer[count] = 0;
-		// printf(" fill_line_buffer-3\n");
-		// printf(" fill_line_buffer- Stash:%s Buffer:%s\n", stash, buffer);
 		stash = ft_strjoin(stash, buffer);
-		// printf(" fill_line_buffer-4\n");
-		// printf(" fill_line_buffer- Stash:%s\n", stash);
 	}
 	free(buffer);
-	// printf("OUT fill_line_buffer\n");
 	return (stash);
 }
 
@@ -101,7 +92,6 @@ char	*get_next_line(int fd)
 	char		*line;
 	static char	*stash;
 
-	// printf("IN get_next_line\n");
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	stash = fill_line_buffer(fd, stash);
@@ -109,6 +99,5 @@ char	*get_next_line(int fd)
 		return (NULL);
 	line = set_line(stash);
 	stash = next_line(stash);
-	// printf("OUT get_next_line\n");
 	return (line);
 }

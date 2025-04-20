@@ -13,11 +13,10 @@
 #include "minishell.h"
 
 static t_ast	*create_redirect_node(t_collector **collector, \
-	t_token *curr, t_token *next, t_ast *cmd_node, int g_is_interactive)
+	t_token *curr, t_token *next, t_ast *cmd_node, int interact)
 {
 	t_ast	*redir_node;
 
-	// printf("IN create_redirect_node\n");
 	redir_node = malloc(sizeof(t_ast));
 	if (!redir_node)
 		exit_program(collector, \
@@ -33,21 +32,19 @@ static t_ast	*create_redirect_node(t_collector **collector, \
 	redir_node->right = NULL;
 	redir_node->args = NULL;
 	redir_node->heredoc_content = NULL;
-
 	if (curr->type == TOKEN_HEREDOC)
 	{
-		redir_node->heredoc_content = heredoc_read(next->value, g_is_interactive, collector);
+		redir_node->heredoc_content = heredoc_read(next->value, interact, collector);
 		if (!redir_node->heredoc_content)
 			exit_program(collector, \
-				"Error reading heredoc content", EXIT_FAILURE);
+				"Error saving heredoc content", EXIT_FAILURE);
 		collector_append(collector, redir_node->heredoc_content);
 	}
-	// printf("OUT create_redirect_node\n");
 	return (redir_node);
 }
 
 static t_ast	*parse_redirection(t_collector **collector, \
-	t_token **tokens, t_ast *cmd_node, int g_is_interactive)
+	t_token **tokens, t_ast *cmd_node, int interact)
 {
 	t_token	*curr;
 	t_ast	*redir_node;
@@ -62,7 +59,7 @@ static t_ast	*parse_redirection(t_collector **collector, \
 			printf("Syntax error: expected file after `%s`\n", curr->value);
 			return (NULL);
 		}
-		redir_node = create_redirect_node(collector, curr, *tokens, cmd_node, g_is_interactive);
+		redir_node = create_redirect_node(collector, curr, *tokens, cmd_node, interact);
 		if (!redir_node)
 			return (NULL);
 		cmd_node = redir_node;
@@ -93,7 +90,7 @@ static t_ast	*init_command_node(t_collector **collector)
 	return (node);
 }
 
-t_ast	*parse_command(t_collector **collector, t_token **tokens, int g_is_interactive)
+t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact)
 {
 	t_ast	*node;
 	int		i;
@@ -115,5 +112,5 @@ t_ast	*parse_command(t_collector **collector, t_token **tokens, int g_is_interac
 		*tokens = (*tokens)->next;
 	}
 	node->args[i] = NULL;
-	return (parse_redirection(collector, tokens, node, g_is_interactive));
+	return (parse_redirection(collector, tokens, node, interact));
 }

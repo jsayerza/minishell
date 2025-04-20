@@ -36,7 +36,7 @@
 
 # define MAX_CMD_ARGS 256		//Permet fins 256 args per a un command
 
-extern int g_is_interactive;	// 1 = mode interactiu, 0 = no interactiu
+extern int interact;	// 1 = mode interactiu, 0 = no interactiu
 
 typedef enum e_token_type
 {
@@ -186,17 +186,17 @@ void	token_print(t_token *token);
 void	tokens_free(t_token *head);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
-t_ast	*parser(t_collector **collector, t_token *tokens, int g_is_interactive);
+t_ast	*parser(t_collector **collector, t_token *tokens, int interact);
 
 // parser/parser_funcs.c
 // t_ast	*parse_redirection(t_collector **collector, t_token **tokens, t_ast *cmd);
-t_ast	*parse_command(t_collector **collector, t_token **tokens, int g_is_interactive);
+t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact);
 
 // parser/parser_test.c
 t_token	*build_test_tokens(void);
 
 // parser/parser_heredoc.c
-char	*heredoc_read(const char *delimiter, int g_is_interactive, t_collector **collector);
+char	*heredoc_read(const char *delim, int interact, t_collector **collector);
 
 // parser/parser_ast_print.c
 void	ast_print(t_ast *root, int depth);
