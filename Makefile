@@ -1,15 +1,21 @@
 CC				=	cc
 FLAGS			=	-g -Wextra -Werror -Wall #--sanitize=address
+USE_READLINE	=	1
+ifeq ($(USE_READLINE), 1)
+	READLINE_LIB = -lreadline
+else
+	READLINE_LIB =
+endif
 RM				=	rm -f
-INCLUDES		=	-I. -Ilibft
+INCLUDES		=	-I. -Ilibft -Ignl
 EXEC_DIR		=	executor
 NAME			=	minishell
 PROG_SRC		=	minishell.c collector.c utils.c \
 					lexer/lexer.c lexer/lexer_funcs.c \
 					lexer/lexer_funcs_operator.c lexer/tokens.c \
-					parser/parser.c parser/parser_funcs.c \
-					parser/parser_utils.c \
-					parser/parser_ast_print.c \
+					parser/parser.c parser/parser_ast_print.c \
+					parser/parser_utils.c parser/parser_funcs.c \
+					parser/parser_heredoc.c \
 					conversor/conversor.c \
 					conversor/conversor_constructor_print.c
 
@@ -41,21 +47,25 @@ EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
 			$(EXEC_DIR)/commands.c \
 			$(EXEC_DIR)/clean_shell.c
 
+SRC_GNL =	gnl/get_next_line.c
+
 PROG_OBJ		=	$(PROG_SRC:.c=.o)
 EXEC_OBJ		=	$(EXEC_SRC:.c=.o)
 
 UTILS_SRC       =
 UTILS_OBJ       =	$(UTILS_SRC:.c=.o)
 
+OBJ_GNL			=	$(SRC_GNL:.c=.o)
+
 LIBFT_DIR       =	libft
 LIBFT           =	$(LIBFT_DIR)/libft.a
 
-HEADERS			=	minishell.h
+HEADERS			=	minishell.h gnl/get_next_line.h
 
 #PARAMS			= "nonexistent_command"
 #PARAMS			= "echo \"$USER\" || $$USER$ 'hello & *world' | *** grep hello >> output*.txt && < test.txt"
 #PARAMS			= "echo $USER | grep jsay >> output*.txt"
-PARAMS			=
+PARAMS			= < heredoc_test.txt
 
 
 all:	$(LIBFT) $(NAME)
@@ -64,9 +74,9 @@ $(LIBFT):
 	@echo "Construint libft..."
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME):	$(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT)
+$(NAME):	$(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT) $(OBJ_GNL) 
 #	@echo "Construint $(NAME)..."
-	$(CC) $(FLAGS) $(INCLUDES) $(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) -L$(LIBFT_DIR) -lft -o $(NAME)
+	$(CC) $(FLAGS) $(INCLUDES) $(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(OBJ_GNL) -L$(LIBFT_DIR) -lft $(READLINE_LIB) -o $(NAME)
 
 %.o: %.c Makefile $(HEADERS)
 	$(CC) $(FLAGS) $(INCLUDES) -c $< -o $@
@@ -74,11 +84,14 @@ $(NAME):	$(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT)
 clean:
 	@echo "Eliminant object files..."
 	$(MAKE) clean -C $(LIBFT_DIR)
+	$(MAKE) clean -C gnl
+
 	$(RM) $(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ)
 
 fclean:	clean
 	@echo "Eliminant $(NAME) i libft.a..."
 	$(MAKE) fclean -C $(LIBFT_DIR)
+	$(MAKE) fclean -C gnl
 	$(RM) $(NAME)
 
 re:		fclean all

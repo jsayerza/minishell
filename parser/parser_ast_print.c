@@ -46,15 +46,18 @@ static void	ast_print_type(t_ast *root)
 		printf("\n");
 	}
 	else if (root->type == TOKEN_PIPE)
-		printf(BOLD RED "PIPE\n" RESET);
+		printf(YELLOW "PIPE\n" RESET);
 	else if (root->type == TOKEN_REDIRECT_IN)
-		printf(YELLOW "REDIRECT_IN: %s\n" RESET, root->file);
+		printf(BOLD RED "REDIRECT_IN (<): %s\n" RESET, root->file);
 	else if (root->type == TOKEN_REDIRECT_OUT)
-		printf(YELLOW "REDIRECT_OUT: %s\n" RESET, root->file);
+		printf(BOLD RED "REDIRECT_OUT (>): %s\n" RESET, root->file);
 	else if (root->type == TOKEN_HEREDOC)
-		printf(MAGENTA "HEREDOC: %s\n" RESET, root->file);
+	// 	printf(MAGENTA "HEREDOC (<<): %s\n" RESET, root->file);
+		printf(MAGENTA "HEREDOC (<<): %s\nCONTENT:\n%s\n" RESET, \
+			root->file, root->heredoc_content);
+	
 	else if (root->type == TOKEN_APPEND)
-		printf(MAGENTA "APPEND: %s\n" RESET, root->file);
+		printf(MAGENTA "APPEND (>>): %s\n" RESET, root->file);
 	else
 		printf(RED "UNKNOWN NODE\n" RESET);
 }

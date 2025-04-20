@@ -31,6 +31,7 @@ void	token_print(t_token *token)
 
 void	tokens_print(t_token *token)
 {
+	printf("\n=== Tokens ===\n");
 	while (token)
 	{
 		token_print(token);

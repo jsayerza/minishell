@@ -16,6 +16,10 @@ char	*ft_strchr(const char *s, int c)
 {
 	int	i;
 
+	if (!s)
+		return (0);
+	if (c == '\0')
+		return ((char *)&s[ft_strlen(s)]);
 	i = 0;
 	while (s[i])
 	{
@@ -23,11 +27,5 @@ char	*ft_strchr(const char *s, int c)
 			return ((char *)s + i);
 		i++;
 	}
-	return (NULL);
-}
-/*
-int	main(void)
-{
-	printf("Res:%s\n", ft_strchr("1234536", '3'));
 	return (0);
-}*/
+}

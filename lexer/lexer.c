@@ -63,7 +63,7 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 	i = 0;
 	while (input[i])
 	{
-		printf("lexer-input[%d]:%c\n", i, input[i]);
+		// printf("lexer-input[%d]:%c\n", i, input[i]);
 		if (handle_invalidchars(input, i))
 			exit_program(collector, "Invalid char in input", EXIT_SUCCESS);
 		if (handle_whitespace(input, &i)

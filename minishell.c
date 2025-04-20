@@ -12,45 +12,70 @@
 
 #include "minishell.h"
 
-int	main(int argc, char **argv, char **env)
+int	main(int argc, char **argv, char **envp)
 {
-	t_collector	*collector;
-	t_token		*tokens;
-	const char	*input;
-	t_shell		*shell;
-	t_ast		*ast;
+	t_collector		*collector;
+	t_token			*tokens;
+	t_shell			*shell;
+	t_ast			*ast;
 	t_constructor	*constructor;
+	char			*line;
+	int				g_is_interactive;
 
+	(void)argc;
 	(void)argv;
-	if (argc != 1)
-		return (-1);
-	shell = NULL;
-	shell = init_shell(shell, env);
+	// Modo interactivo si es terminal
+	g_is_interactive = isatty(STDIN_FILENO);
+
+	// Init shell
+	shell = init_shell(NULL, envp);
 	if (!shell)
-	{
-		perror("Error al inicializar la shell.\n");
-		exit(1);
-	}
+		exit_program(NULL, "Error al inicializar shell", 1);
+
 	collector = NULL;
-	//// Usarem build_test_toks() temporalm. x enter tokens manualm dins token
-	// tokens = build_test_tokens();
-	//// Usarem aquest imput temporalment per simular l'entrada des de shell
-	input = "echo hello | grep h > output.txt";
-	tokens = NULL;
-	tokens = lexer(input, &collector, &tokens);
-	tokens_print(tokens);
-	ast = parser(&collector, tokens);
-	if (ast)
+
+	while (1)
 	{
-		printf("\n=== AST ===\n/");
-		ast_print(ast, 0);
+		// Leer input interactivo o desde redirección
+		if (g_is_interactive)
+			line = readline("minishell$ ");
+		else
+			line = get_next_line(STDIN_FILENO);
+
+		if (!line)
+			break ;
+
+		// Saltar líneas vacías
+		if (line[0] == '\0' || is_only_whitespace(line))
+		{
+			free(line);
+			continue ;
+		}
+
+		// Guardar en historial si readline (solo en modo interactivo)
+		if (g_is_interactive)
+			add_history(line);
+
+		// Tokenizar y parsear
+		tokens = NULL;
+		tokens = lexer(line, &collector, &tokens);
+		tokens_print(tokens);
+
+		ast = parser(&collector, tokens, g_is_interactive);
+		if (ast)
+		{
+			printf("\n=== AST ===\n");
+			ast_print(ast, 0);
+			constructor = ast_to_constructor(&collector, ast, shell);
+			constructor_print(constructor);
+			// Aquí iría start_shell(shell); si quisieras ejecutar
+		}
+		else
+			printf("Parse failed.\n");
+
+		//TDOD: crec q això va fora del while
+		collector_cleanup(&collector);
+		free(line);
 	}
-	else//////
-		printf("Parse failed.\n");
-	start_shell(shell);
-	constructor = ast_to_constructor(&collector, ast, shell);
-	constructor_print(constructor);
-	start_shell(shell);
-	collector_cleanup(&collector);
-	return (EXIT_SUCCESS);///////
+	return (EXIT_SUCCESS);
 }

@@ -28,20 +28,20 @@ static void	parse_pipeline_add_node(t_collector **collector, \
 	*left = node;
 }
 
-static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens)
+static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens, int g_is_interactive)
 {
 	t_ast	*left;
 	t_ast	*right;
 	t_token	*curr;
 
-	left = parse_command(collector, tokens);
+	left = parse_command(collector, tokens, g_is_interactive);
 	if (!left)
 		return (NULL);
 	curr = *tokens;
 	while (curr && curr->type == TOKEN_PIPE)
 	{
 		*tokens = curr->next;
-		right = parse_pipeline(collector, tokens);
+		right = parse_pipeline(collector, tokens, g_is_interactive);
 		if (!right)
 		{
 			printf("Syntax error: unexpected token after `|`\n");
@@ -53,7 +53,7 @@ static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens)
 	return (left);
 }
 
-t_ast	*parser(t_collector **collector, t_token *tokens)
+t_ast	*parser(t_collector **collector, t_token *tokens, int g_is_interactive)
 {
 	if (!tokens_validate(tokens))
 	{
@@ -61,6 +61,6 @@ t_ast	*parser(t_collector **collector, t_token *tokens)
 		tokens_free(tokens);
 		return (NULL);
 	}
-	printf("parse-Tokens OK!\n");
-	return (parse_pipeline(collector, &tokens));
+	// printf("parse-Tokens OK!\n");
+	return (parse_pipeline(collector, &tokens, g_is_interactive));
 }

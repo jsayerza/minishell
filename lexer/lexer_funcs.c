@@ -81,7 +81,7 @@ void	get_word(const char *input, t_collector **collector, \
 		&& (ft_strchr(" \f\r\n\t\v|<>$;'\"\\", input[*i]) == NULL))
 		(*i)++;
 	value = ft_strndup(input + istart, *i - istart);
-	printf("get_word-value:%s\n", value);
+	// printf("get_word-value:%s\n", value);
 	if (!value)
 		exit_program(collector, \
 			"Error malloc get value for token", EXIT_FAILURE);

@@ -20,7 +20,10 @@
 # include <stdbool.h>
 # include <string.h>
 # include <ctype.h>
+# include <readline/readline.h>
+# include <readline/history.h>
 # include "libft/libft.h"
+# include "gnl/get_next_line.h"
 
 # define RESET    "\033[0m"
 # define RED      "\033[31m"
@@ -31,17 +34,19 @@
 # define CYAN     "\033[36m"
 # define BOLD     "\033[1m"
 
-# define MAX_CMD_ARGS 256	//Permet fins 256 args per a un command
+# define MAX_CMD_ARGS 256		//Permet fins 256 args per a un command
+
+extern int g_is_interactive;	// 1 = mode interactiu, 0 = no interactiu
 
 typedef enum e_token_type
 {
-	TOKEN_EOF,
-	TOKEN_WORD,
-	TOKEN_PIPE,
-	TOKEN_REDIRECT_IN,
-	TOKEN_REDIRECT_OUT,
-	TOKEN_APPEND,
-	TOKEN_HEREDOC,
+	TOKEN_EOF,			// 0
+	TOKEN_WORD,			// 1
+	TOKEN_PIPE,			// 2
+	TOKEN_REDIRECT_IN,	// 3
+	TOKEN_REDIRECT_OUT,	// 4
+	TOKEN_APPEND,		// 5
+	TOKEN_HEREDOC,		// 6
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_WILDCARD,
@@ -101,6 +106,7 @@ typedef struct s_ast {
 	t_token_type	type;
 	char			**args;	// Stores command arguments.
 	char			*file;	// Stores file names for redirections.
+	char			*heredoc_content;
 	struct s_ast	*left;	// Represent child nodes for pipes & redirections
 	struct s_ast	*right;	// Represent child nodes for pipes & redirections
 }	t_ast;
@@ -125,19 +131,19 @@ typedef struct s_shell
 
 typedef struct s_constructor
 {
-	char				**executable;   		// array de str de ejecutables
+	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
 	int				fd[2];				// File descriptor
 	int				pipe_out;			// File descriptor
 	int				pipe_in;			// File descriptor
 	int				read_fd;			// File descriptor
 	int				write_fd;			// File descriptor
-	t_builtin			builtin;			// si es buitlin , que tipo
-	t_token_type			type;				// typo de ejecutable
-	t_token_error			error;				// Estado de error
-	t_shell				*shell;				//enlace a shell
-	t_constructor			*next;				//sigueinte nodo o ejecutable
-	t_constructor			*prev;				//sigueinte nodo o ejecutable
+	t_builtin		builtin;			// si es buitlin , que tipo
+	t_token_type	type;				// typo de ejecutable
+	t_token_error	error;				// Estado de error
+	t_shell			*shell;				//enlace a shell
+	t_constructor	*next;				//sigueinte nodo o ejecutable
+	t_constructor	*prev;				//sigueinte nodo o ejecutable
 }	t_constructor;
 
 typedef struct s_collector
@@ -148,6 +154,7 @@ typedef struct s_collector
 
 // utils.c
 void    freer(char *ptr);
+int		is_only_whitespace(const char *str);
 
 // collector.c
 void	collector_cleanup(t_collector **collector);
@@ -179,15 +186,17 @@ void	token_print(t_token *token);
 void	tokens_free(t_token *head);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
-t_ast	*parser(t_collector **collector, t_token *tokens);
+t_ast	*parser(t_collector **collector, t_token *tokens, int g_is_interactive);
 
 // parser/parser_funcs.c
-t_ast	*parse_redirection(t_collector **collector, \
-	t_token **tokens, t_ast *cmd);
-t_ast	*parse_command(t_collector **collector, t_token **tokens);
+// t_ast	*parse_redirection(t_collector **collector, t_token **tokens, t_ast *cmd);
+t_ast	*parse_command(t_collector **collector, t_token **tokens, int g_is_interactive);
 
 // parser/parser_test.c
 t_token	*build_test_tokens(void);
+
+// parser/parser_heredoc.c
+char	*heredoc_read(const char *delimiter, int g_is_interactive, t_collector **collector);
 
 // parser/parser_ast_print.c
 void	ast_print(t_ast *root, int depth);

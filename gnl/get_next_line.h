@@ -1,30 +1,31 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   utils.c                                            :+:      :+:    :+:   */
+/*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/10 20:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Created: 2024/10/09 18:25:23 by jsayerza          #+#    #+#             */
+/*   Updated: 2024/10/10 14:32:56 by jsayerza         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#ifndef GET_NEXT_LINE_H
+# define GET_NEXT_LINE_H
 
-void	freer(char *ptr)
-{
-	free(ptr);
-	ptr = NULL;
-}
+# ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 50
+# endif
 
-int	is_only_whitespace(const char *str)
-{
-	while (*str)
-	{
-		if (!ft_strchr(" \t\n\r\v\f", *str))
-			return (0);
-		str++;
-	}
-	return (1);
-}
+# include <unistd.h>
+# include <stdio.h>
+# include <fcntl.h>
+# include <stdlib.h>
+# include "../libft/libft.h"
+
+char	*get_next_line(int fd);
+char	*fill_line_buffer(int fd, char *stash);
+char	*set_line(char *stash);
+char	*next_line(char *stash);
+
+#endif
