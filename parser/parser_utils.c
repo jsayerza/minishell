@@ -38,3 +38,14 @@ int	tokens_validate(t_token *tokens)
 	}
 	return (1);
 }
+
+void	remove_trailing_newline(char *line)
+{
+	size_t	len;
+
+	if (!line)
+		return ;
+	len = ft_strlen(line);
+	if (len > 0 && line[len - 1] == '\n')
+		line[len - 1] = '\0';
+}

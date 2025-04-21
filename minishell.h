@@ -202,7 +202,8 @@ char	*heredoc_read(const char *delim, int interact, t_collector **collector);
 void	ast_print(t_ast *root, int depth);
 
 // parser/parser_utils.c
-int	tokens_validate(t_token *tokens);
+int		tokens_validate(t_token *tokens);
+void	remove_trailing_newline(char *line);
 
 // conversor/conversor.c
 t_constructor	*ast_to_constructor(t_collector **collector, \

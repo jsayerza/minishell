@@ -23,15 +23,19 @@ static char	*heredoc_read_line(int interact)
 	return (line);
 }
 
-static void	remove_trailing_newline(char *line)
+static void	heredoc_read_ctrl(char *heredoc, char *heredoc_old, char *line, \
+	t_collector **collector)
 {
-	size_t	len;
-
-	if (!line)
-		return ;
-	len = ft_strlen(line);
-	if (len > 0 && line[len - 1] == '\n')
-		line[len - 1] = '\0';
+	if (heredoc_old)
+	{
+		free(heredoc_old);
+		heredoc_old = NULL;
+	}
+	if (!heredoc)
+	{
+		free(line);
+		exit_program(collector, "Error reading heredoc cont", EXIT_FAILURE);
+	}
 }
 
 static char	*heredoc_read_new(char *line, char *heredoc, \
@@ -43,7 +47,7 @@ static char	*heredoc_read_new(char *line, char *heredoc, \
 
 	new_heredoc = malloc(total_len + line_len + 2);
 	if (!new_heredoc)
-		return (free(heredoc), NULL);
+		return (NULL);
 	k = 0;
 	if (heredoc)
 	{
@@ -61,21 +65,21 @@ static char	*heredoc_read_new(char *line, char *heredoc, \
 	return (new_heredoc);
 }
 
-static void	heredoc_read_ctrl(char *heredoc, char *line, \
-	t_collector **collector)
+int	is_delimiter(char *line, const char *delim)
 {
-	if (!heredoc)
+	if (ft_strcmp(line, delim) == 0)
 	{
 		free(line);
-		exit_program(collector, "Error reading heredoc cont", EXIT_FAILURE);
+		return (true);
 	}
-	collector_append(collector, heredoc);
+	return (false);
 }
 
 char	*heredoc_read(const char *delim, int interact, t_collector **collector)
 {
 	char	*line;
 	char	*heredoc;
+	char	*heredoc_old;
 	size_t	total_len;
 	size_t	line_len;
 
@@ -87,14 +91,12 @@ char	*heredoc_read(const char *delim, int interact, t_collector **collector)
 		if (!line)
 			break ;
 		remove_trailing_newline(line);
-		if (ft_strcmp(line, delim) == 0)
-		{
-			free(line);
+		if (is_delimiter(line, delim))
 			break ;
-		}
 		line_len = ft_strlen(line);
+		heredoc_old = heredoc;
 		heredoc = heredoc_read_new(line, heredoc, line_len, total_len);
-		heredoc_read_ctrl(heredoc, line, collector);
+		heredoc_read_ctrl(heredoc, heredoc_old, line, collector);
 		total_len += line_len + 1;
 		free(line);
 	}

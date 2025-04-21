@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
-	// Modo interactivo si es terminal
+	// Mode interactiu si és terminal
 	interact = isatty(STDIN_FILENO);
 
 	// Init shell

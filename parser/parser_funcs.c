@@ -12,7 +12,19 @@
 
 #include "minishell.h"
 
-static t_ast	*create_redirect_node(t_collector **collector, \
+static void	redir_node_heredoc(t_collector **collector, \
+	t_token *next, t_ast *redir_node, int interact)
+{
+	redir_node->heredoc_content = heredoc_read(next->value, \
+		interact, collector);
+	if (!redir_node->heredoc_content)
+		exit_program(collector, \
+			"Error saving heredoc content", EXIT_FAILURE);
+	collector_append(collector, redir_node->heredoc_content);
+}
+
+//// Eliminarem interact en versió final (amb terminal)
+static t_ast	*crea_redir_node(t_collector **collector, \
 	t_token *curr, t_token *next, t_ast *cmd_node, int interact)
 {
 	t_ast	*redir_node;
@@ -33,13 +45,7 @@ static t_ast	*create_redirect_node(t_collector **collector, \
 	redir_node->args = NULL;
 	redir_node->heredoc_content = NULL;
 	if (curr->type == TOKEN_HEREDOC)
-	{
-		redir_node->heredoc_content = heredoc_read(next->value, interact, collector);
-		if (!redir_node->heredoc_content)
-			exit_program(collector, \
-				"Error saving heredoc content", EXIT_FAILURE);
-		collector_append(collector, redir_node->heredoc_content);
-	}
+		redir_node_heredoc(collector, next, redir_node, interact);
 	return (redir_node);
 }
 
@@ -49,7 +55,6 @@ static t_ast	*parse_redirection(t_collector **collector, \
 	t_token	*curr;
 	t_ast	*redir_node;
 
-	// printf("IN parse_redirection\n");
 	while (*tokens && (*tokens)->type >= TOKEN_REDIRECT_IN)
 	{
 		curr = *tokens;
@@ -59,13 +64,13 @@ static t_ast	*parse_redirection(t_collector **collector, \
 			printf("Syntax error: expected file after `%s`\n", curr->value);
 			return (NULL);
 		}
-		redir_node = create_redirect_node(collector, curr, *tokens, cmd_node, interact);
+		redir_node = crea_redir_node(collector, curr, *tokens, \
+			cmd_node, interact);
 		if (!redir_node)
 			return (NULL);
 		cmd_node = redir_node;
 		*tokens = (*tokens)->next;
 	}
-	// printf("OUT parse_redirection\n");
 	return (cmd_node);
 }
 

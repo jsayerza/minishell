@@ -28,7 +28,8 @@ static void	parse_pipeline_add_node(t_collector **collector, \
 	*left = node;
 }
 
-static t_ast	*parse_pipeline(t_collector **collector, t_token **tokens, int interact)
+static t_ast	*parse_pipeline(t_collector **collector, \
+	t_token **tokens, int interact)
 {
 	t_ast	*left;
 	t_ast	*right;
@@ -61,6 +62,5 @@ t_ast	*parser(t_collector **collector, t_token *tokens, int interact)
 		tokens_free(tokens);
 		return (NULL);
 	}
-	// printf("parse-Tokens OK!\n");
 	return (parse_pipeline(collector, &tokens, interact));
 }
