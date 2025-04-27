@@ -52,7 +52,7 @@ static void	ast_print_type(t_ast *root)
 	else if (root->type == TOKEN_REDIRECT_OUT)
 		printf(BOLD RED "REDIRECT_OUT (>): %s\n" RESET, root->file);
 	else if (root->type == TOKEN_HEREDOC)
-		printf(MAGENTA "HEREDOC (<<): %s\nCONTENT:\n%s\n" RESET, \
+		printf(MAGENTA "HEREDOC (<<): %s\n   CONTENT:\n%s\n" RESET, \
 			root->file, root->heredoc_content);
 	else if (root->type == TOKEN_APPEND)
 		printf(MAGENTA "APPEND (>>): %s\n" RESET, root->file);

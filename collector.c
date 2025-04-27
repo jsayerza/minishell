@@ -17,11 +17,12 @@ void	collector_cleanup(t_collector **collector)
 	t_collector	*current;
 	t_collector	*next;
 
+	// printf("Cleaning collector\n");
 	current = *collector;
 	while (current)
 	{
 		next = current->next;
-		free(current->ptr);
+		freer(current->ptr);
 		free(current);
 		current = next;
 	}
@@ -38,12 +39,9 @@ void	collector_append(t_collector **collector, void *ptr)
 	new_node->ptr = ptr;
 	new_node->next = *collector;
 	*collector = new_node;
-}
-
-void	exit_program(t_collector **collector, char *msg, int exit_type)
-{
-	collector_cleanup(collector);
-	if (msg)
-		printf("%s\n", msg);
-	exit(exit_type);
+	// printf("Appending to collector: %p\n", ptr);
+	// if (ptr)
+	// 	printf("  Pointer value: %s\n", (char *)ptr);
+	// else
+	// 	printf("  Pointer value: NULL\n");
 }

@@ -20,6 +20,8 @@
 # include <stdbool.h>
 # include <string.h>
 # include <ctype.h>
+# include <pwd.h>
+# include <limits.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -52,6 +54,7 @@ typedef enum e_token_type
 	TOKEN_WILDCARD,
 	TOKEN_DOLLAR,
 	TOKEN_ESCAPE,
+	TOKEN_WHITESPACE,
 	TOKEN_COMMAND,
     TOKEN_BUILTIN,
 }	t_token_type;
@@ -134,8 +137,8 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos  a ejecutar
 	int				fd[2];				// File descriptor
-	int				pipe_out;			// File descriptor
-	int				pipe_in;			// File descriptor
+	int				pipe_out;
+	int				pipe_in;
 	int				read_fd;			// File descriptor
 	int				write_fd;			// File descriptor
 	t_builtin		builtin;			// si es buitlin , que tipo
@@ -155,11 +158,16 @@ typedef struct s_collector
 // utils.c
 void    freer(char *ptr);
 int		is_only_whitespace(const char *str);
+void	print_error(const char *msg);
+void	exit_program(t_collector **collector, const char *msg,\
+	bool should_exit);
+
+// prompt.c
+char	*prompt_generate(t_collector **collector);
 
 // collector.c
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
-void	exit_program(t_collector **collector, char *msg, int exit_type);
 
 // lexer/lexer.c
 t_token	*lexer(const char *input, t_collector **collector, t_token **head);

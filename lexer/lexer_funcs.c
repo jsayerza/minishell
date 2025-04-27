@@ -14,9 +14,12 @@
 
 int	handle_invalidchars(const char *input, int i)
 {
-	if (ft_strchr(";\\", input[i]))
+	if (ft_strchr("*&(){}[];\\", input[i]))
 	{
+		printf("minishell: syntax error near unexpected token `%c`\n", \
+			input[i]);
 		return (1);
+		// return (input[i]);
 	}
 	return (0);
 }
@@ -67,7 +70,7 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 			"Error malloc get value for token", EXIT_FAILURE);
 	(*i)++;
 	token_create(collector, TOKEN_WORD, quoted, head);
-	free(quoted);
+	freer(quoted);
 }
 
 void	get_word(const char *input, t_collector **collector, \
@@ -86,5 +89,5 @@ void	get_word(const char *input, t_collector **collector, \
 		exit_program(collector, \
 			"Error malloc get value for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, value, head);
-	free(value);
+	freer(value);
 }

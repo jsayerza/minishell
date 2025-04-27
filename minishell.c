@@ -20,62 +20,75 @@ int	main(int argc, char **argv, char **envp)
 	t_ast			*ast;
 	t_constructor	*constructor;
 	char			*line;
+	char			*prompt;
 	int				interact;
 
 	(void)argc;
 	(void)argv;
-	// Mode interactiu si és terminal
 	interact = isatty(STDIN_FILENO);
 
 	// Init shell
 	shell = init_shell(NULL, envp);
 	if (!shell)
-		exit_program(NULL, "Error al inicializar shell", 1);
-
-	collector = NULL;
+		exit_program(NULL, "Error al inicializar shell", true);
 
 	while (1)
 	{
-		// Leer input interactivo o desde redirección
+		collector = NULL;
+		line = NULL;
 		if (interact)
-			line = readline("minishell$ ");
+		{
+			prompt = prompt_generate(&collector);
+			line = readline(prompt);
+			if (!line)
+			{
+				collector_cleanup(&collector);
+				break ;
+			}
+		}
 		else
 			line = get_next_line(STDIN_FILENO);
 
 		if (!line)
 			break ;
-
-		// Saltar líneas vacías
 		if (line[0] == '\0' || is_only_whitespace(line))
 		{
-			free(line);
+			freer(line);
+			collector_cleanup(&collector);
 			continue ;
 		}
-
-		// Guardar en historial si readline (solo en modo interactivo)
 		if (interact)
 			add_history(line);
 
-		// Tokenizar y parsear
 		tokens = NULL;
 		tokens = lexer(line, &collector, &tokens);
-		tokens_print(tokens);
-
-		ast = parser(&collector, tokens, interact);
-		if (ast)
+		freer(line);
+		if (!tokens)
 		{
-			printf("\n=== AST ===\n");
-			ast_print(ast, 0);
-			constructor = ast_to_constructor(&collector, ast, shell);
+			collector_cleanup(&collector);
+			continue ;
+		}
+		tokens_print(tokens);
+		ast = parser(&collector, tokens, interact);
+		if (!ast)
+		{
+			collector_cleanup(&collector);
+			continue ;
+		}
+		printf("\n=== AST ===\n");
+		ast_print(ast, 0);
+		constructor = ast_to_constructor(&collector, ast, shell);
+		if (constructor)
+		{
 			constructor_print(constructor);
-			// Aquí iría start_shell(shell); si quisieras ejecutar
+			// start_shell(shell, constructor);
 		}
 		else
-			printf("Parse failed.\n");
+			print_error("minishell: failed to prepare command execution");
 
-		//TDOD: crec q això va fora del while
 		collector_cleanup(&collector);
-		free(line);
 	}
+
+	collector_cleanup(&collector); // Cleanup final si sales con Ctrl-D
 	return (EXIT_SUCCESS);
 }

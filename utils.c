@@ -28,3 +28,19 @@ int	is_only_whitespace(const char *str)
 	}
 	return (1);
 }
+
+void	print_error(const char *msg)
+{
+	if (msg && *msg)
+		write(2, msg, ft_strlen(msg));
+	write(2, "\n", 1);
+}
+
+void	exit_program(t_collector **collector, const char *msg, bool should_exit)
+{
+	collector_cleanup(collector);
+	if (msg && *msg)
+		print_error(msg);
+	if (should_exit)
+		exit(EXIT_FAILURE);
+}

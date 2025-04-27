@@ -28,12 +28,12 @@ static void	heredoc_read_ctrl(char *heredoc, char *heredoc_old, char *line, \
 {
 	if (heredoc_old)
 	{
-		free(heredoc_old);
+		freer(heredoc_old);
 		heredoc_old = NULL;
 	}
 	if (!heredoc)
 	{
-		free(line);
+		freer(line);
 		exit_program(collector, "Error reading heredoc cont", EXIT_FAILURE);
 	}
 }
@@ -69,7 +69,7 @@ int	is_delimiter(char *line, const char *delim)
 {
 	if (ft_strcmp(line, delim) == 0)
 	{
-		free(line);
+		freer(line);
 		return (true);
 	}
 	return (false);
@@ -98,7 +98,7 @@ char	*heredoc_read(const char *delim, int interact, t_collector **collector)
 		heredoc = heredoc_read_new(line, heredoc, line_len, total_len);
 		heredoc_read_ctrl(heredoc, heredoc_old, line, collector);
 		total_len += line_len + 1;
-		free(line);
+		freer(line);
 	}
 	return (heredoc);
 }

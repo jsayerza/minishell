@@ -45,7 +45,7 @@ static t_ast	*parse_pipeline(t_collector **collector, \
 		right = parse_pipeline(collector, tokens, interact);
 		if (!right)
 		{
-			printf("Syntax error: unexpected token after `|`\n");
+			printf("minishell: syntax error unexpected token after `|`\n");
 			return (NULL);
 		}
 		parse_pipeline_add_node(collector, &left, right);
@@ -56,11 +56,15 @@ static t_ast	*parse_pipeline(t_collector **collector, \
 
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact)
 {
+	t_ast	*ast;
+
 	if (!tokens_validate(tokens))
 	{
-		printf("Error: Invalid tokens\n");
-		tokens_free(tokens);
+		// print_error("minishell: syntax error");
 		return (NULL);
 	}
-	return (parse_pipeline(collector, &tokens, interact));
+	ast = parse_pipeline(collector, &tokens, interact);
+	// if (!ast)
+	// 	print_error("minishell: parser error");
+	return (ast);
 }

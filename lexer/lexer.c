@@ -58,14 +58,18 @@ static int	handle_variables(const char *input, t_collector **collector, \
 
 t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 {
-	int	i;
+	int		i;
+	t_token	*first_token;
 
 	i = 0;
 	while (input[i])
 	{
 		// printf("lexer-input[%d]:%c\n", i, input[i]);
 		if (handle_invalidchars(input, i))
-			exit_program(collector, "Invalid char in input", EXIT_SUCCESS);
+		{
+			exit_program(collector, "", false);
+			return (NULL);
+		}
 		if (handle_whitespace(input, &i)
 			|| handle_operator(input, collector, &i, head)
 			|| handle_quotes(input, collector, &i, head)
@@ -74,5 +78,13 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 		get_word(input, collector, &i, head);
 	}
 	token_create(collector, TOKEN_EOF, "EOF", head);
+	first_token = *head;
+	while (first_token && first_token->type == TOKEN_WHITESPACE)
+		first_token = first_token->next;
+	if (!first_token || first_token->type != TOKEN_WORD)
+	{
+		exit_program(collector,	"minishell: syntax error: unexpected token at start", false);
+		return (NULL);
+	}
 	return (*head);
 }

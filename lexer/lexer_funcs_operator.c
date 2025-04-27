@@ -16,24 +16,14 @@ static t_token_type	get_operator_type(const char *input, int *i)
 {
 	if (input[*i] == '|')
 		return (TOKEN_PIPE);
-//	else if (input[*i] == '<' && input[*i + 1] == '<')
 	else if (input[*i] == '<' && (*i > 0) && input[*i - 1] == '<')
 		return (TOKEN_HEREDOC);
-//	else if (input[*i] == '>' && input[*i + 1] == '>')
 	else if (input[*i] == '>' && (*i > 0) && input[*i - 1] == '>')
 		return (TOKEN_APPEND);
 	else if (input[*i] == '<')
 		return (TOKEN_REDIRECT_IN);
 	else if (input[*i] == '>')
 		return (TOKEN_REDIRECT_OUT);
-//	else if (input[*i] == '&' && input[*i + 1] == '&')
-	else if (input[*i] == '&' && (*i > 0) && input[*i - 1] == '&')
-		return (TOKEN_AND);
-//	else if (input[*i] == '|' && input[*i + 1] == '|')
-	else if (input[*i] == '|' && (*i > 0) && input[*i - 1] == '|')
-		return (TOKEN_OR);
-	else if (input[*i] == '*')
-		return (TOKEN_WILDCARD);
 	else if (input[*i] == '$')
 		return (TOKEN_DOLLAR);
 	return (999);
@@ -48,7 +38,7 @@ void	get_operator(const char *input, t_collector **collector, \
 	op[0] = input[*i];
 	op[1] = '\0';
 	op[2] = '\0';
-	if ((ft_strchr("<>|&", input[*i]) != NULL)
+	if ((ft_strchr("<>", input[*i]) != NULL)
 		&& input[*i + 1] == input[*i])
 	{
 		op[1] = input[*i + 1];

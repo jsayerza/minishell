@@ -10,7 +10,7 @@ RM				=	rm -f
 INCLUDES		=	-I. -Ilibft -Ignl
 EXEC_DIR		=	executor
 NAME			=	minishell
-PROG_SRC		=	minishell.c collector.c utils.c \
+PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					lexer/lexer.c lexer/lexer_funcs.c \
 					lexer/lexer_funcs_operator.c lexer/tokens.c \
 					parser/parser.c parser/parser_ast_print.c \

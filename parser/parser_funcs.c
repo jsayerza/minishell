@@ -61,7 +61,8 @@ static t_ast	*parse_redirection(t_collector **collector, \
 		*tokens = curr->next;
 		if (!(*tokens) || (*tokens)->type != TOKEN_WORD)
 		{
-			printf("Syntax error: expected file after `%s`\n", curr->value);
+			printf("minishell: syntax error expected file after `%s`\n",\
+				curr->value);
 			return (NULL);
 		}
 		redir_node = crea_redir_node(collector, curr, *tokens, \
