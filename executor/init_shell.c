@@ -51,8 +51,5 @@ t_shell	*init_shell(t_shell *shell, char **env)
 	shell->output = NULL;
 	shell->node_size = 0;
 	shell->constructor = init_constructor();
-	printf("%s\n", shell->home);
-	printf("%s\n", shell->pwd);
-	printf("%s\n", shell->oldpwd);
 	return (shell);
 }

@@ -36,7 +36,7 @@ char	*acces_path(t_constructor *node)
 	while (node->shell->paths[i])
 	{
 		exec = (construct_exec(node->shell->paths[i],
-							   node->executable[0]));
+					node->executable[0]));
 		if (exec && access(exec, X_OK) == 0)
 			return (exec);
 		free(exec);
@@ -57,7 +57,7 @@ void	execute_command(t_constructor *node)
 	{
 		printf("Command not found\n");
 		node->shell->last_exit = 127;
-		return;
+		return ;
 	}
 	pid = fork();
 	if (pid == -1)
@@ -65,7 +65,7 @@ void	execute_command(t_constructor *node)
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
-		return;
+		return ;
 	}
 	if (pid == 0)
 	{
@@ -95,7 +95,7 @@ void	execute_first_command(t_constructor *node)
 	{
 		printf("Command not found\n");
 		node->shell->last_exit = 127;
-		return;
+		return ;
 	}
 	pid = fork();
 	if (pid == -1)
@@ -103,7 +103,7 @@ void	execute_first_command(t_constructor *node)
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
-		return;
+		return ;
 	}
 	if (pid == 0)
 	{
@@ -137,7 +137,7 @@ void	execute_middle_command(t_constructor *node)
 	{
 		printf("Command not found\n");
 		node->shell->last_exit = 127;
-		return;
+		return ;
 	}
 	pid = fork();
 	if (pid == -1)
@@ -145,7 +145,7 @@ void	execute_middle_command(t_constructor *node)
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
-		return;
+		return ;
 	}
 	if (pid == 0)
 	{
@@ -183,7 +183,7 @@ void	execute_last_command(t_constructor *node)
 	{
 		printf("Command not found\n");
 		node->shell->last_exit = 127;
-		return;
+		return ;
 	}
 	pid = fork();
 	if (pid == -1)
@@ -191,7 +191,7 @@ void	execute_last_command(t_constructor *node)
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
-		return;
+		return ;
 	}
 	if (pid == 0)
 	{

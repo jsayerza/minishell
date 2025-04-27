@@ -19,15 +19,13 @@ PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					conversor/conversor.c \
 					conversor/conversor_constructor_print.c
 
-EXEC_SRC =	$(EXEC_DIR)/start_shell.c \
-			$(EXEC_DIR)/init_shell.c \
+EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \
 			$(EXEC_DIR)/env_to_export.c \
 			$(EXEC_DIR)/create_export.c \
 			$(EXEC_DIR)/display_shell.c \
-			$(EXEC_DIR)/prints.c \
-			$(EXEC_DIR)/contructor_manualy.c \
 			$(EXEC_DIR)/builtins.c \
+			$(EXEC_DIR)/prints.c \
 			$(EXEC_DIR)/export.c \
 			$(EXEC_DIR)/export_utils00.c \
 			$(EXEC_DIR)/export_utils01.c \
@@ -74,7 +72,7 @@ $(LIBFT):
 	@echo "Construint libft..."
 	$(MAKE) -C $(LIBFT_DIR)
 
-$(NAME):	$(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT) $(OBJ_GNL) 
+$(NAME):	$(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(HEADERS) $(LIBFT) $(OBJ_GNL)
 #	@echo "Construint $(NAME)..."
 	$(CC) $(FLAGS) $(INCLUDES) $(PROG_OBJ) $(EXEC_OBJ) $(UTILS_OBJ) $(OBJ_GNL) -L$(LIBFT_DIR) -lft $(READLINE_LIB) -o $(NAME)
 

@@ -12,29 +12,34 @@
 
 #include "../minishell.h"
 
+char	*get_value(char **env)
+{
+	int	i;
+
+	i = 0;
+	if (!env)
+		return (NULL);
+	while (env[i])
+	{
+		if (ft_strncmp(env[i], "PATH=", 5) == 0)
+			return (env[i] + 5);
+		i++;
+	}
+	return (NULL);
+}
+
 char	**find_path(t_shell *shell)
 {
-	int		i;
 	char	**result;
 	char	*path_value;
 
-	i = 0;
 	if (!shell->env)
 		return (NULL);
-	while (shell->env[i])
-	{
-		if (ft_strncmp(shell->env[i], "PATH=", 5) == 0)
-			break ;
-		i++;
-	}
-	if (!shell->env[i])
-		return (NULL);
-	path_value = shell->env[i] + 5;
-	if (!*path_value)
+	path_value = get_value(shell->env);
+	if (!path_value || !*path_value)
 		return (NULL);
 	shell->path = malloc((ft_strlen(path_value) + 1) * sizeof(char));
 	shell->path = ft_strdup(path_value);
-	printf("%s\n",shell->path);
 	result = ft_split(path_value, ':');
 	if (!result || !result[0])
 	{

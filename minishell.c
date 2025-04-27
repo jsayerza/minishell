@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/03 20:31:59 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:04:18 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,12 +26,9 @@ int	main(int argc, char **argv, char **envp)
 	(void)argc;
 	(void)argv;
 	interact = isatty(STDIN_FILENO);
-
-	// Init shell
 	shell = init_shell(NULL, envp);
 	if (!shell)
 		exit_program(NULL, "Error al inicializar shell", true);
-
 	while (1)
 	{
 		collector = NULL;
@@ -48,7 +45,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 			line = get_next_line(STDIN_FILENO);
-
 		if (!line)
 			break ;
 		if (line[0] == '\0' || is_only_whitespace(line))
@@ -59,7 +55,6 @@ int	main(int argc, char **argv, char **envp)
 		}
 		if (interact)
 			add_history(line);
-
 		tokens = NULL;
 		tokens = lexer(line, &collector, &tokens);
 		freer(line);
@@ -78,17 +73,16 @@ int	main(int argc, char **argv, char **envp)
 		printf("\n=== AST ===\n");
 		ast_print(ast, 0);
 		constructor = ast_to_constructor(&collector, ast, shell);
+		shell->constructor = constructor;
 		if (constructor)
 		{
 			constructor_print(constructor);
-			// start_shell(shell, constructor);
+			display_shell(shell);
 		}
 		else
 			print_error("minishell: failed to prepare command execution");
-
 		collector_cleanup(&collector);
 	}
-
-	collector_cleanup(&collector); // Cleanup final si sales con Ctrl-D
+	collector_cleanup(&collector);
 	return (EXIT_SUCCESS);
 }
