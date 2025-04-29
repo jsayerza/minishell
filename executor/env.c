@@ -14,6 +14,8 @@
 
 void	env(t_constructor *node)
 {
-	if (node->shell->node_size == 1)
-		print_env(node->shell);
+	if (node->pipe_out)
+		redirect_builtin(node, node->shell->env);
+	else if (!node->executable[1])
+		print_builtin(node->shell->env);
 }

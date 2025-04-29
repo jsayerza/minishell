@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/08 18:04:10 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:25:02 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -141,6 +141,7 @@ typedef struct s_constructor
 	int				pipe_in;
 	int				read_fd;			// File descriptor
 	int				write_fd;			// File descriptor
+	int				expand;				// File descriptor
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
 	t_token_error	error;				// Estado de error
@@ -239,6 +240,7 @@ t_constructor *fill_constructor_manually(t_shell *shell);
 void display_shell(t_shell *shell);
 
 //builtins
+void	redirect_builtin(t_constructor *node, char **builtin);
 void	token_builtins(t_constructor *node);
 void	env(t_constructor *node);
 void	export(t_constructor *node);
@@ -300,8 +302,7 @@ char	*get_path_value(char **env);
 char	**try_alternative_path(char **env);
 
 //print functions
-void	print_env(t_shell *shell);
-void	print_export(t_shell *shell);
+void	print_builtin(char **builtin);
 void	print_token_list(t_shell *shell);
 void	print_constructor(t_shell *shell);
 void	print_path(t_shell *shell);

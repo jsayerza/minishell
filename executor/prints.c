@@ -12,20 +12,11 @@
 
 #include "../minishell.h"
 
-void	print_env(t_shell *shell)
+void	print_builtin(char **builtin)
 {
 	int	i;
 
 	i = 0;
-	while (shell->env[i])
-		printf("%s\n", shell->env[i++]);
-}
-
-void	print_export(t_shell *shell)
-{
-	int	i;
-
-	i = 0;
-	while (shell->export[i] != NULL)
-		printf("%s\n", shell->export[i++]);
+	while (builtin[i])
+		printf("%s\n", builtin[i++]);
 }

@@ -81,8 +81,10 @@ void	export(t_constructor *node)
 {
 	int	j;
 
-	if (node->shell->node_size == 1 && !node->executable[1])
-		print_export(node->shell);
+	if (node->pipe_out)
+		redirect_builtin(node, node->shell->export);
+	else if (!node->executable[1])
+		print_builtin(node->shell->export);
 	else
 	{
 		j = 1;

@@ -37,9 +37,9 @@ void	display_shell(t_shell *shell)
 	while (current_node)
 	{
 		current_node->shell = shell;
-		if (current_node->type == TOKEN_BUILTIN)
+		if (current_node->builtin)
 			token_builtins(current_node);
-		if (current_node->type == TOKEN_COMMAND)
+		else if (current_node->type == TOKEN_COMMAND)
 			token_commands(current_node);
 		current_node = current_node->next;
 	}
