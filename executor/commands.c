@@ -50,11 +50,11 @@ void	execute_command(t_constructor *node)
 	pid_t	pid;
 	char	*path;
 
-	fprintf(stderr, "Executing simple command: %s\n", node->executable[0]);
+	fprintf(stderr, "Executing simple command\n");
 	path = acces_path(node);
 	if (!path)
 	{
-		printf("Command not found: %s\n", node->executable[0]);
+		printf("Command not found\n");
 		node->shell->last_exit = 127;
 		return ;
 	}
@@ -86,11 +86,11 @@ void	execute_first_command(t_constructor *node)
 	pid_t	pid;
 	char	*path;
 
-	fprintf(stderr, "Executing first command in pipeline: %s\n", node->executable[0]);
+	fprintf(stderr, "Executing first command in pipeline\n");
 	path = acces_path(node);
 	if (!path)
 	{
-		printf("Command not found: %s\n", node->executable[0]);
+		printf("Command not found\n");
 		node->shell->last_exit = 127;
 		return ;
 	}
@@ -104,16 +104,9 @@ void	execute_first_command(t_constructor *node)
 	}
 	if (pid == 0)
 	{
-		// Child process - redirect stdout to pipe
-		if (dup2(node->fd[1], STDOUT_FILENO) == -1) {
-			perror("Error en dup2 de stdout");
-			exit(1);
-		}
-		
-		// Close all unnecessary pipe fds
+		dup2(node->fd[1], STDOUT_FILENO);
 		close(node->fd[0]);
 		close(node->fd[1]);
-		
 		execve(path, node->executable, node->shell->env);
 		perror("Error al ejecutar el comando");
 		free(path);
@@ -121,11 +114,10 @@ void	execute_first_command(t_constructor *node)
 	}
 	else
 	{
-		// Parent process - close write end only
-		close(node->fd[1]);
-		node->pid = pid;
+		close(node->fd[1]);  // Close the write end in the parent
+		node->pid = pid;     // Store the pid in the node
 		free(path);
-		// No waitpid
+		// No waitpid here - we'll wait for all processes at the end
 	}
 }
 
@@ -134,11 +126,11 @@ void	execute_middle_command(t_constructor *node)
 	pid_t	pid;
 	char	*path;
 
-	fprintf(stderr, "Executing middle command in pipeline: %s\n", node->executable[0]);
+	fprintf(stderr, "Executing middle command in pipeline\n");
 	path = acces_path(node);
 	if (!path)
 	{
-		printf("Command not found: %s\n", node->executable[0]);
+		printf("Command not found\n");
 		node->shell->last_exit = 127;
 		return ;
 	}
@@ -152,21 +144,12 @@ void	execute_middle_command(t_constructor *node)
 	}
 	if (pid == 0)
 	{
-		// Child process - redirect stdin from previous pipe and stdout to next pipe
-		if (dup2(node->prev->fd[0], STDIN_FILENO) == -1) {
-			perror("Error en dup2 de stdin");
-			exit(1);
-		}
-		if (dup2(node->fd[1], STDOUT_FILENO) == -1) {
-			perror("Error en dup2 de stdout");
-			exit(1);
-		}
-		
-		// Close all pipe fds after duplication
+		dup2(node->prev->fd[0], STDIN_FILENO);
+		dup2(node->fd[1], STDOUT_FILENO);
 		close(node->prev->fd[0]);
+		close(node->prev->fd[1]);
 		close(node->fd[0]);
 		close(node->fd[1]);
-		
 		execve(path, node->executable, node->shell->env);
 		perror("Error al ejecutar el comando");
 		free(path);
@@ -174,12 +157,11 @@ void	execute_middle_command(t_constructor *node)
 	}
 	else
 	{
-		// Parent process - close unnecessary fds
 		close(node->prev->fd[0]);  // Close previous read in parent
-		close(node->fd[1]);        // Close current write in parent
-		node->pid = pid;
+		close(node->fd[1]);        // Close write end in parent
+		node->pid = pid;           // Store the pid in the node
 		free(path);
-		// No waitpid
+		// No waitpid here - we'll wait for all processes at the end
 	}
 }
 
@@ -188,11 +170,11 @@ void	execute_last_command(t_constructor *node)
 	pid_t	pid;
 	char	*path;
 
-	fprintf(stderr, "Executing last command in pipeline: %s\n", node->executable[0]);
+	fprintf(stderr, "Executing last command in pipeline\n");
 	path = acces_path(node);
 	if (!path)
 	{
-		printf("Command not found: %s\n", node->executable[0]);
+		printf("Command not found\n");
 		node->shell->last_exit = 127;
 		return ;
 	}
@@ -206,15 +188,9 @@ void	execute_last_command(t_constructor *node)
 	}
 	if (pid == 0)
 	{
-		// Child process - redirect stdin from previous pipe
-		if (dup2(node->prev->fd[0], STDIN_FILENO) == -1) {
-			perror("Error en dup2 de stdin");
-			exit(1);
-		}
-		
-		// Close all pipe fds after duplication
+		dup2(node->prev->fd[0], STDIN_FILENO);
 		close(node->prev->fd[0]);
-		
+		close(node->prev->fd[1]);
 		execve(path, node->executable, node->shell->env);
 		perror("Error al ejecutar el comando");
 		free(path);
@@ -222,11 +198,10 @@ void	execute_last_command(t_constructor *node)
 	}
 	else
 	{
-		// Parent process - close previous read fd
-		close(node->prev->fd[0]);
-		node->pid = pid;
+		close(node->prev->fd[0]);  // Close the read end in parent
+		node->pid = pid;           // Store the pid in the node
 		free(path);
-		// No waitpid
+		// No waitpid here - we'll wait for all processes at the end
 	}
 }
 
