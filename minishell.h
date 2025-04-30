@@ -114,13 +114,19 @@ typedef struct s_ast {
 	struct s_ast	*right;	// Represent child nodes for pipes & redirections
 }	t_ast;
 
+typedef struct s_collector
+{
+	void				*ptr;
+	struct s_collector	*next;
+}	t_collector;
+
 typedef struct s_constructor	t_constructor;
 
 typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
-	char			*path;				// Lista de paths donde buscar ejecutables
+	char			*path;				// path donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
 	int				interactive;		// 1 si es interactivo, 0 si es un script
@@ -128,33 +134,29 @@ typedef struct s_shell
 	char			*pwd;				// Directorio actual
 	char			*oldpwd;			// Directorio anterior
 	char			*output;			// Salida de shell
-	int				node_size;
+	int				node_size;			// Tamanyo lista de nodos a ejecutar
 	t_constructor	*constructor;		// Estructura de ejecución
 }	t_shell;
 
 typedef struct s_constructor
 {
 	char			**executable;   	// array de str de ejecutables
-	int				size_exec;			// Elemntos  a ejecutar
+	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
-	int				pipe_out;
-	int				pipe_in;
-	int				read_fd;			// File descriptor
-	int				write_fd;			// File descriptor
-	int				expand;				// File descriptor
+	int				pipe_in;			// Flag ->Pipe izquierda	
+	int				pipe_out;			// Flag ->Pipe derecha
+	int				read_fd;			// Flag ->Read File
+	int				write_fd;			// Flag ->Write File
+	int				append;				// Flag ->Write append
+	int				expand;				// Flag ->Expand variable
+	pid_t			pid;				// fork()
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
 	t_token_error	error;				// Estado de error
-	t_shell			*shell;				//enlace a shell
-	t_constructor	*next;				//sigueinte nodo o ejecutable
-	t_constructor	*prev;				//sigueinte nodo o ejecutable
+	t_shell			*shell;				// Enlace a shell
+	t_constructor	*next;				// Sigueinte nodo
+	t_constructor	*prev;				// Anterior nodo
 }	t_constructor;
-
-typedef struct s_collector
-{
-	void				*ptr;
-	struct s_collector	*next;
-}	t_collector;
 
 // utils.c
 void    freer(char *ptr);
