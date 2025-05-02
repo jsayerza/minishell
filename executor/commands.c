@@ -35,8 +35,7 @@ char	*acces_path(t_constructor *node)
 	i = 0;
 	while (node->shell->paths[i])
 	{
-		exec = (construct_exec(node->shell->paths[i],
-					node->executable[0]));
+		exec = construct_exec(node->shell->paths[i], node->executable[0]);
 		if (exec && access(exec, X_OK) == 0)
 			return (exec);
 		free(exec);
@@ -45,155 +44,129 @@ char	*acces_path(t_constructor *node)
 	return (NULL);
 }
 
-void	execute_command(t_constructor *node)
+void	close_all_pipes_except(t_constructor *node, int keep_in, int keep_out)
 {
-	char	*path;
+	t_constructor	*temp;
 
-	fprintf(stderr, "Executing simple command\n");
-	path = acces_path(node);
+	temp = node->shell->constructor;
+	while (temp && temp->prev)
+		temp = temp->prev;
+	while (temp)
+	{
+		if (temp->pipe_out == 1)
+		{
+			if (keep_in != 1 || temp != node->prev)
+				close(temp->fd[0]);
+			if (keep_out != 1 || temp != node)
+				close(temp->fd[1]);
+		}
+		temp = temp->next;
+	}
+}
+
+int	handle_command_not_found(t_constructor *node, char *path)
+{
 	if (!path)
 	{
 		printf("Command not found\n");
 		node->shell->last_exit = 127;
-		return ;
+		return (1);
 	}
-	node->pid = fork();
+	return (0);
+}
+
+int	handle_fork_error(t_constructor *node, char *path)
+{
 	if (node->pid == -1)
 	{
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
-		return ;
+		return (1);
 	}
+	return (0);
+}
+
+void	execute_in_child(t_constructor *node, char *path)
+{
+	execve(path, node->executable, node->shell->env);
+	perror("Error al ejecutar el comando");
+	free(path);
+	exit(1);
+}
+
+void	setup_first_command_pipes(t_constructor *node)
+{
+	dup2(node->fd[1], STDOUT_FILENO);
+	close_all_pipes_except(node, 0, 0);
+}
+
+void	setup_middle_command_pipes(t_constructor *node)
+{
+	dup2(node->prev->fd[0], STDIN_FILENO);
+	dup2(node->fd[1], STDOUT_FILENO);
+	close_all_pipes_except(node, 0, 0);
+}
+
+void	setup_last_command_pipes(t_constructor *node)
+{
+	dup2(node->prev->fd[0], STDIN_FILENO);
+	close_all_pipes_except(node, 0, 0);
+}
+
+void	execute_command_with_path(t_constructor *node, char *path,
+			void (*setup_pipes)(t_constructor *))
+{
+	node->pid = fork();
+	if (handle_fork_error(node, path))
+		return;
 	if (node->pid == 0)
 	{
-		execve(path, node->executable, node->shell->env);
-		perror("Error al ejecutar el comando");
-		free(path);
-		exit(1);
+		if (setup_pipes)
+			setup_pipes(node);
+		execute_in_child(node, path);
 	}
-	else
-	{
-		free(path);
-	}
+	free(path);
+}
+
+void	execute_command(t_constructor *node)
+{
+	char	*path;
+
+	path = acces_path(node);
+	if (handle_command_not_found(node, path))
+		return;
+	execute_command_with_path(node, path, NULL);
 }
 
 void	execute_first_command(t_constructor *node)
 {
 	char	*path;
 
-	fprintf(stderr, "Executing first command in pipeline\n");
 	path = acces_path(node);
-	if (!path)
-	{
-		printf("Command not found\n");
-		node->shell->last_exit = 127;
-		return ;
-	}
-	node->pid = fork();
-	if (node->pid == -1)
-	{
-		perror("Error al crear el proceso hijo");
-		free(path);
-		node->shell->last_exit = 1;
-		return ;
-	}
-	if (node->pid == 0)
-	{
-		dup2(node->fd[1], STDOUT_FILENO);
-		close(node->fd[0]);
-		close(node->fd[1]);
-		execve(path, node->executable, node->shell->env);
-		perror("Error al ejecutar el comando");
-		free(path);
-		exit(1);
-	}
-	else
-	{
-		close(node->fd[1]);  // Close the write end in the parent
-		free(path);
-		// No waitpid here - we'll wait for all processes at the end
-	}
+	if (handle_command_not_found(node, path))
+		return;
+	execute_command_with_path(node, path, setup_first_command_pipes);
 }
 
 void	execute_middle_command(t_constructor *node)
 {
 	char	*path;
 
-	fprintf(stderr, "Executing middle command in pipeline\n");
 	path = acces_path(node);
-	if (!path)
-	{
-		printf("Command not found\n");
-		node->shell->last_exit = 127;
-		return ;
-	}
-	node->pid = fork();
-	if (node->pid == -1)
-	{
-		perror("Error al crear el proceso hijo");
-		free(path);
-		node->shell->last_exit = 1;
-		return ;
-	}
-	if (node->pid == 0)
-	{
-		dup2(node->prev->fd[0], STDIN_FILENO);
-		dup2(node->fd[1], STDOUT_FILENO);
-		close(node->prev->fd[0]);
-		close(node->prev->fd[1]);
-		close(node->fd[0]);
-		close(node->fd[1]);
-		execve(path, node->executable, node->shell->env);
-		perror("Error al ejecutar el comando");
-		free(path);
-		exit(1);
-	}
-	else
-	{
-		close(node->prev->fd[0]);  // Close previous read in parent
-		close(node->fd[1]);        // Close write end in parent
-		free(path);
-		// No waitpid here - we'll wait for all processes at the end
-	}
+	if (handle_command_not_found(node, path))
+		return;
+	execute_command_with_path(node, path, setup_middle_command_pipes);
 }
 
 void	execute_last_command(t_constructor *node)
 {
 	char	*path;
 
-	fprintf(stderr, "Executing last command in pipeline\n");
 	path = acces_path(node);
-	if (!path)
-	{
-		printf("Command not found\n");
-		node->shell->last_exit = 127;
-		return ;
-	}
-	node->pid = fork();
-	if (node->pid == -1)
-	{
-		perror("Error al crear el proceso hijo");
-		free(path);
-		node->shell->last_exit = 1;
-		return ;
-	}
-	if (node->pid == 0)
-	{
-		dup2(node->prev->fd[0], STDIN_FILENO);
-		close(node->prev->fd[0]);
-		close(node->prev->fd[1]);
-		execve(path, node->executable, node->shell->env);
-		perror("Error al ejecutar el comando");
-		free(path);
-		exit(1);
-	}
-	else
-	{
-		close(node->prev->fd[0]);  // Close the read end in parent
-		free(path);
-		// No waitpid here - we'll wait for all processes at the end
-	}
+	if (handle_command_not_found(node, path))
+		return;
+	execute_command_with_path(node, path, setup_last_command_pipes);
 }
 
 void	token_commands(t_constructor *node)

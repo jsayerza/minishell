@@ -284,6 +284,11 @@ void	refresh_directori(t_shell *shell, char *pwd, int type);
 void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 
+//funcions fd
+
+void    read_fd(t_constructor *node);
+
+
 //Funciones comandos
 void	token_commands(t_constructor *node);
 
