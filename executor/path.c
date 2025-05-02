@@ -73,28 +73,22 @@ char	**copy_path(char **path)
 	}
 	return (new_path);
 }
-
-void	path(t_shell *shell)
+void path(t_shell *shell)
 {
-	char	**path;
-
-	if (!shell || !shell->env)
-	{
-		if (shell)
-			shell->paths = NULL;
-		return ;
-	}
-	path = find_path(shell);
-	if (!path || len_path(path) == 0)
-	{
-		free_path_array(path);
-		path = try_alternative_path(shell->env);
-	}
-	if (!path || len_path(path) == 0)
-	{
-		shell->paths = NULL;
-		free_path_array(path);
-		return ;
-	}
-	shell->paths = copy_path(path);
+    if (!shell || !shell->env)
+    {
+        if (shell)
+            shell->paths = NULL;
+        return;
+    }
+    
+    shell->paths = find_path(shell);
+    if (!shell->paths || len_path(shell->paths) == 0)
+    {
+        free_path_array(shell->paths);
+        shell->paths = try_alternative_path(shell->env);
+    }
+    
+    // No necesitas hacer un copy_path y luego liberar el original
+    // Ya que el collector se encargará de liberar la memoria
 }

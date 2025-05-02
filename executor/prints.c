@@ -90,8 +90,6 @@ void print_constructor(t_shell *shell)
         printf("Flags: ");
         if (current->pipe_in) printf("PIPE_IN ");
         if (current->pipe_out) printf("PIPE_OUT ");
-        if (current->read_fd) printf("READ_FD ");
-        if (current->write_fd) printf("WRITE_FD ");
         if (current->append) printf("APPEND ");
         if (current->expand) printf("EXPAND ");
         printf("\n");

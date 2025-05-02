@@ -24,6 +24,7 @@ static char	*get_short_pwd(char *cwd, t_collector **collector)
 	{
 		rel = cwd + ft_strlen(home);
 		short_pwd = ft_strjoin("~", rel);
+		collector_append(collector, short_pwd);
 	}
 	else
 		short_pwd = ft_strdup(cwd);

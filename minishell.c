@@ -15,6 +15,7 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_collector		*collector;
+	t_collector		*cycle_collector;
 	t_token			*tokens;
 	t_shell			*shell;
 	t_ast			*ast;
@@ -25,21 +26,22 @@ int	main(int argc, char **argv, char **envp)
 
 	(void)argc;
 	(void)argv;
+	collector = NULL;
 	interact = isatty(STDIN_FILENO);
-	shell = init_shell(NULL, envp);
+	shell = init_shell(NULL, envp, &collector);
 	if (!shell)
-		exit_program(NULL, "Error al inicializar shell", true);
+		exit_program(&collector, "Error al inicializar shell", true);
 	while (1)
 	{
-		collector = NULL;
+		cycle_collector = NULL;
 		line = NULL;
 		if (interact)
 		{
-			prompt = prompt_generate(&collector);
+			prompt = prompt_generate(&cycle_collector);
 			line = readline(prompt);
 			if (!line)
 			{
-				collector_cleanup(&collector);
+				collector_cleanup(&cycle_collector);
 				break ;
 			}
 		}
@@ -50,29 +52,29 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] == '\0' || is_only_whitespace(line))
 		{
 			freer(line);
-			collector_cleanup(&collector);
+			collector_cleanup(&cycle_collector);
 			continue ;
 		}
 		if (interact)
 			add_history(line);
 		tokens = NULL;
-		tokens = lexer(line, &collector, &tokens);
+		tokens = lexer(line, &cycle_collector, &tokens);
 		freer(line);
 		if (!tokens)
 		{
-			collector_cleanup(&collector);
+			collector_cleanup(&cycle_collector);
 			continue ;
 		}
 		tokens_print(tokens);
-		ast = parser(&collector, tokens, interact);
+		ast = parser(&cycle_collector, tokens, interact);
 		if (!ast)
 		{
-			collector_cleanup(&collector);
+			collector_cleanup(&cycle_collector);
 			continue ;
 		}
 		printf("\n=== AST ===\n");
 		ast_print(ast, 0);
-		constructor = ast_to_constructor(&collector, ast, shell);
+		constructor = ast_to_constructor(&cycle_collector, ast, shell);
 		shell->constructor = constructor;
 		if (constructor)
 		{
@@ -81,7 +83,7 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 			print_error("minishell: failed to prepare command execution");
-		collector_cleanup(&collector);
+		collector_cleanup(&cycle_collector);
 	}
 	collector_cleanup(&collector);
 	return (EXIT_SUCCESS);

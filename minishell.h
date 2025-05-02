@@ -136,6 +136,7 @@ typedef struct s_shell
 	char			*output;			// Salida de shell
 	int				node_size;			// Tamanyo lista de nodos a ejecutar
 	t_constructor	*constructor;		// Estructura de ejecución
+	t_collector		*collector;
 }	t_shell;
 
 typedef struct s_constructor
@@ -143,10 +144,10 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
+	char			**input_file;		// archivos de entrda 
+	char			**output_file;		// archivos de salida
 	int				pipe_in;			// Flag ->Pipe izquierda	
 	int				pipe_out;			// Flag ->Pipe derecha
-	int				read_fd;			// Flag ->Read File
-	int				write_fd;			// Flag ->Write File
 	int				append;				// Flag ->Write append
 	int				expand;				// Flag ->Expand variable
 	pid_t			pid;				// fork()
@@ -225,10 +226,9 @@ void	constructor_print(t_constructor *list);
 
 //init functions
 void	start_shell(t_shell *shell);
-t_shell	*init_shell(t_shell *shell, char **env);
 void			start_shell(t_shell *shell);
-t_shell			*init_shell(t_shell *shell, char **env);
-t_constructor	*init_constructor(void);
+t_shell			*init_shell(t_shell *shell, char **env, t_collector **collector);
+t_constructor *init_constructor(t_collector **collector);
 //void	construct_shell_data(t_shell *shell, char **env);
 void			copy_env_to_shell (t_shell *shell, char **envv);
 void			env_to_export(t_shell *shell);
@@ -277,7 +277,7 @@ void	path(t_shell *shell);
 char	*get_home(t_shell *shell);
 char	*get_pwd(t_shell *shell);
 char	*get_oldpwd(t_shell *shell);
-char	*extract_home_path(const char *env_entry);
+char	*extract_home_path(t_shell *shell, const char *env_entry);
 char	*extract_pwd_path(const char *env_entry);
 char	*extract_oldpwd_path(const char *env_entry);
 void	refresh_directori(t_shell *shell, char *pwd, int type);
@@ -317,5 +317,6 @@ void	print_path(t_shell *shell);
 //clean functions
 void	clean_shell(t_shell *shell);
 void	clean_constructor(t_constructor *constructor);
+void	free_split(char **split);
 
 #endif

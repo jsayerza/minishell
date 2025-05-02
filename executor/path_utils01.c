@@ -28,25 +28,35 @@ char	*get_value(char **env)
 	return (NULL);
 }
 
-char	**find_path(t_shell *shell)
+char **find_path(t_shell *shell)
 {
-	char	**result;
-	char	*path_value;
+    char **result;
+    char *path_value;
+    int i;
 
-	if (!shell->env)
-		return (NULL);
-	path_value = get_value(shell->env);
-	if (!path_value || !*path_value)
-		return (NULL);
-	shell->path = malloc((ft_strlen(path_value) + 1) * sizeof(char));
-	shell->path = ft_strdup(path_value);
-	result = ft_split(path_value, ':');
-	if (!result || !result[0])
-	{
-		free_path_array(result);
-		return (NULL);
-	}
-	return (result);
+    if (!shell->env)
+        return (NULL);
+    path_value = get_value(shell->env);
+    if (!path_value || !*path_value)
+        return (NULL);
+    shell->path = ft_strdup(path_value);
+    collector_append(&shell->collector, shell->path);
+    result = ft_split(path_value, ':');
+    if (!result || !result[0])
+    {
+        free_path_array(result);
+        return (NULL);
+    }
+    
+    collector_append(&shell->collector, result);
+    i = 0;
+    while (result[i])
+    {
+        collector_append(&shell->collector, result[i]);
+        i++;
+    }
+    
+    return (result);
 }
 
 int	count_segments(char *path_str)

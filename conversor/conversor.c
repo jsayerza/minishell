@@ -46,8 +46,8 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->size_exec = 0;
 	while (node->executable && node->executable[node->size_exec])
 		node->size_exec++;
-	node->read_fd = -1;
-	node->write_fd = -1;
+	//node->read_fd = -1;
+	//node->write_fd = -1;
 	node->type = ast->type;
 	node->error = 0;
 	node->shell = shell;

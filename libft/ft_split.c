@@ -51,21 +51,20 @@ void	free_mem(char **array, int i)
 	free(array);
 }
 
-int	word_proc(char const *s, char c, char **array, int i)
+int word_proc(char const *s, char c, char **array, int i)
 {
-	int	wordlen;
+    int wordlen;
 
-	wordlen = word_len((char *)s, c);
-	array[i] = malloc(sizeof(s) * wordlen + 1);
-	if (!array[i])
-	{
-		free_mem(array, i);
-		return (0);
-	}
-	ft_strlcpy(array[i++], (char *)s, wordlen + 1);
-	return (wordlen);
+    wordlen = word_len((char *)s, c);
+    array[i] = malloc(sizeof(char) * (wordlen + 1));
+    if (!array[i])
+    {
+        free_mem(array, i);
+        return (0);
+    }
+    ft_strlcpy(array[i++], (char *)s, wordlen + 1);
+    return (wordlen);
 }
-
 char	**ft_split(char const *s, char c)
 {
 	char	**array;

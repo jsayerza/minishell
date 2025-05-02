@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-char	*extract_home_path(const char *env_entry)
+char	*extract_home_path(t_shell *shell, const char *env_entry)
 {
 	char	*home;
 	int		len;
@@ -22,6 +22,7 @@ char	*extract_home_path(const char *env_entry)
 	home = malloc((len + 1) * sizeof(char));
 	if (!home)
 		return (NULL);
+	collector_append(&shell->collector, home);
 	i = 0;
 	while (env_entry[i + 5])
 	{
@@ -40,7 +41,7 @@ char	*get_home(t_shell *shell)
 	while (shell->env[i])
 	{
 		if (ft_strncmp("HOME=", shell->env[i], 5) == 0)
-			return (extract_home_path(shell->env[i]));
+			return (extract_home_path(shell, shell->env[i]));
 		i++;
 	}
 	return (NULL);

@@ -69,8 +69,8 @@ void	constructor_print(t_constructor *list)
 		else
 			printf("(null)\n");
 		printf("Builtin: %s\n", get_builtin_name(list->builtin));
-		printf("Read FD: %d\n", list->read_fd);
-		printf("Write FD: %d\n", list->write_fd);
+		//printf("Read FD: %d\n", list->read_fd);
+		//printf("Write FD: %d\n", list->write_fd);
 		printf("Token Type: %s\n", get_token_type_name(list->type));
 		printf("Error: %d\n", list->error);
 		printf("Pipe in: %d  Pipe out: %d\n", list->pipe_in, list->pipe_out);

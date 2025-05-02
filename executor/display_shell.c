@@ -68,7 +68,6 @@ void display_shell(t_shell *shell)
 
     assign_pipes(shell);
     current_node = shell->constructor;
-    print_constructor(shell);
     
     while (current_node && current_node->prev)
         current_node = current_node->prev;
@@ -79,8 +78,6 @@ void display_shell(t_shell *shell)
             token_builtins(current_node);
         else if (current_node->type == TOKEN_COMMAND)
             token_commands(current_node);
-        else if (current_node->read_fd)
-            read_fd(current_node);
         current_node = current_node->next;
     }
     
