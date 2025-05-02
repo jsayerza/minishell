@@ -85,6 +85,10 @@ int	main(int argc, char **argv, char **envp)
 			print_error("minishell: failed to prepare command execution");
 		collector_cleanup(&cycle_collector);
 	}
+	free_path_array(shell->paths);
+	free_path_array(shell->env);
+	free(shell->path);
 	collector_cleanup(&collector);
+	
 	return (EXIT_SUCCESS);
 }

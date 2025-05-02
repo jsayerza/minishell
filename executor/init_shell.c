@@ -14,6 +14,9 @@
 
 static void init_constructor_fields(t_constructor *new)
 {
+    if (!new)
+        return;
+    
     new->executable = NULL;
     new->size_exec = 0;
     new->input_file = NULL;
@@ -37,31 +40,36 @@ t_constructor *init_constructor(t_collector **collector)
     new = (t_constructor *)malloc(sizeof(t_constructor));
     if (!new)
         return (NULL);
+    
+    init_constructor_fields(new);
+    
     if (collector)
         collector_append(collector, new);
-    init_constructor_fields(new);
+    
     return (new);
 }
 
 static int init_shell_fields(t_shell *shell, t_collector **collector)
 {
+    if (!shell)
+        return (0);
+    
     shell->last_exit = 0;
     shell->interactive = 1;
     shell->output = NULL;
     shell->node_size = 0;
-    shell->collector = *collector;
+    shell->collector = collector ? *collector : NULL;
     
     shell->home = get_home(shell);
-    if (shell->home && collector)
-        collector_append(collector, shell->home);
-    
     shell->pwd = getcwd(NULL, 0);
-    if (shell->pwd && collector)
-        collector_append(collector, shell->pwd);
+    shell->oldpwd = shell->pwd ? ft_strdup(shell->pwd) : NULL;
     
-    shell->oldpwd = ft_strdup(shell->pwd);
-    if (shell->oldpwd && collector)
-        collector_append(collector, shell->oldpwd);
+    if (collector)
+    {
+        if (shell->home) collector_append(collector, shell->home);
+        if (shell->pwd) collector_append(collector, shell->pwd);
+        if (shell->oldpwd) collector_append(collector, shell->oldpwd);
+    }
     
     shell->constructor = init_constructor(collector);
     if (!shell->constructor)
@@ -69,7 +77,6 @@ static int init_shell_fields(t_shell *shell, t_collector **collector)
     
     return (1);
 }
-
 t_shell *init_shell(t_shell *shell, char **env, t_collector **collector)
 {
     if (shell)
@@ -77,22 +84,34 @@ t_shell *init_shell(t_shell *shell, char **env, t_collector **collector)
     
     shell = (t_shell *)malloc(sizeof(t_shell));
     if (!shell)
-        return (NULL);
+        return NULL;
+    
+    // Inicialización explícita
+    ft_memset(shell, 0, sizeof(t_shell));
     
     if (collector)
+    {
         collector_append(collector, shell);
+        shell->collector = *collector;
+    }
     
-    // Call void functions without checking return values
+    // Inicialización de environment
     copy_env_to_shell(shell, env);
-    collector_append(&shell->collector, shell->env);
     env_to_export(shell);
     create_export(shell);
-    collector_append(&shell->collector, shell->export);
+    
+    // Registrar export si existe
+    if (shell->export && collector)
+        collector_append(collector, shell->export);
+    
+    // Inicializar paths
     path(shell);
+    
     if (!init_shell_fields(shell, collector))
     {
         clean_shell(shell);
-        return (NULL);
+        return NULL;
     }
-    return (shell);
+    
+    return shell;
 }

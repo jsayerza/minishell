@@ -1,100 +1,93 @@
-/* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::   */
-/*	 clean_shell.c										:+:		 :+:	:+:   */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2025/03/23 12:13:30 by acarranz		   #+#	  #+#			  */
-/*	 Updated: 2025/03/23 12:13:30 by acarranz		  ###	########.fr		  */
-/*																			  */
-/* ************************************************************************** */
-
 #include "../minishell.h"
 
-void	clean_path(t_shell *shell)
+static void clean_executable(t_constructor *current)
 {
-	int	i;
+    int i;
 
-	i = 0;
-	if (shell->paths)
-	{
-		while (shell->paths[i])
-		{
-			free(shell->paths[i]);
-			i++;
-		}
-		free(shell->paths);
-	}
+    if (!current || !current->executable)
+        return;
+    
+    i = 0;
+    while (current->executable[i])
+        free(current->executable[i++]);
+    free(current->executable);
+    current->executable = NULL;
 }
 
-void	clean_executbale(t_constructor *current)
+void clean_constructor(t_constructor *constructor)
 {
-	int	i;
+    t_constructor *current;
+    t_constructor *next;
 
-	if (current->executable)
-	{
-		i = 0;
-		while (current->executable[i])
-		{
-			free(current->executable[i]);
-			i++;
-		}
-		free(current->executable);
-	}
+    if (!constructor)
+        return;
+    
+    current = constructor;
+    while (current)
+    {
+        next = current->next;
+        clean_executable(current);
+        free(current);
+        current = next;
+    }
 }
 
-void	clean_constructor(t_constructor *constructor)
+void clean_paths(t_shell *shell)
 {
-	t_constructor	*current;
-	t_constructor	*next;
-
-	current = constructor;
-	while (current)
-	{
-		next = current->next;
-		clean_executbale(current);
-		free(current);
-		current = next;
-	}
+    if (!shell)
+        return;
+    
+    if (shell->path)
+    {
+        free(shell->path);
+        shell->path = NULL;
+    }
+    
+    if (shell->paths)
+    {
+        free_path_array(shell->paths);
+        shell->paths = NULL;
+    }
 }
 
-void	clean_all(t_shell *shell)
+void clean_shell(t_shell *shell)
 {
-	if (shell->paths)
-		free_path_array(shell->paths);
-	free(shell->pwd);
-	free(shell->oldpwd);
-	free(shell->output);
-	clean_constructor(shell->constructor);
-	free(shell);
-}
+    int i;
 
-void	clean_shell(t_shell *shell)
-{
-	int	i;
-
-	if (!shell)
-		return ;
-	if (shell->env)
-	{
-		i = 0;
-		while (shell->env[i])
-		{
-			free(shell->env[i]);
-			i++;
-		}
-		free(shell->env);
-	}
-	if (shell->export)
-	{
-		i = 0;
-		while (shell->export[i])
-		{
-			free(shell->export[i]);
-			i++;
-		}
-		free(shell->export);
-	}
-	clean_path(shell);
+    if (!shell)
+        return;
+    
+    // Limpiar environment
+    if (shell->env)
+    {
+        i = 0;
+        while (shell->env[i])
+            free(shell->env[i++]);
+        free(shell->env);
+        shell->env = NULL;
+    }
+    
+    // Limpiar export
+    if (shell->export)
+    {
+        i = 0;
+        while (shell->export[i])
+            free(shell->export[i++]);
+        free(shell->export);
+        shell->export = NULL;
+    }
+    
+    // Limpiar paths
+    clean_paths(shell);
+    
+    // Limpiar otros campos
+    free(shell->pwd);
+    free(shell->oldpwd);
+    free(shell->output);
+    
+    // Limpiar constructor
+    clean_constructor(shell->constructor);
+    
+    // Finalmente liberar la estructura shell
+    free(shell);
 }

@@ -317,6 +317,6 @@ void	print_path(t_shell *shell);
 //clean functions
 void	clean_shell(t_shell *shell);
 void	clean_constructor(t_constructor *constructor);
-void	free_split(char **split);
+void free_path_array(char **path);
 
 #endif

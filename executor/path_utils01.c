@@ -32,33 +32,37 @@ char **find_path(t_shell *shell)
 {
     char **result;
     char *path_value;
-    int i;
 
-    if (!shell->env)
-        return (NULL);
+    if (!shell || !shell->env)
+        return NULL;
+    
     path_value = get_value(shell->env);
     if (!path_value || !*path_value)
-        return (NULL);
+        return NULL;
+
+    // Liberar path anterior si existe
+    if (shell->path)
+    {
+        freer(shell->path);
+        shell->path = NULL;
+    }
+    
+    // Duplicar y registrar el path completo en el collector
     shell->path = ft_strdup(path_value);
+    if (!shell->path)
+        return NULL;
     collector_append(&shell->collector, shell->path);
+
+    // Split sin collector (liberado por path())
     result = ft_split(path_value, ':');
     if (!result || !result[0])
     {
         free_path_array(result);
-        return (NULL);
+        return NULL;
     }
     
-    collector_append(&shell->collector, result);
-    i = 0;
-    while (result[i])
-    {
-        collector_append(&shell->collector, result[i]);
-        i++;
-    }
-    
-    return (result);
+    return result;
 }
-
 int	count_segments(char *path_str)
 {
 	int		count;

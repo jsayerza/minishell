@@ -81,6 +81,5 @@ void	copy_env_to_shell(t_shell *shell, char **envv)
 		free_envv(env, env_count);
 		return ;
 	}
-	collector_append(&shell->collector, env);
 	shell->env = env;
 }
