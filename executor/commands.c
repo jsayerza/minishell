@@ -47,7 +47,6 @@ char	*acces_path(t_constructor *node)
 
 void	execute_command(t_constructor *node)
 {
-	pid_t	pid;
 	char	*path;
 
 	fprintf(stderr, "Executing simple command\n");
@@ -58,15 +57,15 @@ void	execute_command(t_constructor *node)
 		node->shell->last_exit = 127;
 		return ;
 	}
-	pid = fork();
-	if (pid == -1)
+	node->pid = fork();
+	if (node->pid == -1)
 	{
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
 		return ;
 	}
-	if (pid == 0)
+	if (node->pid == 0)
 	{
 		execve(path, node->executable, node->shell->env);
 		perror("Error al ejecutar el comando");
@@ -75,15 +74,12 @@ void	execute_command(t_constructor *node)
 	}
 	else
 	{
-		node->pid = pid;  // Store the pid in the node
 		free(path);
-		// No waitpid here - we'll wait for all processes at the end
 	}
 }
 
 void	execute_first_command(t_constructor *node)
 {
-	pid_t	pid;
 	char	*path;
 
 	fprintf(stderr, "Executing first command in pipeline\n");
@@ -94,15 +90,15 @@ void	execute_first_command(t_constructor *node)
 		node->shell->last_exit = 127;
 		return ;
 	}
-	pid = fork();
-	if (pid == -1)
+	node->pid = fork();
+	if (node->pid == -1)
 	{
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
 		return ;
 	}
-	if (pid == 0)
+	if (node->pid == 0)
 	{
 		dup2(node->fd[1], STDOUT_FILENO);
 		close(node->fd[0]);
@@ -115,7 +111,6 @@ void	execute_first_command(t_constructor *node)
 	else
 	{
 		close(node->fd[1]);  // Close the write end in the parent
-		node->pid = pid;     // Store the pid in the node
 		free(path);
 		// No waitpid here - we'll wait for all processes at the end
 	}
@@ -123,7 +118,6 @@ void	execute_first_command(t_constructor *node)
 
 void	execute_middle_command(t_constructor *node)
 {
-	pid_t	pid;
 	char	*path;
 
 	fprintf(stderr, "Executing middle command in pipeline\n");
@@ -134,15 +128,15 @@ void	execute_middle_command(t_constructor *node)
 		node->shell->last_exit = 127;
 		return ;
 	}
-	pid = fork();
-	if (pid == -1)
+	node->pid = fork();
+	if (node->pid == -1)
 	{
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
 		return ;
 	}
-	if (pid == 0)
+	if (node->pid == 0)
 	{
 		dup2(node->prev->fd[0], STDIN_FILENO);
 		dup2(node->fd[1], STDOUT_FILENO);
@@ -159,7 +153,6 @@ void	execute_middle_command(t_constructor *node)
 	{
 		close(node->prev->fd[0]);  // Close previous read in parent
 		close(node->fd[1]);        // Close write end in parent
-		node->pid = pid;           // Store the pid in the node
 		free(path);
 		// No waitpid here - we'll wait for all processes at the end
 	}
@@ -167,7 +160,6 @@ void	execute_middle_command(t_constructor *node)
 
 void	execute_last_command(t_constructor *node)
 {
-	pid_t	pid;
 	char	*path;
 
 	fprintf(stderr, "Executing last command in pipeline\n");
@@ -178,15 +170,15 @@ void	execute_last_command(t_constructor *node)
 		node->shell->last_exit = 127;
 		return ;
 	}
-	pid = fork();
-	if (pid == -1)
+	node->pid = fork();
+	if (node->pid == -1)
 	{
 		perror("Error al crear el proceso hijo");
 		free(path);
 		node->shell->last_exit = 1;
 		return ;
 	}
-	if (pid == 0)
+	if (node->pid == 0)
 	{
 		dup2(node->prev->fd[0], STDIN_FILENO);
 		close(node->prev->fd[0]);
@@ -199,7 +191,6 @@ void	execute_last_command(t_constructor *node)
 	else
 	{
 		close(node->prev->fd[0]);  // Close the read end in parent
-		node->pid = pid;           // Store the pid in the node
 		free(path);
 		// No waitpid here - we'll wait for all processes at the end
 	}

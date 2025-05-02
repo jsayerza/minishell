@@ -34,12 +34,14 @@ void	wait_for_all_processes(t_shell *shell)
 	int				status;
 
 	current = shell->constructor;
+	while(current->prev)
+		current = current->prev;
 	while (current)
 	{
 		if (current->pid > 0)
 		{
 			waitpid(current->pid, &status, 0);
-			if (WIFEXITED(status) && current->next == NULL)  // Get status from last command
+			if (WIFEXITED(status) && current->next == NULL)
 				shell->last_exit = WEXITSTATUS(status);
 		}
 		current = current->next;

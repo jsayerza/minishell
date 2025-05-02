@@ -23,6 +23,10 @@ t_constructor	*init_constructor(void)
 	new->size_exec = 0;
 	new->pipe_in = -1;
 	new->pipe_out = -1;
+	new->read_fd = -1;
+	new->write_fd = -1;
+	new->append = -1;
+	new->expand = -1;
 	new->builtin = 0;
 	new->type = 0;
 	new->error = NO_ERROR;
