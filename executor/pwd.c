@@ -21,4 +21,6 @@ void	pwd(void)
 		printf("%s\n", pwd);
 	else
 		printf("minishell: pwd: PWD not set\n");
+
+	free(pwd);
 }

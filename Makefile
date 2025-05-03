@@ -101,8 +101,6 @@ run: $(NAME)
 valgrind1: $(NAME)
 	valgrind -s --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(NAME) $(PARAMS)
 
-.PHONY:	all clean fclean re run valgrind1
-
+.PHONY: all clean fclean re run valgrind1 pretty run_pretty
 
 # source ~/norminette_env/bin/activate
-

@@ -28,41 +28,34 @@ char	*get_value(char **env)
 	return (NULL);
 }
 
-char **find_path(t_shell *shell)
+char	**find_path(t_shell *shell)
 {
-    char **result;
-    char *path_value;
+	char	**result;
+	char	*path_value;
 
-    if (!shell || !shell->env)
-        return NULL;
-    
-    path_value = get_value(shell->env);
-    if (!path_value || !*path_value)
-        return NULL;
-
-    // Liberar path anterior si existe
-    if (shell->path)
-    {
-        freer(shell->path);
-        shell->path = NULL;
-    }
-    
-    // Duplicar y registrar el path completo en el collector
-    shell->path = ft_strdup(path_value);
-    if (!shell->path)
-        return NULL;
-    collector_append(&shell->collector, shell->path);
-
-    // Split sin collector (liberado por path())
-    result = ft_split(path_value, ':');
-    if (!result || !result[0])
-    {
-        free_path_array(result);
-        return NULL;
-    }
-    
-    return result;
+	if (!shell || !shell->env)
+		return (NULL);
+	path_value = get_value(shell->env);
+	if (!path_value || !*path_value)
+		return (NULL);
+	if (shell->path)
+	{
+		freer(shell->path);
+		shell->path = NULL;
+	}
+	shell->path = ft_strdup(path_value);
+	if (!shell->path)
+		return (NULL);
+	collector_append(&shell->collector, shell->path);
+	result = ft_split(path_value, ':');
+	if (!result || !result[0])
+	{
+		free_path_array(result);
+		return (NULL);
+	}
+	return (result);
 }
+
 int	count_segments(char *path_str)
 {
 	int		count;

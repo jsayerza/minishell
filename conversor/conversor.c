@@ -53,6 +53,7 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->shell = shell;
 	node->next = NULL;
 	node->prev = NULL;
+	node->pid = -1;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
 	node->builtin = BUILTIN_NONE;

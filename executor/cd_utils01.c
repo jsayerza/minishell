@@ -85,12 +85,13 @@ void	append_pwd(t_shell *shell, char *new_dir)
 	if (!slash)
 		return ;
 	new_pwd = ft_strjoin(slash, new_dir);
-	free(slash);
 	if (!new_pwd)
 		return ;
 	free(shell->oldpwd);
 	shell->oldpwd = shell->pwd;
 	shell->pwd = new_pwd;
+	collector_append(&shell->collector, new_pwd);
+	collector_append(&shell->collector, slash);
 	printf("pwd->%s\n", shell->pwd);
 	printf("oldpwd->%s\n", shell->oldpwd);
 	update_environment(shell);
@@ -104,6 +105,7 @@ void	refresh_directori(t_shell *shell, char *pwd, int type)
 	new_oldpwd = malloc((ft_strlen(shell->pwd) + 1) * sizeof(char));
 	if (!new_oldpwd)
 		return ;
+	collector_append(&shell->collector, new_oldpwd);
 	if (!type)
 		append_pwd(shell, pwd);
 	else
