@@ -171,6 +171,7 @@ void	exit_program(t_collector **collector, const char *msg,\
 char	*prompt_generate(t_collector **collector);
 
 // collector.c
+void	collector_remove_ptr(t_collector **collector, void *ptr);
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
 
@@ -189,15 +190,16 @@ void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
 // lexer/tokens.c
+void	tokens_free(t_token *head);
+void	token_print(t_token *token);
+void	tokens_print(t_token **head);
+void	token_remove(t_token **head, t_token *target, t_collector **collector);
+t_token	*ft_lasttoken(t_token *lst);
 void	token_create(t_collector **collector, t_token_type type, \
 	const char *value, t_token **head);
-t_token	*ft_lasttoken(t_token *lst);
-void	tokens_print(t_token *token);
-void	token_print(t_token *token);
-void	tokens_free(t_token *head);
 
 // lexer/lexer_expand.c
-void tokens_expand(t_token *tokens, int exit_status, t_collector **collector);
+void	tokens_expand(t_token **head, int exit_status, t_collector **collector);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact);

@@ -19,7 +19,6 @@ int	handle_invalidchars(const char *input, int i)
 		printf("minishell: syntax error near unexpected token `%c`\n", \
 			input[i]);
 		return (1);
-		// return (input[i]);
 	}
 	return (0);
 }
@@ -55,10 +54,33 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	printf("OUT get_expand_var\n");
 }
 
+// void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head)
+// {
+// 	int		start;
+// 	char	*quoted;
+// 	char	quote_type;
+
+// 	printf("IN get_quoted_str\n");
+// 	quote_type = input[*i];
+// 	start = ++(*i);
+// 	while (input[*i] && input[*i] != quote_type)
+// 		(*i)++;
+// 	if (!input[*i]) // No s'ha trobat "'" o """
+// 		exit_program(collector, "minishell: unclosed quotes", false);
+// 	quoted = ft_strndup(input + start, *i - start);
+// 	if (!quoted)
+// 		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+// 	(*i)++;
+// 	token_create(collector, TOKEN_WORD, quoted, head);
+// 	freer(quoted);
+// 	printf("OUT get_quoted_str\n");
+// }
+
 void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head)
 {
 	int		start;
 	char	*quoted;
+	char	quote_str[2];
 	char	quote_type;
 
 	printf("IN get_quoted_str\n");
@@ -66,14 +88,26 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	start = ++(*i);
 	while (input[*i] && input[*i] != quote_type)
 		(*i)++;
-	if (!input[*i]) // No s'ha trobat "'" o """
+	if (!input[*i])
 		exit_program(collector, "minishell: unclosed quotes", false);
+	if (quote_type == '"')
+	{
+		quote_str[0] = '"';
+		quote_str[1] = '\0';
+		token_create(collector, TOKEN_DQUOTE, quote_str, head);
+	}
 	quoted = ft_strndup(input + start, *i - start);
 	if (!quoted)
 		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
-	(*i)++;
 	token_create(collector, TOKEN_WORD, quoted, head);
 	freer(quoted);
+	if (quote_type == '"')
+	{
+		quote_str[0] = '"';
+		quote_str[1] = '\0';
+		token_create(collector, TOKEN_DQUOTE, quote_str, head);
+	}
+	(*i)++;
 	printf("OUT get_quoted_str\n");
 }
 
@@ -85,7 +119,8 @@ void	get_word(const char *input, t_collector **collector, int *i, t_token **head
 	printf("IN get_word\n");
 	istart = *i;
 	while (input[*i]
-		&& (ft_strchr(" \f\r\n\t\v|<>$;'\"\\", input[*i]) == NULL))
+		&& (ft_strchr(" \f\r\n\t\v|<>;'\"\\", input[*i]) == NULL))
+		// && (ft_strchr(" \f\r\n\t\v|<>$;'\"\\", input[*i]) == NULL))
 		(*i)++;
 	value = ft_strndup(input + istart, *i - istart);
 	printf("get_word-value:%s\n", value);

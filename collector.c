@@ -12,6 +12,30 @@
 
 #include "minishell.h"
 
+void	collector_remove_ptr(t_collector **collector, void *ptr)
+{
+	t_collector	*curr;
+	t_collector	*prev;
+
+	curr = *collector;
+	prev = NULL;
+	while (curr)
+	{
+		if (curr->ptr == ptr)
+		{
+			if (prev)
+				prev->next = curr->next;
+			else
+				*collector = curr->next;
+			free(curr);
+			printf("  Removed from collector: %p\n", ptr);
+			return ;
+		}
+		prev = curr;
+		curr = curr->next;
+	}
+}
+
 void	collector_cleanup(t_collector **collector)
 {
 	t_collector	*current;
@@ -41,26 +65,26 @@ static bool	collector_contains(t_collector *collector, void *ptr)
 		if (collector->ptr == ptr)
 		{
 			printf("      YURATENXIONPLIS!!!!!!!!! Pointer already in collector: %p\n", ptr);
-			return true;
+			return (true);
 		}
 		collector = collector->next;
 	}
-	return false;
+	return (false);
 }
 
 void	collector_append(t_collector **collector, void *ptr)
 {
 	t_collector	*new_node;
 
+	printf("  Appending to collector: %p\n", ptr);
 	if (!ptr || collector_contains(*collector, ptr))
-		return;
+		return ;
 	new_node = malloc(sizeof(t_collector));
 	if (!new_node)
 		exit_program(collector, "Error malloc collector", EXIT_FAILURE);
 	new_node->ptr = ptr;
 	new_node->next = *collector;
 	*collector = new_node;
-	printf("  Appending to collector: %p\n", ptr);
 	if (ptr)
 		printf("    Pointer value: %s\n", (char *)ptr);
 	else

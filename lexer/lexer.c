@@ -80,9 +80,10 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 			|| handle_quotes(input, collector, &i, head))
 			// || handle_variables(input, collector, &i, head))
 			continue ;
+		printf("  lexer-input[%d]: %c\n", i, input[i]);
 		get_word(input, collector, &i, head);
 	}
-	token_create(collector, TOKEN_EOF, "EOF", head);
+	// token_create(collector, TOKEN_EOF, "EOF", head);
 	first_token = *head;
 	while (first_token && first_token->type == TOKEN_WHITESPACE)
 		first_token = first_token->next;
@@ -92,7 +93,10 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 		printf("OUT lexer NULL\n");
 		return (NULL);
 	}
-	// tokens_expand(*head, 0, collector);	//TODO: Hi ha errors de double free!!!!!!
+	tokens_print(head);
+	tokens_expand(head, 0, collector);	//TODO: Hi ha errors de double free!!!!!!
+	token_create(collector, TOKEN_EOF, "EOF", head);
+	tokens_print(head);
 	printf("OUT lexer\n");
 	return (*head);
 }
