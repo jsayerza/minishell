@@ -77,7 +77,7 @@ int	main(int argc, char **argv, char **envp)
 		if (constructor)
 		{
 			constructor_print(constructor);
-			// display_shell(shell);
+			display_shell(shell);
 		}
 		else
 			print_error("minishell: failed to prepare command execution");
