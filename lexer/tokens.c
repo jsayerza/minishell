@@ -37,6 +37,7 @@ void	tokens_print(t_token *token)
 		token_print(token);
 		token = token->next;
 	}
+	printf("\n");
 }
 
 t_token	*ft_lasttoken(t_token *lst)

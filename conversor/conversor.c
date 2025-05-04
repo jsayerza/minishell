@@ -81,6 +81,7 @@ t_constructor	*ast_to_constructor(t_collector **collector, \
 	t_constructor	*right;
 	t_constructor	*curr;
 
+	printf("IN ast_to_constructor\n");
 	if (!ast)
 		return (NULL);
 	if (ast->type == TOKEN_PIPE)
@@ -99,5 +100,6 @@ t_constructor	*ast_to_constructor(t_collector **collector, \
 		ast = ast->left;
 	if (!ast || ast->type != TOKEN_COMMAND)
 		return (NULL);
+	printf("IN ast_to_constructor\n");
 	return (create_constructor_node(collector, ast, shell));
 }

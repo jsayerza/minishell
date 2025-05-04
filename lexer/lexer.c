@@ -12,6 +12,7 @@
 
 #include "minishell.h"
 
+//TODO: unificar amb func utils/is_only_whitespace ?
 static int	handle_whitespace(const char *input, int *i)
 {
 	if (ft_strchr(" \f\r\n\t\v", input[*i]))
@@ -25,7 +26,8 @@ static int	handle_whitespace(const char *input, int *i)
 static int	handle_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head)
 {
-	if (ft_strchr("<>|&*$", input[*i]))
+	// if (ft_strchr("<>|$", input[*i]))
+	if (ft_strchr("<>|", input[*i]))
 	{
 		get_operator(input, collector, i, head);
 		(*i)++;
@@ -34,46 +36,49 @@ static int	handle_operator(const char *input, t_collector **collector, \
 	return (0);
 }
 
-static int	handle_quotes(const char *input, t_collector **collector, \
-	int *i, t_token **head)
+static int	handle_quotes(const char *input, t_collector **collector, int *i, t_token **head)
 {
 	if (ft_strchr("'\"", input[*i]))
 	{
+		printf("IN handle_quotes\n");
 		get_quoted_str(input, collector, i, head);
+		printf("OUT handle_quotes\n");
 		return (1);
 	}
 	return (0);
 }
 
-static int	handle_variables(const char *input, t_collector **collector, \
-	int *i, t_token **head)
-{
-	if (input[*i] == '$')
-	{
-		get_expand_var(input, collector, i, head);
-		return (1);
-	}
-	return (0);
-}
+// static int	handle_variables(const char *input, t_collector **collector, int *i, t_token **head)
+// {
+// 	if (input[*i] == '$')
+// 	{
+// 		printf("IN handle_variables\n");
+// 		get_expand_var(input, collector, i, head);
+// 		printf("OUT handle_variables\n");
+// 		return (1);
+// 	}
+// 	return (0);
+// }
 
 t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 {
 	int		i;
 	t_token	*first_token;
 
+	printf("IN lexer\n");
 	i = 0;
 	while (input[i])
 	{
-		// printf("lexer-input[%d]:%c\n", i, input[i]);
 		if (handle_invalidchars(input, i))
 		{
-			exit_program(collector, "", false);
+			exit_program(collector, "minishell: invalid character", false);
+			printf("OUT lexer NULL char\n");
 			return (NULL);
 		}
 		if (handle_whitespace(input, &i)
 			|| handle_operator(input, collector, &i, head)
-			|| handle_quotes(input, collector, &i, head)
-			|| handle_variables(input, collector, &i, head))
+			|| handle_quotes(input, collector, &i, head))
+			// || handle_variables(input, collector, &i, head))
 			continue ;
 		get_word(input, collector, &i, head);
 	}
@@ -83,8 +88,11 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 		first_token = first_token->next;
 	if (!first_token || first_token->type != TOKEN_WORD)
 	{
-		exit_program(collector,	"minishell: syntax error: unexpected token at start", false);
+		exit_program(collector, "minishell: syntax error: unexpected token at start", false);
+		printf("OUT lexer NULL\n");
 		return (NULL);
 	}
+	// tokens_expand(*head, 0, collector);	//TODO: Hi ha errors de double free!!!!!!
+	printf("OUT lexer\n");
 	return (*head);
 }

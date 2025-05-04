@@ -17,31 +17,52 @@ void	collector_cleanup(t_collector **collector)
 	t_collector	*current;
 	t_collector	*next;
 
-	// printf("Cleaning collector\n");
+	printf("  IN collector_cleanup\n");
 	current = *collector;
 	while (current)
 	{
 		next = current->next;
-		freer(current->ptr);
-		free(current);
+		printf("    Free pointer:  %p\n", current);
+		printf("      Free pointer value: %s\n", (char *)current->ptr);
+		if (current->ptr)
+			freer(current->ptr);
+		if (current)
+			free(current);
 		current = next;
 	}
 	*collector = NULL;
+	printf("  OUT collector_cleanup\n");
+}
+
+static bool	collector_contains(t_collector *collector, void *ptr)
+{
+	while (collector)
+	{
+		if (collector->ptr == ptr)
+		{
+			printf("      YURATENXIONPLIS!!!!!!!!! Pointer already in collector: %p\n", ptr);
+			return true;
+		}
+		collector = collector->next;
+	}
+	return false;
 }
 
 void	collector_append(t_collector **collector, void *ptr)
 {
 	t_collector	*new_node;
 
+	if (!ptr || collector_contains(*collector, ptr))
+		return;
 	new_node = malloc(sizeof(t_collector));
 	if (!new_node)
 		exit_program(collector, "Error malloc collector", EXIT_FAILURE);
 	new_node->ptr = ptr;
 	new_node->next = *collector;
 	*collector = new_node;
-	// printf("Appending to collector: %p\n", ptr);
-	// if (ptr)
-	// 	printf("  Pointer value: %s\n", (char *)ptr);
-	// else
-	// 	printf("  Pointer value: NULL\n");
+	printf("  Appending to collector: %p\n", ptr);
+	if (ptr)
+		printf("    Pointer value: %s\n", (char *)ptr);
+	else
+		printf("    Pointer value: NULL\n");
 }
