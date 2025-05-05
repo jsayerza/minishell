@@ -27,18 +27,18 @@
 # include "libft/libft.h"
 # include "gnl/get_next_line.h"
 
-# define RESET    "\033[0m"
-# define RED      "\033[31m"
-# define GREEN    "\033[32m"
-# define YELLOW   "\033[33m"
-# define BLUE     "\033[34m"
-# define MAGENTA  "\033[35m"
-# define CYAN     "\033[36m"
-# define BOLD     "\033[1m"
+# define RESET    "\001\033[0m\002"
+# define RED      "\001\033[31m\002"
+# define GREEN    "\001\033[32m\002"
+# define YELLOW   "\001\033[33m\002"
+# define BLUE     "\001\033[34m\002"
+# define MAGENTA  "\001\033[35m\002"
+# define CYAN     "\001\033[36m\002"
+# define BOLD     "\001\033[1m\002"
 
 # define MAX_CMD_ARGS 256		//Permet fins 256 args per a un command
 
-extern int interact;	// 1 = mode interactiu, 0 = no interactiu
+extern int interact;			// 1 = mode interactiu, 0 = no interactiu
 
 typedef enum e_token_type
 {
@@ -56,6 +56,8 @@ typedef enum e_token_type
 	TOKEN_ESCAPE,
 	TOKEN_WHITESPACE,
 	TOKEN_COMMAND,
+	TOKEN_DQUOTE,
+	TOKEN_SQUOTE,
     TOKEN_BUILTIN,
 }	t_token_type;
 
@@ -170,6 +172,7 @@ void	exit_program(t_collector **collector, const char *msg,\
 char	*prompt_generate(t_collector **collector);
 
 // collector.c
+void	collector_remove_ptr(t_collector **collector, void *ptr);
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
 
@@ -180,22 +183,24 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head);
 int		handle_invalidchars(const char *input, int i);
 void	get_expand_var(const char *input, t_collector **collector, \
 	int *i, t_token **head);
-void	get_quoted_str(const char *input, t_collector **collector, \
-	int *i, t_token **head);
-void	get_word(const char *input, t_collector **collector, \
-	int *i, t_token **head);
+void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head);
+void	get_word(const char *input, t_collector **collector, int *i, t_token **head);
 
 // lexer/lexer_funcs_operator.c
 void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
 // lexer/tokens.c
+void	tokens_free(t_token *head);
+void	token_print(t_token *token);
+void	tokens_print(t_token **head);
+void	token_remove(t_token **head, t_token *target, t_collector **collector);
+t_token	*ft_lasttoken(t_token *lst);
 void	token_create(t_collector **collector, t_token_type type, \
 	const char *value, t_token **head);
-t_token	*ft_lasttoken(t_token *lst);
-void	tokens_print(t_token *token);
-void	token_print(t_token *token);
-void	tokens_free(t_token *head);
+
+// lexer/lexer_expand.c
+void	tokens_expand(t_token **head, int exit_status, t_collector **collector);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact);

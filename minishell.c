@@ -65,7 +65,7 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		tokens_print(tokens);
+		// tokens_print(tokens);
 		ast = parser(&cycle_collector, tokens, interact);
 		if (!ast)
 		{

@@ -58,6 +58,7 @@ t_ast	*parser(t_collector **collector, t_token *tokens, int interact)
 {
 	t_ast	*ast;
 
+	printf("IN parser\n");
 	if (!tokens_validate(tokens))
 	{
 		// print_error("minishell: syntax error");
@@ -66,5 +67,6 @@ t_ast	*parser(t_collector **collector, t_token *tokens, int interact)
 	ast = parse_pipeline(collector, &tokens, interact);
 	// if (!ast)
 	// 	print_error("minishell: parser error");
+	printf("OUT parser\n");
 	return (ast);
 }
