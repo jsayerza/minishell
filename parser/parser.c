@@ -21,11 +21,11 @@ static void	parse_pipeline_add_node(t_collector **collector, \
 	if (!node)
 		exit_program(collector, \
 			"Error malloc parser command node", EXIT_FAILURE);
-	collector_append(collector, node);
 	node->type = TOKEN_PIPE;
 	node->left = *left;
 	node->right = right;
 	*left = node;
+	collector_append(collector, node);
 }
 
 static t_ast	*parse_pipeline(t_collector **collector, \

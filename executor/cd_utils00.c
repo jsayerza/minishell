@@ -22,7 +22,6 @@ char	*extract_home_path(t_shell *shell, const char *env_entry)
 	home = malloc((len + 1) * sizeof(char));
 	if (!home)
 		return (NULL);
-	collector_append(&shell->collector, home);
 	i = 0;
 	while (env_entry[i + 5])
 	{
@@ -30,6 +29,7 @@ char	*extract_home_path(t_shell *shell, const char *env_entry)
 		i++;
 	}
 	home[i] = '\0';
+	collector_append(&shell->collector, home);
 	return (home);
 }
 

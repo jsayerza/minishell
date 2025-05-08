@@ -41,7 +41,6 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node = malloc(sizeof(t_constructor));
 	if (!node)
 		exit_program(collector, "Error malloc constructor node", EXIT_FAILURE);
-	collector_append(collector, node);
 	node->executable = ast->args;
 	node->size_exec = 0;
 	while (node->executable && node->executable[node->size_exec])
@@ -58,6 +57,7 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->pipe_out = 0;
 	node->builtin = BUILTIN_NONE;
 	create_constructor_node_builtin(node);
+	collector_append(collector, node);
 	return (node);
 }
 
