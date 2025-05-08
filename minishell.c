@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/27 21:04:18 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:04:18by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,6 @@ int	main(int argc, char **argv, char **envp)
 	free_path_array(shell->env);
 	free(shell->path);
 	collector_cleanup(&collector);
-	
+
 	return (EXIT_SUCCESS);
 }
