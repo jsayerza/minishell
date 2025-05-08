@@ -61,7 +61,7 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 	result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_string init", true);
-	// collector_append(collector, result);
+	collector_append(collector, result);
 	while (str[i])
 	{
 		printf(" IN expand_string-str[%d]:%c\n", i, str[i]);
@@ -201,6 +201,7 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 			expanded = expand_string(curr->value, exit_status, collector);
 			curr->value = ft_strdup(expanded);
 			freer(expanded);
+			collector_append(collector, curr->value);
 			}
 		curr = curr->next;
 	}
