@@ -44,6 +44,7 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/cd_utils00.c \
 			$(EXEC_DIR)/cd_utils01.c \
 			$(EXEC_DIR)/commands.c \
+			$(EXEC_DIR)/redirects.c \
 			$(EXEC_DIR)/clean_shell.c
 
 SRC_GNL =	gnl/get_next_line.c

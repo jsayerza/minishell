@@ -67,6 +67,7 @@ void	display_shell(t_shell *shell)
 
 	assign_pipes(shell);
 	current_node = shell->constructor;
+	check_redirect_in(current_node);
 	while (current_node && current_node->prev)
 		current_node = current_node->prev;
 	while (current_node)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversor_constructor_print.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/05/09 15:54:15 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,9 @@ void	constructor_print(t_constructor *list)
 				printf("%s ", list->executable[i++]);
 			printf("\n");
 		}
-		else
-			printf("(null)\n");
+		printf("Size exec : %d\n", list->size_exec);
 		printf("Builtin: %s\n", get_builtin_name(list->builtin));
-		//printf("Read FD: %d\n", list->read_fd);
-		//printf("Write FD: %d\n", list->write_fd);
+		printf("file->%s\n", list->file);
 		printf("Token Type: %s\n", get_token_type_name(list->type));
 		printf("Error: %d\n", list->error);
 		printf("Pipe in: %d  Pipe out: %d\n", list->pipe_in, list->pipe_out);

@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 12:14:04 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/09 19:25:47 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,8 +146,7 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
-	char			**input_file;		// archivos de entrda
-	char			**output_file;		// archivos de salida
+	char			*file;				// archivos de entrda
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
 	pid_t			pid;				// fork()
@@ -294,6 +293,14 @@ void    read_fd(t_constructor *node);
 
 //Funciones comandos
 void	token_commands(t_constructor *node);
+char	*acces_path(t_constructor *node);
+void	execute_first_command(t_constructor *node);
+void	execute_command(t_constructor *node);
+
+//funciones de archivos
+
+void	read_file_and_execute(t_constructor *node);
+void	check_redirect_in(t_constructor *node);
 
 /* Función principal exportada */
 void path(t_shell *shell);
