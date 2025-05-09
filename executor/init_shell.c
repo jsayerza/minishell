@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:14:31 by acarranz          #+#    #+#             */
-/*   Updated: 2025/05/03 18:00:00 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/09 09:49:11 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ static void	init_constructor_fields(t_constructor *new)
 	new->output_file = NULL;
 	new->pipe_in = -1;
 	new->pipe_out = -1;
-	new->append = -1;
-	new->expand = -1;
 	new->builtin = 0;
 	new->type = 0;
 	new->error = NO_ERROR;

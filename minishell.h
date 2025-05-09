@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/29 19:25:02 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:14:04 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,12 +146,10 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
-	char			**input_file;		// archivos de entrda 
+	char			**input_file;		// archivos de entrda
 	char			**output_file;		// archivos de salida
-	int				pipe_in;			// Flag ->Pipe izquierda	
+	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
-	int				append;				// Flag ->Write append
-	int				expand;				// Flag ->Expand variable
 	pid_t			pid;				// fork()
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable

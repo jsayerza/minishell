@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversor.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/05/09 12:19:07 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,17 +45,17 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->size_exec = 0;
 	while (node->executable && node->executable[node->size_exec])
 		node->size_exec++;
-	//node->read_fd = -1;
-	//node->write_fd = -1;
-	node->type = ast->type;
-	node->error = 0;
-	node->shell = shell;
-	node->next = NULL;
-	node->prev = NULL;
-	node->pid = -1;
+	node->input_file = NULL;
+	node->output_file = NULL;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
+	node->shell = shell;
+	node->pid = -1;
 	node->builtin = BUILTIN_NONE;
+	node->type = ast->type;
+	node->error = 0;
+	node->next = NULL;
+	node->prev = NULL;
 	create_constructor_node_builtin(node);
 	collector_append(collector, node);
 	return (node);
@@ -87,6 +87,7 @@ t_constructor	*ast_to_constructor(t_collector **collector, \
 		return (NULL);
 	if (ast->type == TOKEN_PIPE)
 	{
+		printf("pipe\n");
 		left = ast_to_constructor(collector, ast->left, shell);
 		curr = left;
 		while (curr && curr->next)
@@ -95,12 +96,21 @@ t_constructor	*ast_to_constructor(t_collector **collector, \
 		set_pipe_flags_and_link(curr, right);
 		return (left);
 	}
-	while (ast && (ast->type == TOKEN_REDIRECT_IN
-			|| ast->type == TOKEN_REDIRECT_OUT
-			|| ast->type == TOKEN_APPEND || ast->type == TOKEN_HEREDOC))
-		ast = ast->left;
+	if (ast && (ast->type == TOKEN_REDIRECT_OUT || ast->type == TOKEN_REDIRECT_IN ||
+			ast->type == TOKEN_APPEND || ast->type == TOKEN_HEREDOC))
+	{
+		printf("redirect in\n");
+		printf("%s\n", ast->file);
+		left = ast_to_constructor(collector, ast->left, shell);
+		curr = left;
+		while (curr && curr->next)
+			curr = curr->next;
+		right = ast_to_constructor(collector, ast->right, shell);
+		return (left);
+
+	}
 	if (!ast || ast->type != TOKEN_COMMAND)
 		return (NULL);
-	printf("IN ast_to_constructor\n");
+	printf("out ast_to_constructor\n");
 	return (create_constructor_node(collector, ast, shell));
 }
