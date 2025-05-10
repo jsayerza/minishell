@@ -21,6 +21,7 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 
 	printf("IN expand_variable\n");
 	(*i)++; // Skip $
+	//TODO: revisar aquest codi, hem de ctrlar '?'?
 	if (str[*i] == '?')
 	{
 		(*i)++;
@@ -61,7 +62,7 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 	result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_string init", true);
-	collector_append(collector, result);
+	//collector_append(collector, result);
 	while (str[i])
 	{
 		printf(" IN expand_string-str[%d]:%c\n", i, str[i]);
@@ -202,7 +203,7 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 			curr->value = ft_strdup(expanded);
 			freer(expanded);
 			collector_append(collector, curr->value);
-			}
+		}
 		curr = curr->next;
 	}
 	printf("OUT tokens_expand\n");

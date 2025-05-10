@@ -65,19 +65,34 @@ void	display_shell(t_shell *shell)
 {
 	t_constructor	*current_node;
 
+	printf("IN display_shell\n");
 	assign_pipes(shell);
+	printf("  1 display_shell\n");
 	current_node = shell->constructor;
 	while (current_node && current_node->prev)
 		current_node = current_node->prev;
+	printf("  2 display_shell\n");
 	while (current_node)
 	{
 		current_node->shell = shell;
+		printf("  3 display_shell\n");
 		if (current_node->builtin)
+		{
+			printf("  4.1 display_shell\n");
 			token_builtins(current_node);
+			printf("  4.2 display_shell\n");
+		}
 		else if (current_node->type == TOKEN_COMMAND)
+		{
+			printf("  5.1 display_shell\n");
 			token_commands(current_node);
+			printf("  5.2 display_shell\n");
+		}
 		current_node = current_node->next;
 	}
+	printf("  6 display_shell\n");
 	close_remaining_pipes(shell);
+	printf("  7 display_shell\n");
 	wait_for_all_processes(shell);
+	printf("OUT display_shell\n");
 }

@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser_funcs.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:20:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/09 09:53:31 by acarranz         ###   ########.fr       */
@@ -83,6 +83,7 @@ static t_ast	*init_command_node(t_collector **collector)
 	if (!node)
 		exit_program(collector, "Error malloc parser command node", \
 			EXIT_FAILURE);
+	collector_append(collector, node);
 	node->type = TOKEN_COMMAND;
 	node->left = NULL;
 	node->right = NULL;
@@ -91,7 +92,7 @@ static t_ast	*init_command_node(t_collector **collector)
 	if (!node->args)
 		exit_program(collector, "Error malloc parser command node args", \
 			EXIT_FAILURE);
-	collector_append(collector, node);
+	collector_append(collector, node->args);
 	return (node);
 }
 

@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   lexer.c                                      :+:      :+:    :+:   */
+/*   lexer.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -72,7 +72,7 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 		if (handle_invalidchars(input, i))
 		{
 			exit_program(collector, "minishell: invalid character", false);
-			printf("OUT lexer NULL char\n");
+			printf("OUT lexer NULL char --------------------\n\n");
 			return (NULL);
 		}
 		if (handle_whitespace(input, &i)
@@ -90,13 +90,13 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 	if (!first_token || first_token->type != TOKEN_WORD)
 	{
 		exit_program(collector, "minishell: syntax error: unexpected token at start", false);
-		printf("OUT lexer NULL\n");
+		printf("OUT lexer NULL --------------------\n\n");
 		return (NULL);
 	}
 	tokens_print(head);
 	tokens_expand(head, 0, collector);	//TODO: Hi ha errors de double free!!!!!!
 	token_create(collector, TOKEN_EOF, "EOF", head);
 	tokens_print(head);
-	printf("OUT lexer\n");
+	printf("OUT lexer --------------------\n\n");
 	return (*head);
 }
