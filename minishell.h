@@ -146,8 +146,7 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
-	char			**input_file;		// archivos de entrda
-	char			**output_file;		// archivos de salida
+	char			*file;		// archivos de salida
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
 	pid_t			pid;				// fork()

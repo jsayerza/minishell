@@ -18,8 +18,7 @@ static void	init_constructor_fields(t_constructor *new)
 		return ;
 	new->executable = NULL;
 	new->size_exec = 0;
-	new->input_file = NULL;
-	new->output_file = NULL;
+	new->file = NULL;
 	new->pipe_in = -1;
 	new->pipe_out = -1;
 	new->builtin = 0;
