@@ -7,6 +7,7 @@
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -79,19 +80,24 @@ static void	set_pipe_flags_and_link(t_constructor *left, t_constructor *right)
 }
 
 t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *shell)
+t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *shell)
 {
 	t_constructor	*left;
 	t_constructor	*right;
 	t_constructor	*curr;
+	t_constructor	*node;
 	t_constructor	*node;
 
 	printf("IN ast_to_constructor\n");
 	if (!ast)
 		return (NULL);
 	if (ast->type == TOKEN_PIPE)
+	if (ast->type == TOKEN_PIPE)
 	{
 		printf("pipe\n");
+		printf("pipe\n");
 		left = ast_to_constructor(collector, ast->left, shell);
+		right = ast_to_constructor(collector, ast->right, shell);
 		right = ast_to_constructor(collector, ast->right, shell);
 		curr = left;
 		while (curr && curr->next)
@@ -107,7 +113,35 @@ t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *
 	{
 		printf("redirect: %s\n", ast->file);
 		left = ast_to_constructor(collector, ast->left, shell);
+		set_pipe_flags_and_link(curr, right);
+		curr->next = right;
+		return (left);
+	}
+	if (ast->type == TOKEN_REDIRECT_IN
+		|| ast->type == TOKEN_REDIRECT_OUT
+		|| ast->type == TOKEN_APPEND
+		|| ast->type == TOKEN_HEREDOC)
+	{
+		printf("redirect: %s\n", ast->file);
+		left = ast_to_constructor(collector, ast->left, shell);
 		right = ast_to_constructor(collector, ast->right, shell);
+		node = create_constructor_node(collector, ast, shell);
+		if (!left)
+			left = node;
+		else
+		{
+			curr = left;
+			while (curr->next)
+				curr = curr->next;
+			curr->next = node;
+		}
+		if (right)
+		{
+			curr = node;
+			while (curr->next)
+				curr = curr->next;
+			curr->next = right;
+		}
 		node = create_constructor_node(collector, ast, shell);
 		if (!left)
 			left = node;
