@@ -19,7 +19,7 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 	char	*var_value;
 	char	*result;
 
-	printf("IN expand_variable\n");
+	printf("     IN expand_variable\n");
 	(*i)++; // Skip $
 	//TODO: revisar aquest codi, hem de ctrlar '?'?
 	if (str[*i] == '?')
@@ -46,7 +46,7 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 	if (!result)
 		exit_program(collector, "Error malloc expand_variable result", true);
 	// collector_append(collector, result);
-	printf("OUT expand_variable\n");
+	printf("     OUT expand_variable\n");
 	return (result);
 }
 
@@ -58,14 +58,14 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 	char	*expanded;
 	int		start;
 
-	printf("IN expand_string\n");
+	printf("   IN expand_string\n");
 	result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_string init", true);
 	//collector_append(collector, result);
 	while (str[i])
 	{
-		printf(" IN expand_string-str[%d]:%c\n", i, str[i]);
+		printf("    IN expand_string-str[%d]:%c\n", i, str[i]);
 		if (str[i] == '\'')
 		{
 			start = ++i;
@@ -115,7 +115,7 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 		}
 		else if (str[i] == '$')
 		{
-			printf(" IN expand_string-$\n");
+			printf("    IN expand_string-$\n");
 			expanded = expand_variable(str, &i, exit_status, collector);
 			tmp = ft_strjoin(result, expanded);
 			freer(expanded);
@@ -123,11 +123,11 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 				exit_program(collector, "Error malloc expand_string join var", true);
 			result = ft_strdup(tmp);
 			freer(tmp);
-			printf(" OUT expand_string-$\n");
+			printf("    OUT expand_string-$\n");
 		}
 		else
 		{
-			printf(" IN expand_string-A\n");
+			printf("    IN expand_string-A\n");
 			start = i;
 			while (str[i] && str[i] != '$' && str[i] != '\'' && str[i] != '"')
 				i++;
@@ -139,12 +139,12 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 			if (!tmp)
 				exit_program(collector, "Error malloc expand_string join plain", true);
 			result = ft_strdup(tmp);
-			printf("result: %s\n", result);
+			printf("     -->result: %s\n", result);
 			freer(tmp);
-			printf(" OUT expand_string-A\n");
+			printf("    OUT expand_string-A\n");
 		}
 	}
-	printf("OUT expand_string\n");
+	printf("   OUT expand_string\n");
 	return (result);
 }
 
@@ -164,12 +164,12 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 	{
 		if (curr->type == TOKEN_DQUOTE)
 		{
+			printf(" IN tokens_expand TOKEN_DQUOTE\n");
 			start = curr;
 			curr = curr->next;
 			joined = ft_strdup("");
 			if (!joined)
 				exit_program(collector, "Error malloc tokens_expand init join", true);
-			// collector_append(collector, joined);
 			while (curr && curr->type != TOKEN_DQUOTE)
 			{
 				expanded = expand_string(curr->value, exit_status, collector);
@@ -177,14 +177,14 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 				freer(expanded);
 				if (!tmp)
 					exit_program(collector, "Error join tokens_expand", true);
-				// freer(joined);
+				freer(joined);
 				joined = tmp;
-				// collector_append(collector, joined);
 				curr = curr->next;
 			}
 			if (!curr || curr->type != TOKEN_DQUOTE)
 				exit_program(collector, "minishell: unclosed double quote", false);
-			token_create(collector, TOKEN_WORD, joined, head);
+			token_insert_before(head, start, TOKEN_WORD, joined, collector);			
+			//TODO: revisar aquest free joined
 			freer(joined);
 			next = curr->next;
 			while (start != next)
@@ -194,15 +194,52 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 				token_remove(head, token_tmp, collector);
 			}
 			curr = next;
+			tokens_print(head);
+			printf(" OUT tokens_expand TOKEN_DQUOTE\n\n");
 			continue ;
 		}
-		//TODO: revisar aquest elseif: jo crec q no cal fer res si no s'ha de fer expand...
+		else if (curr->type == TOKEN_SQUOTE)
+		{
+			printf(" IN tokens_expand TOKEN_SQUOTE\n");
+			start = curr;
+			curr = curr->next;
+			joined = ft_strdup("");
+			if (!joined)
+				exit_program(collector, "Error malloc tokens_expand init join", true);
+			while (curr && curr->type != TOKEN_SQUOTE)
+			{
+				tmp = ft_strjoin(joined, curr->value);
+				if (!tmp)
+					exit_program(collector, "Error join tokens_expand (squote)", true);
+				freer(joined);
+				joined = tmp;
+				curr = curr->next;
+			}
+			if (!curr || curr->type != TOKEN_SQUOTE)
+				exit_program(collector, "minishell: unclosed single quote", false);
+			token_insert_before(head, start, TOKEN_WORD, joined, collector);			
+			freer(joined);
+			next = curr->next;
+			while (start != next)
+			{
+				token_tmp = start;
+				start = start->next;
+				token_remove(head, token_tmp, collector);
+			}
+			curr = next;
+			tokens_print(head);
+			printf(" OUT tokens_expand TOKEN_SQUOTE\n\n");
+			continue ;
+		}
 		else if (curr->type == TOKEN_WORD || curr->type == TOKEN_COMMAND)
 		{
+			printf(" IN tokens_expand TOKEN_WORD/COMMAND\n");
 			expanded = expand_string(curr->value, exit_status, collector);
 			curr->value = ft_strdup(expanded);
 			freer(expanded);
 			collector_append(collector, curr->value);
+			tokens_print(head);
+			printf(" OUT tokens_expand TOKEN_WORD/COMMAND\n\n");
 		}
 		curr = curr->next;
 	}

@@ -54,6 +54,37 @@ t_token	*ft_lasttoken(t_token *lst)
 	return (lst);
 }
 
+void	token_insert_before(t_token **head, t_token *pos, \
+	t_token_type type, const char *value, t_collector **collector)
+{
+	t_token	*new_token;
+	t_token	*prev;
+
+	new_token = malloc(sizeof(t_token));
+	if (!new_token)
+		exit_program(collector, "Error malloc token_insrt_bfore", EXIT_FAILURE);
+	collector_append(collector, new_token);
+
+	new_token->type = type;
+	new_token->value = ft_strdup(value);
+	if (!new_token->value)
+		exit_program(collector, "Error malloc tokenInsBfore val", EXIT_FAILURE);
+	collector_append(collector, new_token->value);
+	new_token->next = pos;
+
+	if (*head == pos)
+		*head = new_token;
+	else
+	{
+		prev = *head;
+		while (prev && prev->next != pos)
+			prev = prev->next;
+		if (!prev)
+			exit_program(collector, "toknInsrtBfore:posNotFound", EXIT_FAILURE);
+		prev->next = new_token;
+	}
+}
+
 void	token_insert_after(t_token *prev, t_token *new_token)
 {
 	if (!prev || !new_token)

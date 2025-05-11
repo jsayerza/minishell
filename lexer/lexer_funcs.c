@@ -82,6 +82,7 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	char	*quoted;
 	char	quote_str[2];
 	char	quote_type;
+	t_token_type token_type;
 
 	printf("IN get_quoted_str\n");
 	quote_type = input[*i];
@@ -90,23 +91,30 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 		(*i)++;
 	if (!input[*i])
 		exit_program(collector, "minishell: unclosed quotes", false);
+
+	// Detectamos el tipo de comilla para tokenizar correctamente
 	if (quote_type == '"')
-	{
-		quote_str[0] = '"';
-		quote_str[1] = '\0';
-		token_create(collector, TOKEN_DQUOTE, quote_str, head);
-	}
+		token_type = TOKEN_DQUOTE;
+	else if (quote_type == '\'')
+		token_type = TOKEN_SQUOTE;
+	else
+		exit_program(collector, "minishell: unknown quote type", false);
+
+	// Creamos token de apertura
+	quote_str[0] = quote_type;
+	quote_str[1] = '\0';
+	token_create(collector, token_type, quote_str, head);
+
+	// Creamos contenido entre comillas como WORD
 	quoted = ft_strndup(input + start, *i - start);
 	if (!quoted)
 		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, quoted, head);
 	freer(quoted);
-	if (quote_type == '"')
-	{
-		quote_str[0] = '"';
-		quote_str[1] = '\0';
-		token_create(collector, TOKEN_DQUOTE, quote_str, head);
-	}
+
+	// Creamos token de cierre
+	token_create(collector, token_type, quote_str, head);
+
 	(*i)++;
 	printf("OUT get_quoted_str\n");
 }

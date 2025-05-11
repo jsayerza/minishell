@@ -94,7 +94,7 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 		return (NULL);
 	}
 	tokens_print(head);
-	tokens_expand(head, 0, collector);	//TODO: Hi ha errors de double free!!!!!!
+	tokens_expand(head, 0, collector);	//TODO: revisar si hi ha errors de double free!!!!!!
 	token_create(collector, TOKEN_EOF, "EOF", head);
 	tokens_print(head);
 	printf("OUT lexer --------------------\n\n");
