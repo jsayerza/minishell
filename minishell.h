@@ -324,4 +324,9 @@ void	print_token_list(t_shell *shell);
 void	print_constructor(t_shell *shell);
 void	print_path(t_shell *shell);
 
-#endif // MINISHELL_H
+//clean functions
+void	clean_shell(t_shell *shell);
+void	clean_constructor(t_constructor *constructor);
+void free_path_array(char **path);
+
+#endif
