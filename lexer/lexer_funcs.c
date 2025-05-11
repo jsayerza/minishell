@@ -54,28 +54,6 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	printf("OUT get_expand_var\n");
 }
 
-// void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head)
-// {
-// 	int		start;
-// 	char	*quoted;
-// 	char	quote_type;
-
-// 	printf("IN get_quoted_str\n");
-// 	quote_type = input[*i];
-// 	start = ++(*i);
-// 	while (input[*i] && input[*i] != quote_type)
-// 		(*i)++;
-// 	if (!input[*i]) // No s'ha trobat "'" o """
-// 		exit_program(collector, "minishell: unclosed quotes", false);
-// 	quoted = ft_strndup(input + start, *i - start);
-// 	if (!quoted)
-// 		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
-// 	(*i)++;
-// 	token_create(collector, TOKEN_WORD, quoted, head);
-// 	freer(quoted);
-// 	printf("OUT get_quoted_str\n");
-// }
-
 void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head)
 {
 	int		start;
@@ -138,61 +116,3 @@ void	get_word(const char *input, t_collector **collector, int *i, t_token **head
 	freer(value);
 	printf("OUT get_word\n");
 }
-
-// void	get_word(const char *input, t_collector **collector, int *i, t_token **head)
-// {
-// 	int		start;
-// 	char	*value;
-// 	char	*tmp;
-// 	char	*joined;
-// 	char	quote_type;
-
-// 	printf("IN get_word\n");
-// 	joined = ft_strdup("");
-// 	if (!joined)
-// 		exit_program(collector, "Error malloc get_word init", true);
-// 	collector_append(collector, joined);
-
-// 	while (input[*i] && !ft_strchr(" \f\r\n\t\v|<>", input[*i]))
-// 	{
-// 		if (input[*i] == '\'' || input[*i] == '"')
-// 		{
-// 			quote_type = input[(*i)++];
-// 			start = *i;
-// 			while (input[*i] && input[*i] != quote_type)
-// 				(*i)++;
-// 			if (!input[*i])
-// 				exit_program(collector, "minishell: syntax error: unmatched quote", false);
-
-// 			value = ft_strndup(input + start, *i - start);
-// 			if (!value)
-// 				exit_program(collector, "Error malloc get_word quoted", true);
-// 			collector_append(collector, value);
-// 			tmp = ft_strjoin(joined, value);
-// 			if (!tmp)
-// 				exit_program(collector, "Error malloc get_word join quoted", true);
-// 			collector_append(collector, tmp);
-// 			joined = tmp;  // No se libera, sigue en collector
-// 			(*i)++;
-// 		}
-// 		else if (input[*i] == '$')
-// 			break;
-// 		else
-// 		{
-// 			start = *i;
-// 			while (input[*i] && !ft_strchr(" \f\r\n\t\v|<>'\"$", input[*i]))
-// 				(*i)++;
-// 			value = ft_strndup(input + start, *i - start);
-// 			if (!value)
-// 				exit_program(collector, "Error malloc get_word plain", true);
-// 			collector_append(collector, value);
-// 			tmp = ft_strjoin(joined, value);
-// 			if (!tmp)
-// 				exit_program(collector, "Error malloc get_word join plain", true);
-// 			collector_append(collector, tmp);
-// 			joined = tmp;  // No se libera, sigue en collector
-// 		}
-// 	}
-// 	token_create(collector, TOKEN_WORD, joined, head);
-// 	printf("OUT get_word\n");
-// }
