@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 19:25:47 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/29 19:25:02 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,9 +146,11 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
-	char			*file;				// archivos de entrda
+	char			*file;		// archivos de salida
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
+	int				append;				// Flag ->Write append
+	int				expand;				// Flag ->Expand variable
 	pid_t			pid;				// fork()
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
@@ -293,14 +295,6 @@ void    read_fd(t_constructor *node);
 
 //Funciones comandos
 void	token_commands(t_constructor *node);
-char	*acces_path(t_constructor *node);
-void	execute_first_command(t_constructor *node);
-void	execute_command(t_constructor *node);
-
-//funciones de archivos
-
-void	read_file_and_execute(t_constructor *node);
-void	check_redirect_in(t_constructor *node);
 
 /* Función principal exportada */
 void path(t_shell *shell);
@@ -324,4 +318,9 @@ void	print_token_list(t_shell *shell);
 void	print_constructor(t_shell *shell);
 void	print_path(t_shell *shell);
 
-#endif // MINISHELL_H
+//clean functions
+void	clean_shell(t_shell *shell);
+void	clean_constructor(t_constructor *constructor);
+void free_path_array(char **path);
+
+#endif

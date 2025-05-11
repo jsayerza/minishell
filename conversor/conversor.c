@@ -3,9 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversor.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: @student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
+/*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
 /*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -41,7 +42,6 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node = malloc(sizeof(t_constructor));
 	if (!node)
 		exit_program(collector, "Error malloc constructor node", EXIT_FAILURE);
-	collector_append(collector, node);
 	node->executable = ast->args;
 	node->size_exec = 0;
 	while (node->executable && node->executable[node->size_exec])
@@ -61,6 +61,7 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->next = NULL;
 	node->prev = NULL;
 	create_constructor_node_builtin(node);
+	collector_append(collector, node);
 	return (node);
 }
 
@@ -91,7 +92,9 @@ t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *
 	if (ast->type == TOKEN_PIPE)
 	{
 		printf("pipe\n");
+		printf("pipe\n");
 		left = ast_to_constructor(collector, ast->left, shell);
+		right = ast_to_constructor(collector, ast->right, shell);
 		right = ast_to_constructor(collector, ast->right, shell);
 		curr = left;
 		while (curr && curr->next)
@@ -108,6 +111,23 @@ t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *
 		printf("redirect: %s\n", ast->file);
 		left = ast_to_constructor(collector, ast->left, shell);
 		right = ast_to_constructor(collector, ast->right, shell);
+		node = create_constructor_node(collector, ast, shell);
+		if (!left)
+			left = node;
+		else
+		{
+			curr = left;
+			while (curr->next)
+				curr = curr->next;
+			curr->next = node;
+		}
+		if (right)
+		{
+			curr = node;
+			while (curr->next)
+				curr = curr->next;
+			curr->next = right;
+		}
 		node = create_constructor_node(collector, ast, shell);
 		if (!left)
 			left = node;
