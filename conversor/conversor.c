@@ -46,11 +46,11 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->size_exec = 0;
 	while (node->executable && node->executable[node->size_exec])
 		node->size_exec++;
-	if (ast->file && (ast->type == TOKEN_REDIRECT_IN || ast->type == TOKEN_REDIRECT_OUT
-		|| ast->type == TOKEN_APPEND))
-		node->file = ast->file;
-	else
-		node->file = NULL;
+	// if (ast->file && (ast->type == TOKEN_REDIRECT_IN || ast->type == TOKEN_REDIRECT_OUT
+	// 	|| ast->type == TOKEN_APPEND))
+	// 	node->file = ast->file;
+	// else
+	// 	node->file = NULL;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
 	node->shell = shell;
