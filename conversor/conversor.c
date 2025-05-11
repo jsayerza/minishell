@@ -3,10 +3,9 @@
 /*                                                        :::      ::::::::   */
 /*   conversor.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: @student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza@student.42.fr>          			+#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
 /*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
@@ -94,7 +93,6 @@ t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *
 		printf("pipe\n");
 		printf("pipe\n");
 		left = ast_to_constructor(collector, ast->left, shell);
-		right = ast_to_constructor(collector, ast->right, shell);
 		right = ast_to_constructor(collector, ast->right, shell);
 		curr = left;
 		while (curr && curr->next)
