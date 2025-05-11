@@ -132,6 +132,5 @@ t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *
 		printf("command: creating node\n");
 		return (create_constructor_node(collector, ast, shell));
 	}
-
 	return (NULL);
 }
