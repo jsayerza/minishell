@@ -61,24 +61,57 @@ void	wait_for_all_processes(t_shell *shell)
 	}
 }
 
+void process_command_nodes(t_shell *shell)
+{
+	t_constructor *current;
+
+	current = shell->constructor;
+	while (current && current->prev)
+		current = current->prev;
+	
+	while (current)
+	{
+		current->shell = shell;
+		if (current->type == TOKEN_COMMAND)
+		{
+			if (current->builtin)
+				token_builtins(current);
+			else
+				token_commands(current);
+		}
+		current = current->next;
+	}
+}
+
+void	put_pipes(t_constructor *node)
+{
+	t_constructor	*current;
+	int				pipe;
+
+	pipe = 0;
+	current = node;
+	while (current && current->prev)
+		current = current->prev;
+	while (current)
+	{
+		if (current->pipe_out == 1)
+			pipe = 1;
+		current = current->next;
+	}
+	node->pipe_out = pipe;
+}
+
 void	display_shell(t_shell *shell)
 {
 	t_constructor	*current_node;
 
 	assign_pipes(shell);
 	current_node = shell->constructor;
-	check_redirect_in(current_node);
-	while (current_node && current_node->prev)
-		current_node = current_node->prev;
-	while (current_node)
-	{
-		current_node->shell = shell;
-		if (current_node->builtin)
-			token_builtins(current_node);
-		else if (current_node->type == TOKEN_COMMAND)
-			token_commands(current_node);
-		current_node = current_node->next;
-	}
+	if (check_redirect_in_file_exists(current_node))
+		return;
+	put_pipes(current_node);
+	constructor_print(shell->constructor);
+	process_command_nodes(shell);
 	close_remaining_pipes(shell);
 	wait_for_all_processes(shell);
 }

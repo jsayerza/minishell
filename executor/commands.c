@@ -89,6 +89,7 @@ int	handle_fork_error(t_constructor *node, char *path)
 
 void	execute_in_child(t_constructor *node, char *path)
 {
+	apply_all_redirections(node);
 	execve(path, node->executable, node->shell->env);
 	perror("Error al ejecutar el comando");
 	free(path);
@@ -133,6 +134,8 @@ void	execute_command(t_constructor *node)
 {
 	char	*path;
 
+	if (node->type != TOKEN_COMMAND || !node->executable || !node->executable[0])
+		return;
 	path = acces_path(node);
 	if (handle_command_not_found(node, path))
 		return;
@@ -142,6 +145,9 @@ void	execute_command(t_constructor *node)
 void	execute_first_command(t_constructor *node)
 {
 	char	*path;
+
+	if (node->type != TOKEN_COMMAND || !node->executable || !node->executable[0])
+		return;
 
 	path = acces_path(node);
 	if (handle_command_not_found(node, path))
@@ -153,6 +159,9 @@ void	execute_middle_command(t_constructor *node)
 {
 	char	*path;
 
+	if (node->type != TOKEN_COMMAND || !node->executable || !node->executable[0])
+		return;
+
 	path = acces_path(node);
 	if (handle_command_not_found(node, path))
 		return;
@@ -163,6 +172,9 @@ void	execute_last_command(t_constructor *node)
 {
 	char	*path;
 
+	if (node->type != TOKEN_COMMAND || !node->executable || !node->executable[0])
+		return;
+
 	path = acces_path(node);
 	if (handle_command_not_found(node, path))
 		return;
@@ -171,6 +183,9 @@ void	execute_last_command(t_constructor *node)
 
 void	token_commands(t_constructor *node)
 {
+	if (node->type != TOKEN_COMMAND)
+		return;
+
 	if (node->pipe_in == 0 && node->pipe_out == 0)
 		execute_command(node);
 	else if (node->pipe_in == 0 && node->pipe_out == 1)

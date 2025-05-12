@@ -298,9 +298,9 @@ void	execute_first_command(t_constructor *node);
 void	execute_command(t_constructor *node);
 
 //funciones de archivos
-
-void	read_file_and_execute(t_constructor *node);
-void	check_redirect_in(t_constructor *node);
+int check_redirect_in_file_exists(t_constructor *node);
+void apply_redirect_in(t_constructor *node);
+void apply_all_redirections(t_constructor *node);
 
 /* Función principal exportada */
 void path(t_shell *shell);
