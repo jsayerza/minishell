@@ -51,6 +51,7 @@ void	wait_for_all_processes(t_shell *shell)
 		current = current->prev;
 	while (current)
 	{
+		check_redirect_in_file_exists(current);
 		if (current->pid > 0)
 		{
 			waitpid(current->pid, &status, 0);
@@ -66,12 +67,8 @@ void process_command_nodes(t_shell *shell)
 	t_constructor *current;
 
 	current = shell->constructor;
-	while (current && current->prev)
-		current = current->prev;
-	
 	while (current)
 	{
-		current->shell = shell;
 		if (current->type == TOKEN_COMMAND)
 		{
 			if (current->builtin)
@@ -83,34 +80,10 @@ void process_command_nodes(t_shell *shell)
 	}
 }
 
-void	put_pipes(t_constructor *node)
-{
-	t_constructor	*current;
-	int				pipe;
-
-	pipe = 0;
-	current = node;
-	while (current && current->prev)
-		current = current->prev;
-	while (current)
-	{
-		if (current->pipe_out == 1)
-			pipe = 1;
-		current = current->next;
-	}
-	node->pipe_out = pipe;
-}
-
 void	display_shell(t_shell *shell)
 {
-	t_constructor	*current_node;
 
 	assign_pipes(shell);
-	current_node = shell->constructor;
-	if (check_redirect_in_file_exists(current_node))
-		return;
-	put_pipes(current_node);
-	constructor_print(shell->constructor);
 	process_command_nodes(shell);
 	close_remaining_pipes(shell);
 	wait_for_all_processes(shell);

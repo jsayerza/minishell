@@ -6,11 +6,11 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 17:03:35 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/13 20:04:57 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "minishell.h"
+#include "../minishell.h"
 
 static void	create_constructor_node_builtin(t_constructor *node)
 {
@@ -33,6 +33,32 @@ static void	create_constructor_node_builtin(t_constructor *node)
 	}
 }
 
+static void	add_redirect_file_in(t_collector **collector, t_constructor *node, char *file)
+{
+	char	**new_array;
+	int		i;
+	int		size;
+
+	if (!file)
+		return ;
+	size = 0;
+	while (node->redirect_in && node->redirect_in[size])
+		size++;
+	new_array = malloc(sizeof(char *) * (size + 2));
+	if (!new_array)
+		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
+	i = 0;
+	while (i < size)
+	{
+		new_array[i] = node->redirect_in[i];
+		i++;
+	}
+	new_array[i] = file;
+	new_array[i + 1] = NULL;
+	node->redirect_in = new_array;
+	collector_append(collector, new_array);
+}
+
 t_constructor	*create_constructor_node(t_collector **collector, \
 	t_ast *ast, t_shell *shell)
 {
@@ -45,11 +71,7 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->size_exec = 0;
 	while (node->executable && node->executable[node->size_exec])
 		node->size_exec++;
-	if (ast->file && (ast->type == TOKEN_REDIRECT_IN || ast->type == TOKEN_REDIRECT_OUT
-		|| ast->type == TOKEN_APPEND))
-		node->file = ast->file;
-	else
-		node->file = NULL;
+	node->redirect_in = NULL;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
 	node->shell = shell;
@@ -78,60 +100,89 @@ static void	set_pipe_flags_and_link(t_constructor *left, t_constructor *right)
 	}
 }
 
-t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *shell)
+static t_constructor	*find_or_create_command_node(t_collector **collector, \
+	t_ast *ast, t_shell *shell, t_constructor **first_node)
 {
-	t_constructor	*left;
-	t_constructor	*right;
+	t_constructor	*cmd_node;
 	t_constructor	*curr;
-	t_constructor	*node;
 
-	printf("IN ast_to_constructor\n");
+	curr = *first_node;
+	while (curr)
+	{
+		if (curr->type == TOKEN_COMMAND)
+			return (curr);
+		curr = curr->next;
+	}
+	cmd_node = malloc(sizeof(t_constructor));
+	if (!cmd_node)
+		exit_program(collector, "Error malloc command node", EXIT_FAILURE);
+	cmd_node->executable = ast->args ? ast->args : NULL;
+	cmd_node->size_exec = 0;
+	while (cmd_node->executable && cmd_node->executable[cmd_node->size_exec])
+		cmd_node->size_exec++;
+	cmd_node->redirect_in = NULL;
+	cmd_node->pipe_in = 0;
+	cmd_node->pipe_out = 0;
+	cmd_node->shell = shell;
+	cmd_node->pid = -1;
+	cmd_node->builtin = BUILTIN_NONE;
+	cmd_node->type = TOKEN_COMMAND;
+	cmd_node->error = 0;
+	cmd_node->next = *first_node;
+	cmd_node->prev = NULL;
+	if (*first_node)
+		(*first_node)->prev = cmd_node;
+	*first_node = cmd_node;
+	collector_append(collector, cmd_node);
+	return (cmd_node);
+}
+
+static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_shell *shell)
+{
+	t_constructor	*first_node;
+	t_constructor	*left_nodes;
+	t_constructor	*right_nodes;
+	t_constructor	*cmd_node;
+	t_constructor	*curr;
+
 	if (!ast)
 		return (NULL);
-	if (ast->type == TOKEN_PIPE)
-	{
-		printf("pipe\n");
-		left = ast_to_constructor(collector, ast->left, shell);
-		right = ast_to_constructor(collector, ast->right, shell);
-		curr = left;
-		while (curr && curr->next)
-			curr = curr->next;
-		set_pipe_flags_and_link(curr, right);
-		curr->next = right;
-		return (left);
-	}
-	if (ast->type == TOKEN_REDIRECT_IN
-		|| ast->type == TOKEN_REDIRECT_OUT
-		|| ast->type == TOKEN_APPEND
-		|| ast->type == TOKEN_HEREDOC)
-	{
-		printf("redirect: %s\n", ast->file);
-		left = ast_to_constructor(collector, ast->left, shell);
-		right = ast_to_constructor(collector, ast->right, shell);
-		node = create_constructor_node(collector, ast, shell);
-		if (!left)
-			left = node;
-		else
-		{
-			curr = left;
-			while (curr->next)
-				curr = curr->next;
-			curr->next = node;
-		}
-		if (right)
-		{
-			curr = node;
-			while (curr->next)
-				curr = curr->next;
-			curr->next = right;
-		}
-		return (left);
-	}
 	if (ast->type == TOKEN_COMMAND)
 	{
-		printf("command: creating node\n");
 		return (create_constructor_node(collector, ast, shell));
 	}
+	left_nodes = process_ast_node(collector, ast->left, shell);
+	right_nodes = process_ast_node(collector, ast->right, shell);
+	if (ast->type == TOKEN_PIPE)
+	{
+		if (!left_nodes || !right_nodes)
+			return (left_nodes ? left_nodes : right_nodes);
 
-	return (NULL);
+		curr = left_nodes;
+		while (curr->next)
+			curr = curr->next;
+
+		set_pipe_flags_and_link(curr, right_nodes);
+		return (left_nodes);
+	}
+	first_node = left_nodes;
+	cmd_node = find_or_create_command_node(collector, ast, shell, &first_node);
+	if (ast->type == TOKEN_REDIRECT_IN && ast->file)
+			add_redirect_file_in(collector, cmd_node, ast->file);
+	if (right_nodes)
+	{
+		curr = first_node;
+		while (curr->next)
+			curr = curr->next;
+
+		curr->next = right_nodes;
+		right_nodes->prev = curr;
+	}
+	return (first_node);
+}
+
+t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *shell)
+{
+	printf("IN ast_to_constructor\n");
+	return (process_ast_node(collector, ast, shell));
 }

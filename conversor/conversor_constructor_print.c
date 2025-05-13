@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 15:54:15 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/13 20:09:48 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,7 +68,15 @@ void	constructor_print(t_constructor *list)
 		}
 		printf("Size exec : %d\n", list->size_exec);
 		printf("Builtin: %s\n", get_builtin_name(list->builtin));
-		printf("file->%s\n", list->file);
+		if (list->redirect_in)
+		{
+			printf("Redirect in:\n");
+			int i = 0;
+			while (list->redirect_in[i])
+				printf("%s\n", list->redirect_in[i++]);
+		}
+
+
 		printf("Token Type: %s\n", get_token_type_name(list->type));
 		printf("Error: %d\n", list->error);
 		printf("Pipe in: %d  Pipe out: %d\n", list->pipe_in, list->pipe_out);

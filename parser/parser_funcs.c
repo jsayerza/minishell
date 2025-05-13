@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:20:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 12:45:53 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/13 20:13:09 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ static t_ast	*init_command_node(t_collector **collector)
 		exit_program(collector, "Error malloc parser command node args", \
 			EXIT_FAILURE);
 	collector_append(collector, node);
+	collector_append(collector, node->args);
 	return (node);
 }
 
