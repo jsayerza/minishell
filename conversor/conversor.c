@@ -59,6 +59,58 @@ static void	add_redirect_file_in(t_collector **collector, t_constructor *node, c
 	collector_append(collector, new_array);
 }
 
+static void	add_redirect_file_out(t_collector **collector, t_constructor *node, char *file)
+{
+	char	**new_array;
+	int		i;
+	int		size;
+
+	if (!file)
+		return ;
+	size = 0;
+	while (node->redirect_out && node->redirect_out[size])
+		size++;
+	new_array = malloc(sizeof(char *) * (size + 2));
+	if (!new_array)
+		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
+	i = 0;
+	while (i < size)
+	{
+		new_array[i] = node->redirect_out[i];
+		i++;
+	}
+	new_array[i] = file;
+	new_array[i + 1] = NULL;
+	node->redirect_out = new_array;
+	collector_append(collector, new_array);
+}
+
+static void	add_redirect_file_append(t_collector **collector, t_constructor *node, char *file)
+{
+	char	**new_array;
+	int		i;
+	int		size;
+
+	if (!file)
+		return ;
+	size = 0;
+	while (node->redirect_append && node->redirect_append[size])
+		size++;
+	new_array = malloc(sizeof(char *) * (size + 2));
+	if (!new_array)
+		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
+	i = 0;
+	while (i < size)
+	{
+		new_array[i] = node->redirect_append[i];
+		i++;
+	}
+	new_array[i] = file;
+	new_array[i + 1] = NULL;
+	node->redirect_append = new_array;
+	collector_append(collector, new_array);
+}
+
 t_constructor	*create_constructor_node(t_collector **collector, \
 	t_ast *ast, t_shell *shell)
 {
@@ -72,6 +124,8 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	while (node->executable && node->executable[node->size_exec])
 		node->size_exec++;
 	node->redirect_in = NULL;
+	node->redirect_out = NULL;
+	node->redirect_append = NULL;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
 	node->shell = shell;
@@ -121,6 +175,8 @@ static t_constructor	*find_or_create_command_node(t_collector **collector, \
 	while (cmd_node->executable && cmd_node->executable[cmd_node->size_exec])
 		cmd_node->size_exec++;
 	cmd_node->redirect_in = NULL;
+	cmd_node->redirect_out = NULL;
+	cmd_node->redirect_append = NULL;
 	cmd_node->pipe_in = 0;
 	cmd_node->pipe_out = 0;
 	cmd_node->shell = shell;
@@ -169,6 +225,10 @@ static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_sh
 	cmd_node = find_or_create_command_node(collector, ast, shell, &first_node);
 	if (ast->type == TOKEN_REDIRECT_IN && ast->file)
 			add_redirect_file_in(collector, cmd_node, ast->file);
+	if (ast->type == TOKEN_REDIRECT_OUT && ast->file)
+			add_redirect_file_out(collector, cmd_node, ast->file);
+	if (ast->type == TOKEN_APPEND && ast->file)
+			add_redirect_file_append(collector, cmd_node, ast->file);
 	if (right_nodes)
 	{
 		curr = first_node;
