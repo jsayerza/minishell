@@ -20,6 +20,7 @@ static void	init_constructor_fields(t_constructor *new)
 	new->size_exec = 0;
 	new->redirect_in = NULL;
 	new->redirect_out = NULL;
+	new->redirect_append = NULL;
 	new->pipe_in = -1;
 	new->pipe_out = -1;
 	new->builtin = 0;

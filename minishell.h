@@ -148,6 +148,7 @@ typedef struct s_constructor
 	int				fd[2];				// File descriptor
 	char			**redirect_in;		// archivos de entrda
 	char			**redirect_out;		// archivos de entrda
+	char			**redirect_append;	// archivos de entrda
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
 	pid_t			pid;				// fork()
