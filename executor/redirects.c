@@ -56,7 +56,7 @@ void create_append_files(t_constructor *node)
 
 	if (!node || !node->redirect_append)
 		return;
-	
+
 	i = 0;
 	while (node->redirect_append[i])
 	{
@@ -82,7 +82,7 @@ void apply_input_redirection(t_constructor *node)
 
 	if (!node || !node->redirect_in)
 		return;
-	
+
 	i = 0;
 	while (node->redirect_in[i])
 	{
@@ -113,7 +113,7 @@ void apply_output_redirection(t_constructor *node)
 	i = 0;
 	while (node->redirect_out[i] && node->redirect_out[i + 1])
 		i++;
-	
+
 	if (node->redirect_out[i])
 	{
 		fd = open(node->redirect_out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);

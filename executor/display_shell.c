@@ -71,7 +71,7 @@ void process_command_nodes(t_shell *shell)
 	{
 		if (current->type == TOKEN_COMMAND)
 		{
-			if (current->builtin)
+			if (current->builtin )
 				token_builtins(current);
 			else
 				token_commands(current);
