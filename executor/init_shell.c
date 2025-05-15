@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:14:31 by acarranz          #+#    #+#             */
-/*   Updated: 2025/05/13 20:09:00 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:03:24 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ static void	init_constructor_fields(t_constructor *new)
 	new->redirect_in = NULL;
 	new->redirect_out = NULL;
 	new->redirect_append = NULL;
+	new->heredoc = NULL;
 	new->pipe_in = -1;
 	new->pipe_out = -1;
 	new->builtin = 0;

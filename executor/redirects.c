@@ -60,7 +60,6 @@ void create_append_files(t_constructor *node)
 	i = 0;
 	while (node->redirect_append[i])
 	{
-		// For append files that aren't the last, ensure they exist but don't write to them
 		if (node->redirect_append[i + 1] != NULL)
 		{
 			fd = open(node->redirect_append[i], O_WRONLY | O_CREAT | O_APPEND, 0644);

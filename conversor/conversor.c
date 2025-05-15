@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/14 17:35:09 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:10:42 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,6 +111,31 @@ static void	add_redirect_file_append(t_collector **collector, t_constructor *nod
 	collector_append(collector, new_array);
 }
 
+static void	add_heredoc(t_collector **collector, t_constructor *node, char *file)
+{
+	char	**new_array;
+	int		i;
+	int		size;
+
+	if (!file)
+		return ;
+	size = 0;
+	while (node->heredoc && node->heredoc[size])
+		size++;
+	new_array = malloc(sizeof(char *) * (size + 2));
+	if (!new_array)
+		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
+	i = 0;
+	while (i < size)
+	{
+		new_array[i] = node->heredoc[i];
+		i++;
+	}
+	new_array[i] = file;
+	new_array[i + 1] = NULL;
+	node->heredoc = new_array;
+	collector_append(collector, new_array);
+}
 t_constructor	*create_constructor_node(t_collector **collector, \
 	t_ast *ast, t_shell *shell)
 {
@@ -126,6 +151,7 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->redirect_in = NULL;
 	node->redirect_out = NULL;
 	node->redirect_append = NULL;
+	node->heredoc = NULL;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
 	node->shell = shell;
@@ -177,6 +203,7 @@ static t_constructor	*find_or_create_command_node(t_collector **collector, \
 	cmd_node->redirect_in = NULL;
 	cmd_node->redirect_out = NULL;
 	cmd_node->redirect_append = NULL;
+	cmd_node->heredoc = NULL;
 	cmd_node->pipe_in = 0;
 	cmd_node->pipe_out = 0;
 	cmd_node->shell = shell;
@@ -229,6 +256,8 @@ static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_sh
 			add_redirect_file_out(collector, cmd_node, ast->file);
 	if (ast->type == TOKEN_APPEND && ast->file)
 			add_redirect_file_append(collector, cmd_node, ast->file);
+	if (ast->type == TOKEN_HEREDOC && ast->heredoc_content)
+			add_heredoc(collector, cmd_node, ast->heredoc_content);
 	if (right_nodes)
 	{
 		curr = first_node;

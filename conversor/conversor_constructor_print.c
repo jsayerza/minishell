@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/14 16:39:43 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:06:47 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,6 +88,13 @@ void	constructor_print(t_constructor *list)
 			int i = 0;
 			while (list->redirect_append[i])
 				printf("%s\n", list->redirect_append[i++]);
+		}
+		if (list->heredoc)
+		{
+			printf("Heredoc:\n");
+			int i = 0;
+			while (list->heredoc[i])
+				printf("%s\n", list->heredoc[i++]);
 		}
 
 		printf("Token Type: %s\n", get_token_type_name(list->type));

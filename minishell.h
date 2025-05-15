@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/13 19:54:16 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:03:10 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,6 +149,7 @@ typedef struct s_constructor
 	char			**redirect_in;		// archivos de entrda
 	char			**redirect_out;		// archivos de entrda
 	char			**redirect_append;	// archivos de entrda
+	char			**heredoc;	// archivos de entrda
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
 	pid_t			pid;				// fork()
