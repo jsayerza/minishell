@@ -263,7 +263,6 @@ static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_sh
 		curr = first_node;
 		while (curr->next)
 			curr = curr->next;
-
 		curr->next = right_nodes;
 		right_nodes->prev = curr;
 	}
