@@ -230,10 +230,10 @@ static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_sh
 
 	if (!ast)
 		return (NULL);
-	if (ast->type == TOKEN_COMMAND)
-	{
+	if (ast->type == TOKEN_WORD)
 		return (create_constructor_node(collector, ast, shell));
-	}
+	if (ast->type == TOKEN_COMMAND)
+		return (create_constructor_node(collector, ast, shell));
 	left_nodes = process_ast_node(collector, ast->left, shell);
 	right_nodes = process_ast_node(collector, ast->right, shell);
 	if (ast->type == TOKEN_PIPE)

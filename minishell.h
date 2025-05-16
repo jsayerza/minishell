@@ -128,6 +128,7 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
+	char			**local_var;			// export
 	char			*path;				// path donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
@@ -149,7 +150,7 @@ typedef struct s_constructor
 	char			**redirect_in;		// archivos de entrda
 	char			**redirect_out;		// archivos de entrda
 	char			**redirect_append;	// archivos de entrda
-	char			**heredoc;	// archivos de entrda
+	char			**heredoc;			// archivos de entrda
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
 	pid_t			pid;				// fork()
