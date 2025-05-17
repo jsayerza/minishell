@@ -196,7 +196,10 @@ static t_constructor	*find_or_create_command_node(t_collector **collector, \
 	cmd_node = malloc(sizeof(t_constructor));
 	if (!cmd_node)
 		exit_program(collector, "Error malloc command node", EXIT_FAILURE);
-	cmd_node->executable = ast->args ? ast->args : NULL;
+	if (ast && ast->args)
+ 	   cmd_node->executable = ast->args;
+	else
+   		cmd_node->executable = NULL;
 	cmd_node->size_exec = 0;
 	while (cmd_node->executable && cmd_node->executable[cmd_node->size_exec])
 		cmd_node->size_exec++;
@@ -238,9 +241,10 @@ static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_sh
 	right_nodes = process_ast_node(collector, ast->right, shell);
 	if (ast->type == TOKEN_PIPE)
 	{
-		if (!left_nodes || !right_nodes)
-			return (left_nodes ? left_nodes : right_nodes);
-
+		if (!left_nodes)
+    		return right_nodes;
+		if (!right_nodes)
+    		return left_nodes;
 		curr = left_nodes;
 		while (curr->next)
 			curr = curr->next;
