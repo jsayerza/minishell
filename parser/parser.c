@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <jsayerza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 11:40:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/09 11:05:48 by acarranz         ###   ########.fr       */

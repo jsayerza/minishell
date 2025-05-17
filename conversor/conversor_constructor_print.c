@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   conversor_constructor_print.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <jsayerza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/15 19:06:47 by acarranz         ###   ########.fr       */
