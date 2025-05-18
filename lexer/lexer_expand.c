@@ -177,8 +177,11 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 				exit_program(collector, "Error malloc tokens_expand init join", true);
 			while (curr && curr->type != TOKEN_DQUOTE)
 			{
+				printf("     curr->value: %s\n", curr->value);
 				expanded = expand_string(curr->value, exit_status, collector);
+				printf("     expanded: %s joined: %s\n", expanded, joined);
 				tmp = ft_strjoin(joined, expanded);
+				printf("     tmp: %s\n", tmp);
 				freer(expanded);
 				if (!tmp)
 					exit_program(collector, "Error join tokens_expand", true);
