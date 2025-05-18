@@ -144,9 +144,22 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 			prev = get_prev_token(*head, curr);
 			if (prev && prev->type == TOKEN_WORD && ft_strchr(prev->value, '='))
 			{
+<<<<<<< HEAD
 				printf("    IN tokens_expand fusion asignación + comillas\n");
 
 				start = curr;
+=======
+				printf("     curr->value: %s\n", curr->value);
+				expanded = expand_string(curr->value, shell, collector);
+				printf("     expanded: %s joined: %s\n", expanded, joined);
+				tmp = ft_strjoin(joined, expanded);
+				printf("     tmp: %s\n", tmp);
+				freer(expanded);
+				if (!tmp)
+					exit_program(collector, "Error join tokens_expand", true);
+				freer(joined);
+				joined = tmp;
+>>>>>>> d9063bd (actualitzacio)
 				curr = curr->next;
 
 				joined = ft_strdup("");
