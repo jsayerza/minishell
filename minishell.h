@@ -59,6 +59,7 @@ typedef enum e_token_type
 	TOKEN_DQUOTE,
 	TOKEN_SQUOTE,
     TOKEN_BUILTIN,
+	TOKEN_ENV_ASSIGN,
 }	t_token_type;
 
 // Enum representing various token error types in the minishell application
@@ -114,6 +115,7 @@ typedef struct s_ast {
 	char			*heredoc_content;
 	struct s_ast	*left;	// Represent child nodes for pipes & redirections
 	struct s_ast	*right;	// Represent child nodes for pipes & redirections
+	char			**envp;
 }	t_ast;
 
 typedef struct s_collector
@@ -181,6 +183,7 @@ void	collector_append(t_collector **collector, void *ptr);
 t_token	*lexer(const char *input, t_collector **collector, t_token **head);
 
 // lexer/lexer_funcs.c
+// bool	is_assignment(const char *str);
 int		handle_invalidchars(const char *input, int i);
 void	get_expand_var(const char *input, t_collector **collector, \
 	int *i, t_token **head);
@@ -208,6 +211,12 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector);
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact);
 
+// parser/parser_nodes.c
+t_ast	*init_redir_node(t_collector **collector, \
+	t_token *curr, t_token *next, t_ast *cmd_node, int interact);
+t_ast	*init_command_node(t_collector **collector);
+t_ast	*init_word_node(t_collector **collector, const char *value);
+
 // parser/parser_funcs.c
 // t_ast	*parse_redirection(t_collector **collector, t_token **tokens, t_ast *cmd);
 t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact);
@@ -224,6 +233,7 @@ void	ast_print(t_ast *root, int depth);
 // parser/parser_utils.c
 int		tokens_validate(t_token *tokens);
 void	remove_trailing_newline(char *line);
+int		is_assignment(const char *str);
 
 // conversor/conversor.c
 t_constructor	*ast_to_constructor(t_collector **collector, \

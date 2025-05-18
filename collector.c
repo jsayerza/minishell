@@ -41,13 +41,13 @@ void	collector_cleanup(t_collector **collector)
 	t_collector	*current;
 	t_collector	*next;
 
-	printf("  IN collector_cleanup\n");
+	printf("\nIN collector_cleanup\n");
 	current = *collector;
 	while (current)
 	{
 		next = current->next;
-		printf("    Free pointer:  %p\n", current);
-		printf("      Free pointer value: %s\n", (char *)current->ptr);
+		printf("  Free pointer:  %p\n", current);
+		printf("    Free pointer value: %s\n", (char *)current->ptr);
 		if (current->ptr)
 			freer(current->ptr);
 		if (current)
@@ -55,7 +55,7 @@ void	collector_cleanup(t_collector **collector)
 		current = next;
 	}
 	*collector = NULL;
-	printf("  OUT collector_cleanup\n");
+	printf("OUT collector_cleanup\n\n");
 }
 
 static bool	collector_contains(t_collector *collector, void *ptr)

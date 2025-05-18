@@ -71,7 +71,6 @@ int	tokens_validate(t_token *tokens)
 		prev = curr;
 		curr = curr->next;
 	}
-	// 💥 Verificar si el último token es inválido
 	if (prev && (prev->type == TOKEN_PIPE
 		|| prev->type == TOKEN_REDIRECT_IN
 		|| prev->type == TOKEN_REDIRECT_OUT
@@ -93,4 +92,16 @@ void	remove_trailing_newline(char *line)
 	len = ft_strlen(line);
 	if (len > 0 && line[len - 1] == '\n')
 		line[len - 1] = '\0';
+}
+
+int	is_assignment(const char *str)
+{
+	int	i;
+
+	i = 0;
+	if (!str || !ft_isalpha(str[0]))
+		return (0);
+	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
+		i++;
+	return (str[i] == '=' && i > 0);
 }

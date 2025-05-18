@@ -12,43 +12,6 @@
 
 #include "minishell.h"
 
-static void	redir_node_heredoc(t_collector **collector, \
-	t_token *next, t_ast *redir_node, int interact)
-{
-	redir_node->heredoc_content = heredoc_read(next->value, \
-		interact, collector);
-	if (!redir_node->heredoc_content)
-		exit_program(collector, \
-			"Error saving heredoc content", EXIT_FAILURE);
-	collector_append(collector, redir_node->heredoc_content);
-}
-
-//// Eliminarem interact en versió final (amb terminal)
-static t_ast	*crea_redir_node(t_collector **collector, \
-	t_token *curr, t_token *next, t_ast *cmd_node, int interact)
-{
-	t_ast	*redir_node;
-
-	redir_node = malloc(sizeof(t_ast));
-	if (!redir_node)
-		exit_program(collector, \
-			"Error malloc parser redirect node", EXIT_FAILURE);
-	collector_append(collector, redir_node);
-	redir_node->type = curr->type;
-	redir_node->file = ft_strdup(next->value);
-	if (!redir_node->file)
-		exit_program(collector, \
-			"Error malloc parser redirect file node", EXIT_FAILURE);
-	collector_append(collector, redir_node->file);
-	redir_node->left = cmd_node;
-	redir_node->right = NULL;
-	redir_node->args = NULL;
-	redir_node->heredoc_content = NULL;
-	if (curr->type == TOKEN_HEREDOC)
-		redir_node_heredoc(collector, next, redir_node, interact);
-	return (redir_node);
-}
-
 static t_ast	*parse_redirection(t_collector **collector, \
 	t_token **tokens, t_ast *cmd_node, int interact)
 {
@@ -65,7 +28,7 @@ static t_ast	*parse_redirection(t_collector **collector, \
 				curr->value);
 			return (NULL);
 		}
-		redir_node = crea_redir_node(collector, curr, *tokens, \
+		redir_node = init_redir_node(collector, curr, *tokens, \
 			cmd_node, interact);
 		if (!redir_node)
 			return (NULL);
@@ -75,37 +38,38 @@ static t_ast	*parse_redirection(t_collector **collector, \
 	return (cmd_node);
 }
 
-static t_ast	*init_command_node(t_collector **collector)
-{
-	t_ast	*node;
-
-	node = malloc(sizeof(t_ast));
-	if (!node)
-		exit_program(collector, "Error malloc parser command node", \
-			EXIT_FAILURE);
-	node->type = TOKEN_COMMAND;
-	node->left = NULL;
-	node->right = NULL;
-	node->file = NULL;
-	node->args = malloc(sizeof(char *) * MAX_CMD_ARGS);
-	if (!node->args)
-		exit_program(collector, "Error malloc parser command node args", \
-			EXIT_FAILURE);
-	collector_append(collector, node);
-	collector_append(collector, node->args);
-	return (node);
-}
-
 t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact)
 {
 	t_ast	*node;
 	int		i;
 
-	if (!(*tokens) || (*tokens)->type != TOKEN_WORD)
+	if (!(*tokens))
 		return (NULL);
+
+	// Procesar asignaciones iniciales
 	node = init_command_node(collector);
 	if (!node)
 		return (NULL);
+	i = 0;
+
+	// Guardar asignaciones previas en un array temporal
+	while (*tokens && (*tokens)->type == TOKEN_WORD && is_assignment((*tokens)->value))
+	{
+		node->envp[i] = ft_strdup((*tokens)->value);
+		if (!node->envp[i])
+			exit_program(collector, "Error malloc envp assignment", EXIT_FAILURE);
+		collector_append(collector, node->envp[i]);
+		i++;
+		*tokens = (*tokens)->next;
+	}
+	node->envp[i] = NULL;
+	if (!*tokens)
+	{
+		// Solo hay asignaciones, no comando real
+		node->type = TOKEN_ENV_ASSIGN;
+		return (node);
+	}
+
 	i = 0;
 	while (*tokens && (*tokens)->type == TOKEN_WORD)
 	{
