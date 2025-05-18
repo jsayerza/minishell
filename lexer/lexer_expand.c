@@ -178,7 +178,7 @@ void	tokens_expand(t_token **head,t_shell *shell, t_collector **collector)
 			while (curr && curr->type != TOKEN_DQUOTE)
 			{
 				printf("     curr->value: %s\n", curr->value);
-				expanded = expand_string(curr->value, shell, collector);
+				expanded = expand_string(curr->value, exit_status, collector);
 				printf("     expanded: %s joined: %s\n", expanded, joined);
 				tmp = ft_strjoin(joined, expanded);
 				printf("     tmp: %s\n", tmp);
