@@ -24,6 +24,7 @@ static char	*get_short_pwd(char *cwd, t_collector **collector)
 	{
 		rel = cwd + ft_strlen(home);
 		short_pwd = ft_strjoin("~", rel);
+		collector_append(collector, short_pwd);
 	}
 	else
 		short_pwd = ft_strdup(cwd);
@@ -76,7 +77,6 @@ char	*prompt_generate(t_collector **collector)
 		user = "unknown";
 	short_pwd = get_short_pwd(cwd, collector);
 	prompt = join_prompt_parts(user, short_pwd, collector);
-	freer(short_pwd);
 	collector_append(collector, prompt);
 	return (prompt);
 }

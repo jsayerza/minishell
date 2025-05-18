@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/04/29 19:25:02 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:03:10 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -128,6 +128,7 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
+	char			**local_var;			// export
 	char			*path;				// path donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
@@ -146,11 +147,12 @@ typedef struct s_constructor
 	char			**executable;   	// array de str de ejecutables
 	int				size_exec;			// Elemntos a ejecutar
 	int				fd[2];				// File descriptor
-	char			*file;		// archivos de salida
+	char			**redirect_in;		// archivos de entrda
+	char			**redirect_out;		// archivos de entrda
+	char			**redirect_append;	// archivos de entrda
+	char			**heredoc;			// archivos de entrda
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
-	int				append;				// Flag ->Write append
-	int				expand;				// Flag ->Expand variable
 	pid_t			pid;				// fork()
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
@@ -193,8 +195,6 @@ void	get_operator(const char *input, t_collector **collector, \
 void	tokens_free(t_token *head);
 void	token_print(t_token *token);
 void	tokens_print(t_token **head);
-void	token_insert_before(t_token **head, t_token *pos, \
-	t_token_type type, const char *value, t_collector **collector);
 void	token_remove(t_token **head, t_token *target, t_collector **collector);
 t_token	*ft_lasttoken(t_token *lst);
 void	token_create(t_collector **collector, t_token_type type, \
@@ -297,6 +297,14 @@ void    read_fd(t_constructor *node);
 
 //Funciones comandos
 void	token_commands(t_constructor *node);
+char	*acces_path(t_constructor *node);
+void	execute_first_command(t_constructor *node);
+void	execute_command(t_constructor *node);
+
+//funciones de archivos
+void check_redirect_in_file_exists(t_constructor *node);
+void apply_redirect_in(t_constructor *node);
+void apply_all_redirections(t_constructor *node);
 
 /* Función principal exportada */
 void path(t_shell *shell);

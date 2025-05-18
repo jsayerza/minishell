@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversor_constructor_print.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/05/15 19:06:47 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,11 +66,37 @@ void	constructor_print(t_constructor *list)
 				printf("%s ", list->executable[i++]);
 			printf("\n");
 		}
-		else
-			printf("(null)\n");
+		printf("Size exec : %d\n", list->size_exec);
 		printf("Builtin: %s\n", get_builtin_name(list->builtin));
-		//printf("Read FD: %d\n", list->read_fd);
-		//printf("Write FD: %d\n", list->write_fd);
+		if (list->redirect_in)
+		{
+			printf("Redirect in:\n");
+			int i = 0;
+			while (list->redirect_in[i])
+				printf("%s\n", list->redirect_in[i++]);
+		}
+		if (list->redirect_out)
+		{
+			printf("Redirect out:\n");
+			int i = 0;
+			while (list->redirect_out[i])
+				printf("%s\n", list->redirect_out[i++]);
+		}
+		if (list->redirect_append)
+		{
+			printf("Append:\n");
+			int i = 0;
+			while (list->redirect_append[i])
+				printf("%s\n", list->redirect_append[i++]);
+		}
+		if (list->heredoc)
+		{
+			printf("Heredoc:\n");
+			int i = 0;
+			while (list->heredoc[i])
+				printf("%s\n", list->heredoc[i++]);
+		}
+
 		printf("Token Type: %s\n", get_token_type_name(list->type));
 		printf("Error: %d\n", list->error);
 		printf("Pipe in: %d  Pipe out: %d\n", list->pipe_in, list->pipe_out);

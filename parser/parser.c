@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 11:40:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/09 11:05:48 by acarranz         ###   ########.fr       */
@@ -21,11 +21,11 @@ static void	parse_pipeline_add_node(t_collector **collector, \
 	if (!node)
 		exit_program(collector, \
 			"Error malloc parser command node", EXIT_FAILURE);
-	collector_append(collector, node);
 	node->type = TOKEN_PIPE;
 	node->left = *left;
 	node->right = right;
 	*left = node;
+	collector_append(collector, node);
 }
 
 static t_ast	*parse_pipeline(t_collector **collector, \
@@ -67,6 +67,6 @@ t_ast	*parser(t_collector **collector, t_token *tokens, int interact)
 	ast = parse_pipeline(collector, &tokens, interact);
 	// if (!ast)
 	// 	print_error("minishell: parser error");
-	printf("OUT parser --------------------\n\n");
+	printf("OUT parser\n");
 	return (ast);
 }

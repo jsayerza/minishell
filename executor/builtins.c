@@ -41,9 +41,127 @@ void	redirect_builtin(t_constructor *node, char **builtin)
 	}
 }
 
+void file_out_builtin(t_constructor *node, char *buitlin)
+{
+	int fd;
+	int size;
+	int i;
+	int original_stdout;
+
+	i = 0;
+	size = 0;
+	while (node->redirect_out[size])
+		size++;
+	original_stdout = dup(STDOUT_FILENO);
+	if (original_stdout < 0)
+	{
+		perror("Error duplicando stdout");
+		return;
+	}
+	while (node->redirect_out[i])
+	{
+		fd = open(node->redirect_out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd < 0)
+		{
+			perror("Error open");
+			close(original_stdout);
+			return;
+		}
+		if (i == size - 1)
+		{
+			if (dup2(fd, STDOUT_FILENO) < 0)
+			{
+				perror("Error dup2");
+				close(fd);
+				close(original_stdout);
+				return;
+			}
+		}
+		close(fd);
+		i++;
+	}
+	if (ft_strcmp("env", buitlin) == 0)
+		env(node);
+	if (ft_strcmp("export", buitlin) == 0)
+		export(node);
+	if (ft_strcmp("echo", buitlin) == 0)
+		echo(node);
+	if (ft_strcmp("pwd", buitlin) == 0)
+		pwd(node);
+	if (dup2(original_stdout, STDOUT_FILENO) < 0)
+	{
+		perror("Error restaurando stdout");
+	}
+	close(original_stdout);
+}
+
+void file_append_builtin(t_constructor *node, char *buitlin)
+{
+	int fd;
+	int size;
+	int i;
+	int original_stdout;
+
+	i = 0;
+	size = 0;
+	while (node->redirect_append[size])
+		size++;
+	original_stdout = dup(STDOUT_FILENO);
+	if (original_stdout < 0)
+	{
+		perror("Error duplicando stdout");
+		return;
+	}
+	while (node->redirect_append[i])
+	{
+		fd = open(node->redirect_append[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		if (fd < 0)
+		{
+			perror("Error open");
+			close(original_stdout);
+			return;
+		}
+		if (i == size - 1)
+		{
+			if (dup2(fd, STDOUT_FILENO) < 0)
+			{
+				perror("Error dup2");
+				close(fd);
+				close(original_stdout);
+				return;
+			}
+		}
+		close(fd);
+		i++;
+	}
+	if (ft_strcmp("env", buitlin) == 0)
+		env(node);
+	if (ft_strcmp("export", buitlin) == 0)
+		export(node);
+	if (ft_strcmp("echo", buitlin) == 0)
+		echo(node);
+	if (ft_strcmp("pwd", buitlin) == 0)
+		pwd(node);
+	if (dup2(original_stdout, STDOUT_FILENO) < 0)
+	{
+		perror("Error restaurando stdout");
+	}
+	close(original_stdout);
+}
+
 void	token_builtins(t_constructor *node)
 {
 	printf("Builtins\n");
+	if (node->redirect_out)
+	{
+		file_out_builtin(node, node->executable[0]);
+		return ;
+	}
+	if (node->redirect_append)
+	{
+		file_append_builtin(node, node->executable[0]);
+		return ;
+	}
 	if (node->builtin == BUILTIN_EXPORT)
 		export(node);
 	if (node->builtin == BUILTIN_ENV)

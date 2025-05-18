@@ -12,6 +12,8 @@
 
 #include "../minishell.h"
 
+
+
 void	env(t_constructor *node)
 {
 	if (node->pipe_out)
