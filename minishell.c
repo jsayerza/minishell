@@ -74,10 +74,12 @@ int	main(int argc, char **argv, char **envp)
 		printf("\n=== AST ===\n");
 		ast_print(ast, 0);
 		constructor = ast_to_constructor(&collector, ast, shell);
+		printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
 		if (constructor)
 		{
 			constructor_print(constructor);
+			printf("\n=== Execute shell ===\n");
 			display_shell(shell);
 		}
 		else

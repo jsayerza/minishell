@@ -12,52 +12,69 @@
 
 #include "minishell.h"
 
-void	ast_print_indent(int depth)
+static void	ast_print_indent(int depth)
 {
-	int	i;
-
-	i = 0;
-	while (i < depth)
-	{
+	int	i = 0;
+	while (i++ < depth)
 		printf("  ");
-		i++;
-	}
 }
 
-static void	ast_print_args(char **args)
+static void	ast_print_str_array(char *label, char **array, int depth)
 {
 	int	i;
 
-	i = 0;
-	while (args && args[i])
+	if (!array)
 	{
-		printf(" %s", args[i]);
+		ast_print_indent(depth);
+		printf("%s: [NULL]\n", label);
+		return;
+	}
+	ast_print_indent(depth);
+	printf("%s:\n", label);
+	i = 0;
+	while (array[i])
+	{
+		ast_print_indent(depth + 1);
+		printf("- %s\n", array[i]);
 		i++;
 	}
 }
 
-static void	ast_print_type(t_ast *root)
+static void	ast_print_type(t_ast *root, int depth)
 {
+	ast_print_indent(depth);
 	if (root->type == TOKEN_COMMAND)
-	{
-		printf(BOLD GREEN "CMD:" RESET);
-		if (root->args)
-			ast_print_args(root->args);
-		printf("\n");
-	}
+		printf(BOLD GREEN "CMD\n" RESET);
+	else if (root->type == TOKEN_WORD)
+		printf(BOLD GREEN "WORD\n" RESET);
 	else if (root->type == TOKEN_PIPE)
 		printf(YELLOW "PIPE\n" RESET);
 	else if (root->type == TOKEN_REDIRECT_IN)
-		printf(BOLD RED "REDIRECT_IN (<): %s\n" RESET, root->file);
+		printf(BOLD RED "REDIRECT_IN (<)\n" RESET);
 	else if (root->type == TOKEN_REDIRECT_OUT)
-		printf(BOLD RED "REDIRECT_OUT (>): %s\n" RESET, root->file);
+		printf(BOLD RED "REDIRECT_OUT (>)\n" RESET);
 	else if (root->type == TOKEN_HEREDOC)
-		printf(MAGENTA "HEREDOC (<<): %s\n   CONTENT:\n%s\n" RESET, \
-			root->file, root->heredoc_content);
+	{
+		printf(MAGENTA "HEREDOC (<<): %s\n" RESET, root->file);
+		ast_print_indent(depth);
+		printf("CONTENT:\n");
+		ast_print_indent(depth + 1);
+		printf("%s\n", root->heredoc_content ? root->heredoc_content : "[NULL]");
+		return;
+	}
 	else if (root->type == TOKEN_APPEND)
-		printf(MAGENTA "APPEND (>>): %s\n" RESET, root->file);
+		printf(MAGENTA "APPEND (>>)\n" RESET);
 	else
 		printf(RED "UNKNOWN NODE\n" RESET);
+
+	if (root->file && root->type < TOKEN_REDIRECT_IN) // evita repetir en redirecciones
+	{
+		ast_print_indent(depth);
+		printf("file: %s\n", root->file);
+	}
+
+	ast_print_str_array("args", root->args, depth);
+	ast_print_str_array("envp", root->envp, depth);
 }
 
 static void	ast_print_branch(char *label, t_ast *child, int depth)
@@ -77,8 +94,7 @@ void	ast_print(t_ast *root, int depth)
 {
 	if (!root)
 		return ;
-	ast_print_indent(depth);
-	ast_print_type(root);
+	ast_print_type(root, depth);
 	ast_print_branch("LEFT", root->left, depth);
 	ast_print_branch("RIGHT", root->right, depth);
 }
