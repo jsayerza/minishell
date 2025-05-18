@@ -277,10 +277,6 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 			if (!curr->value)
 				exit_program(collector, "Error strdup in expansion", true);
 			collector_append(collector, curr->value);
-			// if (curr->type == TOKEN_COMMAND && is_assignment(curr->value))
-			// {
-			// 	curr->type = TOKEN_WORD;
-			// }
 			tokens_print(head);
 			printf(" OUT tokens_expand TOKEN_WORD/COMMAND\n\n");
 		}
