@@ -195,6 +195,8 @@ void	get_operator(const char *input, t_collector **collector, \
 void	tokens_free(t_token *head);
 void	token_print(t_token *token);
 void	tokens_print(t_token **head);
+void	token_insert_before(t_token **head, t_token *pos, \
+	t_token_type type, const char *value, t_collector **collector);
 void	token_remove(t_token **head, t_token *target, t_collector **collector);
 t_token	*ft_lasttoken(t_token *lst);
 void	token_create(t_collector **collector, t_token_type type, \

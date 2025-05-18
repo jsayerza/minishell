@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 19:06:13 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/04/27 21:04:18 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,6 @@
 int	main(int argc, char **argv, char **envp)
 {
 	t_collector		*collector;
-	t_collector		*cycle_collector;
 	t_token			*tokens;
 	t_shell			*shell;
 	t_ast			*ast;
@@ -33,15 +32,15 @@ int	main(int argc, char **argv, char **envp)
 		exit_program(&collector, "Error al inicializar shell", true);
 	while (1)
 	{
-		cycle_collector = NULL;
+		collector = NULL;
 		line = NULL;
 		if (interact)
 		{
-			prompt = prompt_generate(&cycle_collector);
+			prompt = prompt_generate(&collector);
 			line = readline(prompt);
 			if (!line)
 			{
-				collector_cleanup(&cycle_collector);
+				collector_cleanup(&collector);
 				break ;
 			}
 		}
@@ -52,29 +51,29 @@ int	main(int argc, char **argv, char **envp)
 		if (line[0] == '\0' || is_only_whitespace(line))
 		{
 			freer(line);
-			collector_cleanup(&cycle_collector);
+			collector_cleanup(&collector);
 			continue ;
 		}
 		if (interact)
 			add_history(line);
 		tokens = NULL;
-		tokens = lexer(line, &cycle_collector, &tokens);
+		tokens = lexer(line, &collector, &tokens);
 		freer(line);
 		if (!tokens)
 		{
-			collector_cleanup(&cycle_collector);
+			collector_cleanup(&collector);
 			continue ;
 		}
 		//tokens_print(tokens);
-		ast = parser(&cycle_collector, tokens, interact);
+		ast = parser(&collector, tokens, interact);
 		if (!ast)
 		{
-			collector_cleanup(&cycle_collector);
+			collector_cleanup(&collector);
 			continue ;
 		}
 		printf("\n=== AST ===\n");
 		ast_print(ast, 0);
-		constructor = ast_to_constructor(&cycle_collector, ast, shell);
+		constructor = ast_to_constructor(&collector, ast, shell);
 		shell->constructor = constructor;
 		if (constructor)
 		{
@@ -83,12 +82,11 @@ int	main(int argc, char **argv, char **envp)
 		}
 		else
 			print_error("minishell: failed to prepare command execution");
-		collector_cleanup(&cycle_collector);
+		collector_cleanup(&collector);
 	}
 	free_path_array(shell->paths);
 	free_path_array(shell->env);
 	free(shell->path);
 	collector_cleanup(&collector);
-
 	return (EXIT_SUCCESS);
 }

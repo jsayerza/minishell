@@ -12,7 +12,6 @@
 
 #include "minishell.h"
 
-
 void	freer(char *ptr)
 {
 	free(ptr);
