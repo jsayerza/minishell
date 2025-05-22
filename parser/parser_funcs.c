@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/10 20:20:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/22 16:47:37 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:43:20 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,7 +51,7 @@ t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact)
 	if (!node)
 		return (NULL);
 	i = 0;
-
+	/*
 	// Guardar asignaciones previas en un array temporal
 	while (*tokens && (*tokens)->type == TOKEN_WORD && is_assignment((*tokens)->value))
 	{
@@ -63,6 +63,7 @@ t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact)
 		*tokens = (*tokens)->next;
 	}
 	node->envp[i] = NULL;
+	*/
 	if (!*tokens)
 	{
 		// Solo hay asignaciones, no comando real
