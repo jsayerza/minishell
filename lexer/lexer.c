@@ -74,9 +74,11 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_she
 	first_token = *head;
 	while (first_token && first_token->type == TOKEN_WHITESPACE)
 		first_token = first_token->next;
-	if (!first_token || (first_token->type != TOKEN_WORD && first_token->type != TOKEN_COMMAND))
+	// if (!first_token || (first_token->type != TOKEN_WORD && first_token->type != TOKEN_COMMAND))
+	if (!first_token)
 	{
-		exit_program(collector, "minishell: syntax error: unexpected token at start", false);
+		// exit_program(collector, "minishell: syntax error: unexpected token at start", false);
+		exit_program(collector, "minishell: syntax error: empty input", false);
 		printf("OUT lexer NULL --------------------\n\n");
 		return (NULL);
 	}
