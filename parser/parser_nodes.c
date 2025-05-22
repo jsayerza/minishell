@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_nodes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/13 20:13:09 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/22 16:49:44 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
