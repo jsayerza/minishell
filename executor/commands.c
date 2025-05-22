@@ -196,17 +196,27 @@ void	setup_last_command_pipes(t_constructor *node)
 	close_all_pipes_except(node, 0, 0);
 }
 
-void	execute_command_with_path(t_constructor *node, char *path,
-			void (*setup_pipes)(t_constructor *))
+void execute_command_with_path(t_constructor *node, char *path,
+							   void (*setup_pipes)(t_constructor *))
 {
+	int status;
+
 	node->pid = fork();
 	if (handle_fork_error(node, path))
 		return;
-	if (node->pid == 0)
+	if (node->pid == 0) // Proceso hijo
 	{
 		if (setup_pipes)
 			setup_pipes(node);
 		execute_in_child(node, path);
+	}
+	else // Proceso padre
+	{
+		waitpid(node->pid, &status, 0);
+		if (WIFEXITED(status))
+			node->shell->last_exit = WEXITSTATUS(status);
+		else if (WIFSIGNALED(status))
+			node->shell->last_exit = 128 + WTERMSIG(status);
 	}
 	free(path);
 }

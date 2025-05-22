@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*expand_variable(const char *str, int *i, int exit_status, t_collector **collector)
+static char	*expand_variable(const char *str, int *i, t_shell *shell, t_collector **collector)
 {
 	int		start;
 	char	*var_name;
@@ -25,7 +25,7 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 	if (str[*i] == '?')
 	{
 		(*i)++;
-		result = ft_itoa(exit_status);
+		result = ft_itoa(shell->last_exit);
 		if (!result)
 			exit_program(collector, "Error malloc expand_variable itoa", true);
 		return (result);
@@ -55,7 +55,7 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 	return (result);
 }
 
-static char	*expand_string(const char *str, int exit_status, t_collector **collector)
+static char	*expand_string(const char *str, t_shell *shell, t_collector **collector)
 {
 	int		i = 0;
 	char	*result;
@@ -97,7 +97,7 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 			while (str[i] && str[i] != '"')
 			{
 				if (str[i] == '$')
-					expanded = expand_variable(str, &i, exit_status, collector);
+					expanded = expand_variable(str, &i, shell, collector);
 				else
 				{
 					start = i;
@@ -121,7 +121,7 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 		else if (str[i] == '$')
 		{
 			printf("    IN expand_string-$\n");
-			expanded = expand_variable(str, &i, exit_status, collector);
+			expanded = expand_variable(str, &i, shell, collector);
 			tmp = ft_strjoin(result, expanded);
 			freer(expanded);
 			if (!tmp)
@@ -153,7 +153,7 @@ static char	*expand_string(const char *str, int exit_status, t_collector **colle
 	return (result);
 }
 
-void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
+void	tokens_expand(t_token **head,t_shell *shell, t_collector **collector)
 {
 	t_token	*curr;
 	t_token	*start;
@@ -177,9 +177,13 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 				exit_program(collector, "Error malloc tokens_expand init join", true);
 			while (curr && curr->type != TOKEN_DQUOTE)
 			{
+<<<<<<< HEAD
 				printf("     curr->value: %s\n", curr->value);
 				expanded = expand_string(curr->value, exit_status, collector);
 				printf("     expanded: %s joined: %s\n", expanded, joined);
+=======
+				expanded = expand_string(curr->value, shell, collector);
+>>>>>>> a810dbb (Codic de sortida a comandos : falta a totes les altres accions , unset path fet)
 				tmp = ft_strjoin(joined, expanded);
 				printf("     tmp: %s\n", tmp);
 				freer(expanded);
@@ -191,7 +195,7 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 			}
 			if (!curr || curr->type != TOKEN_DQUOTE)
 				exit_program(collector, "minishell: unclosed double quote", false);
-			token_insert_before(head, start, TOKEN_WORD, joined, collector);			
+			token_insert_before(head, start, TOKEN_WORD, joined, collector);
 			//TODO: revisar aquest free joined
 			freer(joined);
 			next = curr->next;
@@ -225,7 +229,7 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 			}
 			if (!curr || curr->type != TOKEN_SQUOTE)
 				exit_program(collector, "minishell: unclosed single quote", false);
-			token_insert_before(head, start, TOKEN_WORD, joined, collector);			
+			token_insert_before(head, start, TOKEN_WORD, joined, collector);
 			freer(joined);
 			next = curr->next;
 			while (start != next)
@@ -242,14 +246,14 @@ void	tokens_expand(t_token **head, int exit_status, t_collector **collector)
 		else if (curr->type == TOKEN_WORD || curr->type == TOKEN_COMMAND)
 		{
 			printf(" IN tokens_expand TOKEN_WORD/COMMAND\n");
-			expanded = expand_string(curr->value, exit_status, collector);
+			expanded = expand_string(curr->value, shell, collector);
 			curr->value = ft_strdup(expanded);
-			freer(expanded);
+			//freer(expanded);
 			collector_append(collector, curr->value);
 			// if (curr->type == TOKEN_COMMAND && is_assignment(curr->value))
 			// {
 			// 	curr->type = TOKEN_WORD;
-			// }			
+			// }
 			tokens_print(head);
 			printf(" OUT tokens_expand TOKEN_WORD/COMMAND\n\n");
 		}

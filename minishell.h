@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/22 17:42:55 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:02:51 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdlib.h>
 # include <stdbool.h>
 # include <string.h>
+# include <signal.h>
 # include <ctype.h>
 # include <pwd.h>
 # include <limits.h>
@@ -180,7 +181,7 @@ void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);
 
 // lexer/lexer.c
-t_token	*lexer(const char *input, t_collector **collector, t_token **head);
+t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_shell *shell);
 
 // lexer/lexer_funcs.c
 // bool	is_assignment(const char *str);
@@ -206,7 +207,7 @@ void	token_create(t_collector **collector, t_token_type type, \
 	const char *value, t_token **head);
 
 // lexer/lexer_expand.c
-void	tokens_expand(t_token **head, int exit_status, t_collector **collector);
+void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact);
@@ -334,6 +335,10 @@ void	free_path_array(char **path);
 char	*get_path_value(char **env);
 char	**try_alternative_path(char **env);
 
+//Signal Functions
+
+void setup_signals(t_shell *shell);
+void handle_signals_in_loop(t_shell *shell, char *line);
 //print functions
 void	print_builtin(char **builtin);
 void	print_token_list(t_shell *shell);
