@@ -177,9 +177,13 @@ void	tokens_expand(t_token **head,t_shell *shell, t_collector **collector)
 				exit_program(collector, "Error malloc tokens_expand init join", true);
 			while (curr && curr->type != TOKEN_DQUOTE)
 			{
+<<<<<<< HEAD
 				printf("     curr->value: %s\n", curr->value);
 				expanded = expand_string(curr->value, shell, collector);
 				printf("     expanded: %s joined: %s\n", expanded, joined);
+=======
+				expanded = expand_string(curr->value, shell, collector);
+>>>>>>> a810dbb (Codic de sortida a comandos : falta a totes les altres accions , unset path fet)
 				tmp = ft_strjoin(joined, expanded);
 				printf("     tmp: %s\n", tmp);
 				freer(expanded);
@@ -249,7 +253,7 @@ void	tokens_expand(t_token **head,t_shell *shell, t_collector **collector)
 			// if (curr->type == TOKEN_COMMAND && is_assignment(curr->value))
 			// {
 			// 	curr->type = TOKEN_WORD;
-			// }			
+			// }
 			tokens_print(head);
 			printf(" OUT tokens_expand TOKEN_WORD/COMMAND\n\n");
 		}
