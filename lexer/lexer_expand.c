@@ -20,15 +20,21 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 	char	*result;
 
 	printf("     IN expand_variable\n");
-	(*i)++; // Skip $
-	//TODO: revisar aquest codi, hem de ctrlar '?'?
+	(*i)++;
+	//TODO: revisar aquest codi
 	if (str[*i] == '?')
 	{
 		(*i)++;
 		result = ft_itoa(exit_status);
 		if (!result)
 			exit_program(collector, "Error malloc expand_variable itoa", true);
-		collector_append(collector, result);
+		return (result);
+	}
+	if (!ft_isalnum(str[*i]) && str[*i] != '_')
+	{
+		result = ft_strdup("$");
+		if (!result)
+			exit_program(collector, "Error malloc expand_variable lone $", true);
 		return (result);
 	}
 	start = *i;
@@ -45,7 +51,6 @@ static char	*expand_variable(const char *str, int *i, int exit_status, t_collect
 		result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_variable result", true);
-	// collector_append(collector, result);
 	printf("     OUT expand_variable\n");
 	return (result);
 }
