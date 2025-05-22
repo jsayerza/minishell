@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/15 19:03:10 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/22 17:42:55 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ typedef struct s_ast {
 	char			*heredoc_content;
 	struct s_ast	*left;	// Represent child nodes for pipes & redirections
 	struct s_ast	*right;	// Represent child nodes for pipes & redirections
-	char			**envp;
+	//char			**envp;
 }	t_ast;
 
 typedef struct s_collector
