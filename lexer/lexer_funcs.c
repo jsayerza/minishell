@@ -74,7 +74,7 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	char	*quoted;
 	char	quote_str[2];
 	char	quote_type;
-	t_token_type token_type;
+	t_token_type token_type = TOKEN_WORD;
 
 	printf("IN get_quoted_str\n");
 	quote_type = input[*i];
