@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/22 16:46:44 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/22 20:02:06 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int	main(int argc, char **argv, char **envp)
 		if (interact)
 			add_history(line);
 		tokens = NULL;
-		tokens = lexer(line, &cycle_collector, &tokens);
+		tokens = lexer(line, &cycle_collector, &tokens, shell);
 		freer(line);
 		if (!tokens)
 		{
@@ -86,6 +86,7 @@ int	main(int argc, char **argv, char **envp)
 		else
 			print_error("minishell: failed to prepare command execution");
 		collector_cleanup(&cycle_collector);
+		printf("last_exit-> %d\n", shell->last_exit);
 	}
 	free_path_array(shell->paths);
 	free_path_array(shell->env);

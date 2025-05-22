@@ -82,9 +82,9 @@ void process_command_nodes(t_shell *shell)
 
 void	display_shell(t_shell *shell)
 {
-
 	assign_pipes(shell);
 	process_command_nodes(shell);
 	close_remaining_pipes(shell);
 	wait_for_all_processes(shell);
+	printf("last exit->%d", shell->last_exit);
 }

@@ -48,7 +48,7 @@ static int	handle_quotes(const char *input, t_collector **collector, int *i, t_t
 	return (0);
 }
 
-t_token	*lexer(const char *input, t_collector **collector, t_token **head)
+t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_shell *shell)
 {
 	int		i;
 	t_token	*first_token;
@@ -70,7 +70,7 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head)
 		printf("  lexer-input[%d]: %c\n", i, input[i]);
 		get_word(input, collector, &i, head);
 	}
-	tokens_expand(head, 0, collector);
+	tokens_expand(head, shell, collector);
 	first_token = *head;
 	while (first_token && first_token->type == TOKEN_WHITESPACE)
 		first_token = first_token->next;
