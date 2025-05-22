@@ -64,13 +64,56 @@ char	*construct_exec(char *path, char *command)
 	return (exec);
 }
 
-char	*acces_path(t_constructor *node)
+void check_path(t_shell *shell)
 {
-	char	*exec;
-	int		i;
+	char *path_value;
+	int i;
 
+
+	path_value = NULL;
 	i = 0;
-	while (node->shell->paths[i])
+	while (shell->env && shell->env[i])
+	{
+		if (ft_strncmp(shell->env[i], "PATH=", 5) == 0)
+		{
+			path_value = shell->env[i] + 5;
+			break;
+		}
+		i++;
+	}
+	if (!path_value || ft_strlen(path_value) == 0)
+	{
+		if (shell->paths)
+		{
+			free_path_array(shell->paths);
+			shell->paths = NULL;
+		}
+		return;
+	}
+	if (shell->paths)
+		free_path_array(shell->paths);
+	shell->paths = ft_split(path_value, ':');
+	if (!shell->paths)
+	{
+		perror("minishell: error actualizando PATH");
+		exit(1);
+	}
+}
+
+char *acces_path(t_constructor *node)
+{
+	char *exec;
+	int i;
+
+	check_path(node->shell);
+	if (node->executable[0][0] == '/')
+	{
+		if (access(node->executable[0], X_OK) == 0)
+			return (ft_strdup(node->executable[0]));
+		return (NULL);
+	}
+	i = 0;
+	while (node->shell->paths && node->shell->paths[i])
 	{
 		exec = construct_exec(node->shell->paths[i], node->executable[0]);
 		if (exec && access(exec, X_OK) == 0)
