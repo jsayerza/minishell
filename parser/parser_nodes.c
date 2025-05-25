@@ -70,10 +70,6 @@ t_ast	*init_command_node(t_collector **collector)
 	if (!node->args)
 		exit_program(collector, "Error malloc parser command node args", EXIT_FAILURE);
 	collector_append(collector, node->args);
-	//node->envp = malloc(sizeof(char *) * MAX_CMD_ARGS);
-	//if (!node->envp)
-	//	exit_program(collector, "Error malloc parser command node envp", EXIT_FAILURE);
-	//collector_append(collector, node->envp);
 	printf("OUT init_command_node\n");
 	return (node);
 }
