@@ -76,7 +76,7 @@ static void	ast_print_type(t_ast *root, int depth)
 	}
 
 	ast_print_str_array("args", root->args, depth);
-	ast_print_str_array("envp", root->envp, depth);
+	// ast_print_str_array("envp", root->envp, depth);
 }
 
 static void	ast_print_branch(char *label, t_ast *child, int depth)
