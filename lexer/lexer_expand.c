@@ -145,6 +145,7 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 			if (prev && prev->type == TOKEN_WORD && ft_strchr(prev->value, '='))
 			{
 <<<<<<< HEAD
+<<<<<<< HEAD
 				printf("    IN tokens_expand fusion asignación + comillas\n");
 
 				start = curr;
@@ -160,6 +161,11 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 				freer(joined);
 				joined = tmp;
 >>>>>>> d9063bd (actualitzacio)
+=======
+				printf("    IN tokens_expand fusion asignación + comillas\n");
+
+				start = curr;
+>>>>>>> 2147eda (lexer: export OK)
 				curr = curr->next;
 
 				joined = ft_strdup("");
