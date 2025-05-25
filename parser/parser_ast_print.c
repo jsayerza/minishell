@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_print.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 11:40:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/22 17:45:41 by acarranz         ###   ########.fr       */

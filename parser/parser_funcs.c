@@ -21,18 +21,13 @@ t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact)
 	int		i;
 
 	i = 0;
-<<<<<<< HEAD
 	printf("IN parse_command\n");
-
 	cmd_node = init_command_node(collector);
 	if (!cmd_node)
 		return (NULL);
 	final_node = cmd_node; // este se actualizará si hay redirecciones
 
 	while (*tokens && (*tokens)->type != TOKEN_PIPE)
-=======
-	while (*tokens && (*tokens)->type == TOKEN_WORD)
->>>>>>> b4ae804 (actulaitzacio shell)
 	{
 		curr = *tokens;
 		if (curr->type == TOKEN_WORD)
