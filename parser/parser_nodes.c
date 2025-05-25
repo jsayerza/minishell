@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_nodes.c                                     :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/05/18 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/22 17:41:44 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/13 20:13:09 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,10 +66,10 @@ t_ast	*init_command_node(t_collector **collector)
 	if (!node->args)
 		exit_program(collector, "Error malloc parser command node args", EXIT_FAILURE);
 	collector_append(collector, node->args);
-	//node->envp = malloc(sizeof(char *) * MAX_CMD_ARGS);
-	//if (!node->envp)
-	//	exit_program(collector, "Error malloc parser command node envp", EXIT_FAILURE);
-	//collector_append(collector, node->envp);
+	node->envp = malloc(sizeof(char *) * MAX_CMD_ARGS);
+	if (!node->envp)
+		exit_program(collector, "Error malloc parser command node envp", EXIT_FAILURE);
+	collector_append(collector, node->envp);
 	return (node);
 }
 
