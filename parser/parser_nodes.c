@@ -25,22 +25,25 @@ static void	redir_node_heredoc(t_collector **collector, \
 
 //// Eliminarem interact en versió final (amb terminal)
 t_ast	*init_redir_node(t_collector **collector, \
-	t_token *curr, t_token *next, t_ast *cmd_node, int interact)
+	t_token *curr, t_token *next, t_ast *prev_node, int interact)
 {
 	t_ast	*redir_node;
 
+	if (!next || next->type != TOKEN_WORD)
+	{
+		printf("minishell: syntax error near unexpected token `%s`\n", curr->value);
+		return (NULL);
+	}
 	redir_node = malloc(sizeof(t_ast));
 	if (!redir_node)
-		exit_program(collector, \
-			"Error malloc parser redirect node", EXIT_FAILURE);
+		exit_program(collector, "Error malloc parser redirect node", EXIT_FAILURE);
 	collector_append(collector, redir_node);
 	redir_node->type = curr->type;
 	redir_node->file = ft_strdup(next->value);
 	if (!redir_node->file)
-		exit_program(collector, \
-			"Error malloc parser redirect file node", EXIT_FAILURE);
+		exit_program(collector, "Error strdup redirect file", EXIT_FAILURE);
 	collector_append(collector, redir_node->file);
-	redir_node->left = cmd_node;
+	redir_node->left = prev_node;
 	redir_node->right = NULL;
 	redir_node->args = NULL;
 	redir_node->heredoc_content = NULL;
@@ -53,6 +56,7 @@ t_ast	*init_command_node(t_collector **collector)
 {
 	t_ast	*node;
 
+	printf("IN init_command_node\n");
 	node = malloc(sizeof(t_ast));
 	if (!node)
 		exit_program(collector, "Error malloc parser command node", EXIT_FAILURE);
@@ -70,6 +74,7 @@ t_ast	*init_command_node(t_collector **collector)
 	//if (!node->envp)
 	//	exit_program(collector, "Error malloc parser command node envp", EXIT_FAILURE);
 	//collector_append(collector, node->envp);
+	printf("OUT init_command_node\n");
 	return (node);
 }
 

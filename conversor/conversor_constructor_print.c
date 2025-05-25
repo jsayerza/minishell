@@ -73,28 +73,28 @@ void	constructor_print(t_constructor *list)
 			printf("Redirect in:\n");
 			int i = 0;
 			while (list->redirect_in[i])
-				printf("%s\n", list->redirect_in[i++]);
+				printf("  %s\n", list->redirect_in[i++]);
 		}
 		if (list->redirect_out)
 		{
 			printf("Redirect out:\n");
 			int i = 0;
 			while (list->redirect_out[i])
-				printf("%s\n", list->redirect_out[i++]);
+				printf("  %s\n", list->redirect_out[i++]);
 		}
 		if (list->redirect_append)
 		{
 			printf("Append:\n");
 			int i = 0;
 			while (list->redirect_append[i])
-				printf("%s\n", list->redirect_append[i++]);
+				printf("  %s\n", list->redirect_append[i++]);
 		}
 		if (list->heredoc)
 		{
 			printf("Heredoc:\n");
 			int i = 0;
 			while (list->heredoc[i])
-				printf("%s\n", list->heredoc[i++]);
+				printf("  %s\n", list->heredoc[i++]);
 		}
 
 		printf("Token Type: %s\n", get_token_type_name(list->type));

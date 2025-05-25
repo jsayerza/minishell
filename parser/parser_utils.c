@@ -18,10 +18,8 @@ static int	is_token_invalid(t_token *prev, t_token *curr)
 		return (0);
 	// Caso 1: primer token inválido
 	if (!prev && curr->type != TOKEN_WORD
-		&& curr->type != TOKEN_REDIRECT_IN
-		&& curr->type != TOKEN_REDIRECT_OUT
-		&& curr->type != TOKEN_HEREDOC
-		&& curr->type != TOKEN_APPEND)
+		&& curr->type != TOKEN_REDIRECT_IN && curr->type != TOKEN_REDIRECT_OUT
+		&& curr->type != TOKEN_HEREDOC && curr->type != TOKEN_APPEND)
 	{
 		print_error("minishell: syntax error near unexpected token at start");
 		return (1);
