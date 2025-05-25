@@ -14,6 +14,8 @@
 
 void	freer(char *ptr)
 {
+	if (!ptr)
+		return ;
 	free(ptr);
 	ptr = NULL;
 }
