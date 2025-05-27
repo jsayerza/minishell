@@ -97,6 +97,7 @@ int	main(int argc, char **argv, char **envp)
 	}
 	free_path_array(shell->paths);
 	free_path_array(shell->env);
+	free_path_array(shell->export);
 	free(shell->path);
 	collector_cleanup(&collector);
 	return (EXIT_SUCCESS);

@@ -61,30 +61,51 @@ void	wait_for_all_processes(t_shell *shell)
 		current = current->next;
 	}
 }
-
-void process_command_nodes(t_shell *shell)
+void close_used_pipes(t_shell *shell)
 {
-	t_constructor *current;
+    t_constructor *current;
 
-	current = shell->constructor;
-	while (current)
-	{
-		if (current->type == TOKEN_COMMAND)
-		{
-			if (current->builtin )
-				token_builtins(current);
-			else
-				token_commands(current);
-		}
-		current = current->next;
-	}
+    current = shell->constructor;
+    while (current && current->prev)
+        current = current->prev;
+    
+    while (current)
+    {
+        if (current->pipe_out == 1)
+        {
+            close(current->fd[0]);
+            close(current->fd[1]);
+        }
+        current = current->next;
+    }
 }
 
-void	display_shell(t_shell *shell)
+// 5. MODIFICA process_command_nodes en display_shell.c:
+void process_command_nodes(t_shell *shell)
 {
-	assign_pipes(shell);
-	process_command_nodes(shell);
-	close_remaining_pipes(shell);
-	wait_for_all_processes(shell);
-	printf("last exit->%d", shell->last_exit);
+    t_constructor *current;
+
+    current = shell->constructor;
+    while (current)
+    {
+        if (current->type == TOKEN_COMMAND)
+        {
+            if (current->builtin)
+                token_builtins(current);
+            else
+                token_commands(current);
+        }
+        current = current->next;
+    }
+    
+    // ✅ AÑADIR: Cerrar pipes después de crear todos los procesos
+    close_used_pipes(shell);
+}
+
+void display_shell(t_shell *shell)
+{
+    assign_pipes(shell);
+    process_command_nodes(shell); // Ya cierra los pipes internamente
+    wait_for_all_processes(shell);
+    printf("last exit->%d", shell->last_exit);
 }
