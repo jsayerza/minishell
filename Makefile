@@ -44,6 +44,7 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/cd.c \
 			$(EXEC_DIR)/cd_utils00.c \
 			$(EXEC_DIR)/cd_utils01.c \
+			$(EXEC_DIR)/exit.c \
 			$(EXEC_DIR)/commands.c \
 			$(EXEC_DIR)/redirects.c \
 			$(EXEC_DIR)/signals.c \

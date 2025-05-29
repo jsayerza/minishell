@@ -126,27 +126,22 @@ char *acces_path(t_constructor *node)
 
 void close_all_pipes_except(t_constructor *node, int keep_in, int keep_out)
 {
-    t_constructor *temp;
+	t_constructor *temp;
 
-    temp = node->shell->constructor;
-    // Ir al inicio de la lista
-    while (temp && temp->prev)
-        temp = temp->prev;
-    
-    while (temp)
-    {
-        if (temp->pipe_out == 1)
-        {
-            // Cerrar lectura si no es el pipe que necesitamos para entrada
-            if (!(keep_in && temp->next == node))
-                close(temp->fd[0]);
-            
-            // Cerrar escritura si no es el pipe que necesitamos para salida  
-            if (!(keep_out && temp == node))
-                close(temp->fd[1]);
-        }
-        temp = temp->next;
-    }
+	temp = node->shell->constructor;
+	while (temp && temp->prev)
+		temp = temp->prev;
+	while (temp)
+	{
+		if (temp->pipe_out == 1)
+		{
+			if (!(keep_in && temp->next == node))
+				close(temp->fd[0]);
+			if (!(keep_out && temp == node))
+				close(temp->fd[1]);
+		}
+		temp = temp->next;
+	}
 }
 
 int	handle_command_not_found(t_constructor *node, char *path)
@@ -175,7 +170,8 @@ int	handle_fork_error(t_constructor *node, char *path)
 void	execute_in_child(t_constructor *node, char *path)
 {
 	apply_all_redirections(node);
-	check_heredoc(node);
+	if (node->redirect_in_type == 6)
+		check_heredoc(node);
 	execve(path, node->executable, node->shell->env);
 	perror("Error al ejecutar el comando");
 	free(path);
@@ -212,7 +208,7 @@ void execute_command_with_path(t_constructor *node, char *path,
     node->pid = fork();
     if (handle_fork_error(node, path))
         return;
-    
+
     if (node->pid == 0) { // Proceso hijo
         if (setup_pipes)
             setup_pipes(node);

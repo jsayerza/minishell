@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversor.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42.fr>          +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/15 19:10:42 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:07:20 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,7 @@ static void	add_redirect_file_in(t_collector **collector, t_constructor *node, c
 	new_array = malloc(sizeof(char *) * (size + 2));
 	if (!new_array)
 		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
+	node->redirect_in_type = TOKEN_REDIRECT_IN;
 	i = 0;
 	while (i < size)
 	{
@@ -71,6 +72,7 @@ static void	add_redirect_file_out(t_collector **collector, t_constructor *node, 
 	while (node->redirect_out && node->redirect_out[size])
 		size++;
 	new_array = malloc(sizeof(char *) * (size + 2));
+	node->redirect_out_type = TOKEN_REDIRECT_OUT;
 	if (!new_array)
 		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
 	i = 0;
@@ -97,6 +99,7 @@ static void	add_redirect_file_append(t_collector **collector, t_constructor *nod
 	while (node->redirect_append && node->redirect_append[size])
 		size++;
 	new_array = malloc(sizeof(char *) * (size + 2));
+	node->redirect_out_type = TOKEN_APPEND;
 	if (!new_array)
 		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
 	i = 0;
@@ -123,6 +126,7 @@ static void	add_heredoc(t_collector **collector, t_constructor *node, char *file
 	while (node->heredoc && node->heredoc[size])
 		size++;
 	new_array = malloc(sizeof(char *) * (size + 2));
+	node->redirect_in_type = TOKEN_HEREDOC;
 	if (!new_array)
 		exit_program(collector, "Error malloc redirect_in array", EXIT_FAILURE);
 	i = 0;
@@ -152,6 +156,8 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->redirect_out = NULL;
 	node->redirect_append = NULL;
 	node->heredoc = NULL;
+	node->redirect_in_type = 0;
+	node->redirect_out_type = 0;
 	node->pipe_in = 0;
 	node->pipe_out = 0;
 	node->shell = shell;
@@ -207,6 +213,8 @@ static t_constructor	*find_or_create_command_node(t_collector **collector, \
 	cmd_node->redirect_out = NULL;
 	cmd_node->redirect_append = NULL;
 	cmd_node->heredoc = NULL;
+	cmd_node->redirect_in_type = 0;
+	cmd_node->redirect_out_type = 0;
 	cmd_node->pipe_in = 0;
 	cmd_node->pipe_out = 0;
 	cmd_node->shell = shell;

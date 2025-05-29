@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/22 20:02:06 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/29 18:47:17 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,7 +73,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		printf("\n=== AST ===\n");
-		ast_print(ast, 0);
+		//ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
 		printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
