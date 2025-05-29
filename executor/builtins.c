@@ -174,4 +174,6 @@ void	token_builtins(t_constructor *node)
 		unset(node);
 	if (node->builtin == BUILTIN_CD)
 		cd(node);
+	if (node->builtin == BUILTIN_EXIT)
+		process_exit(node);
 }

@@ -166,7 +166,8 @@ void apply_all_redirections(t_constructor *node)
 	create_output_files(node);
 	create_append_files(node);
 	apply_input_redirection(node);
-	apply_output_redirection(node);
-	if (!node->redirect_out || !node->redirect_out[0])
+	if (node->redirect_out_type == TOKEN_REDIRECT_OUT)
+		apply_output_redirection(node);
+	else if (node->redirect_out_type == TOKEN_APPEND)
 		apply_append_redirection(node);
 }

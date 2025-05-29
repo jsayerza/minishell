@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/22 20:02:51 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/29 21:33:09 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@
 # include <ctype.h>
 # include <pwd.h>
 # include <limits.h>
+#include <sys/stat.h>
+#include <errno.h>       // Para errno, ENOENT, EACCES
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -154,6 +156,8 @@ typedef struct s_constructor
 	char			**redirect_out;		// archivos de entrda
 	char			**redirect_append;	// archivos de entrda
 	char			**heredoc;			// archivos de entrda
+	t_token_type	redirect_in_type;
+	t_token_type	redirect_out_type;
 	int				pipe_in;			// Flag ->Pipe izquierda
 	int				pipe_out;			// Flag ->Pipe derecha
 	pid_t			pid;				// fork()
@@ -300,6 +304,7 @@ char	*extract_oldpwd_path(const char *env_entry);
 void	refresh_directori(t_shell *shell, char *pwd, int type);
 void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
+void	process_exit(t_constructor *node);
 
 //funcions fd
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   conversor_constructor_print.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/15 19:06:47 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/29 20:41:04 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -96,7 +96,8 @@ void	constructor_print(t_constructor *list)
 			while (list->heredoc[i])
 				printf("  %s\n", list->heredoc[i++]);
 		}
-
+		printf("Redirect in -->%d\n", list->redirect_in_type);
+		printf("Redirect out -->%d\n", list->redirect_out_type);
 		printf("Token Type: %s\n", get_token_type_name(list->type));
 		printf("Error: %d\n", list->error);
 		printf("Pipe in: %d  Pipe out: %d\n", list->pipe_in, list->pipe_out);
