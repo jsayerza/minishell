@@ -12,20 +12,6 @@
 
 #include "minishell.h"
 
-// bool	is_assignment(const char *str)
-// {
-// 	int	i;
-
-// 	i = 0;
-// 	if (!ft_isalpha(str[i]) && str[i] != '_')
-// 		return (false);
-// 	while (str[i] && (ft_isalnum(str[i]) || str[i] == '_'))
-// 		i++;
-// 	if (str[i] == '=' && i > 0 && str[i + 1])
-// 		return (true);
-// 	return (false);
-// }
-
 int	handle_invalidchars(const char *input, int i)
 {
 	if (ft_strchr("*&(){}[];\\", input[i]))

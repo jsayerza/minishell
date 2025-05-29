@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser_ast_print.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/30 11:40:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/22 17:45:41 by acarranz         ###   ########.fr       */
@@ -67,14 +67,16 @@ static void	ast_print_type(t_ast *root, int depth)
 	else
 		printf(RED "UNKNOWN NODE\n" RESET);
 
-	if (root->file && root->type < TOKEN_REDIRECT_IN) // evita repetir en redirecciones
+	if (root->file &&
+		(root->type == TOKEN_REDIRECT_IN || root->type == TOKEN_REDIRECT_OUT ||
+		 root->type == TOKEN_APPEND))
 	{
 		ast_print_indent(depth);
 		printf("file: %s\n", root->file);
 	}
 
 	ast_print_str_array("args", root->args, depth);
-	//ast_print_str_array("envp", root->envp, depth);
+	// ast_print_str_array("envp", root->envp, depth);
 }
 
 static void	ast_print_branch(char *label, t_ast *child, int depth)

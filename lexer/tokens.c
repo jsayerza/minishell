@@ -43,6 +43,16 @@ void	tokens_print(t_token **head)
 	printf("\n");
 }
 
+t_token *get_prev_token(t_token *head, t_token *target)
+{
+	t_token *curr = head;
+
+	while (curr && curr->next != target)
+		curr = curr->next;
+	return curr;
+}
+
+
 t_token	*ft_lasttoken(t_token *lst)
 {
 	while (lst)
@@ -111,8 +121,8 @@ void	token_remove(t_token **head, t_token *target, t_collector **collector)
 	}
 	if (target->value)
 	{
-		freer(target->value);
 		collector_remove_ptr(collector, target->value);
+		freer(target->value);
 	}
 	collector_remove_ptr(collector, target);
 	free(target);
