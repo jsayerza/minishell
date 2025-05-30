@@ -31,11 +31,11 @@ void	get_expand_var(const char *input, t_collector **collector, \
 	char	*value;
 	char	*expanded;
 
-	printf("IN get_expand_var\n");
+	//printf("IN get_expand_var\n");
 	start = ++(*i);
 	while (ft_isalnum(input[*i]) || input[*i] == '_')
 	{
-		printf("get_expand_var-input[%d]:%c\n", *i, input[*i]);
+		//printf("get_expand_var-input[%d]:%c\n", *i, input[*i]);
 		(*i)++;
 	}
 	var_name = ft_strndup(input + start, *i - start);
@@ -51,7 +51,7 @@ void	get_expand_var(const char *input, t_collector **collector, \
 		exit_program(collector, "Error malloc get value token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, expanded, head);
 	freer(expanded);
-	printf("OUT get_expand_var\n");
+	//printf("OUT get_expand_var\n");
 }
 
 void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head)
@@ -62,7 +62,7 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	char	quote_type;
 	t_token_type token_type = TOKEN_WORD;
 
-	printf("IN get_quoted_str\n");
+	//printf("IN get_quoted_str\n");
 	quote_type = input[*i];
 	start = ++(*i);
 	while (input[*i] && input[*i] != quote_type)
@@ -94,7 +94,7 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	token_create(collector, token_type, quote_str, head);
 
 	(*i)++;
-	printf("OUT get_quoted_str\n");
+	//printf("OUT get_quoted_str\n");
 }
 
 void	get_word(const char *input, t_collector **collector, int *i, t_token **head)
@@ -102,17 +102,17 @@ void	get_word(const char *input, t_collector **collector, int *i, t_token **head
 	int		istart;
 	char	*value;
 
-	printf("IN get_word\n");
+	//printf("IN get_word\n");
 	istart = *i;
 	while (input[*i]
 		&& (ft_strchr(" \f\r\n\t\v|<>;'\"\\", input[*i]) == NULL))
 		// && (ft_strchr(" \f\r\n\t\v|<>$;'\"\\", input[*i]) == NULL))
 		(*i)++;
 	value = ft_strndup(input + istart, *i - istart);
-	printf("get_word-value:%s\n", value);
+	//printf("get_word-value:%s\n", value);
 	if (!value)
 		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, value, head);
 	freer(value);
-	printf("OUT get_word\n");
+	//printf("OUT get_word\n");
 }

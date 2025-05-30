@@ -7,12 +7,13 @@ static bool is_numeric(const char *str)
 	if (!str || !*str)
 		return false;
 	if (str[i] == '-' || str[i] == '+')
-		while (str[i])
-		{
-			if (!isdigit(str[i]))
-				return false;
-			i++;
-		}
+		i++;
+	while (str[i])
+	{
+		if (!isdigit(str[i]))
+			return false;
+		i++;
+	}
 	return true;
 }
 
