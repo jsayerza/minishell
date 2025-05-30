@@ -5,20 +5,6 @@
 /*													  +:+ +:+		  +:+	  */
 /*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
 /*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2025/03/23 12:13:51 by acarranz		   #+#	  #+#			  */
-/*	 Updated: 2025/03/23 12:13:51 by acarranz		  ###	########.fr		  */
-/*																			  */
-/* ************************************************************************** */
-
-#include "../minishell.h"
-
-/* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::   */
-/*	 echo.c												:+:		 :+:	:+:   */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
 /*	 Created: 2025/04/29 12:00:00 by acarranz		   #+#	  #+#			  */
 /*	 Updated: 2025/04/29 12:00:00 by acarranz		  ###	########.fr		  */
 /*																			  */
@@ -26,29 +12,47 @@
 
 #include "../minishell.h"
 
+#include "../minishell.h"
+
+static int	is_valid_n_flag(const char *arg)
+{
+    int i;
+
+    if (!arg || arg[0] != '-')
+        return (0);
+    i = 1;
+    while (arg[i])
+    {
+        if (arg[i] != 'n') // Verifica que todos los caracteres sean 'n'
+            return (0);
+        i++;
+    }
+    return (1);
+}
+
 void	execute_echo(char **args)
 {
-	int	jump;
-	int	i;
+    int	jump;
+    int	i;
 
-	jump = 0;
-	i = 1;
-	if (!args || !args[0])
-		return ;
-	while (args[i] && strcmp(args[i], "-n") == 0)
-	{
-		jump = 1;
-		i++;
-	}
-	while (args[i])
-	{
-		printf("%s", args[i]);
-		if (args[i + 1])
-			printf(" ");
-		i++;
-	}
-	if (!jump)
-		printf("\n");
+    jump = 0;
+    i = 1;
+    if (!args || !args[0])
+        return ;
+    while (args[i] && is_valid_n_flag(args[i])) // Maneja cualquier argumento válido de tipo -n
+    {
+        jump = 1;
+        i++;
+    }
+    while (args[i])
+    {
+        printf("%s", args[i]);
+        if (args[i + 1])
+            printf(" ");
+        i++;
+    }
+    if (!jump)
+        printf("\n");
 }
 
 void	redirect_echo(t_constructor *node)

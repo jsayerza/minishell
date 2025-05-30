@@ -31,7 +31,7 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	char			quote_type;
 	t_token_type	token_type = TOKEN_WORD;
 
-	printf("IN get_quoted_str\n");
+	//printf("IN get_quoted_str\n");
 	quote_type = input[*i];
 	start = ++(*i);
 	while (input[*i] && input[*i] != quote_type)
@@ -54,7 +54,7 @@ void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token 
 	freer(quoted);
 	token_create(collector, token_type, quote_str, head);
 	(*i)++;
-	printf("OUT get_quoted_str\n");
+	//printf("OUT get_quoted_str\n");
 }
 
 void	get_word(const char *input, t_collector **collector, int *i, t_token **head)
@@ -62,17 +62,17 @@ void	get_word(const char *input, t_collector **collector, int *i, t_token **head
 	int		istart;
 	char	*value;
 
-	printf("IN get_word\n");
+	//printf("IN get_word\n");
 	istart = *i;
 	while (input[*i]
 		&& (ft_strchr(" \f\r\n\t\v|<>;'\"\\", input[*i]) == NULL))
 		// && (ft_strchr(" \f\r\n\t\v|<>$;'\"\\", input[*i]) == NULL))
 		(*i)++;
 	value = ft_strndup(input + istart, *i - istart);
-	printf("get_word-value:%s\n", value);
+	//printf("get_word-value:%s\n", value);
 	if (!value)
 		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, value, head);
 	freer(value);
-	printf("OUT get_word\n");
+	//printf("OUT get_word\n");
 }

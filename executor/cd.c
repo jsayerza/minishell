@@ -26,22 +26,24 @@ void	cd_oldpwd(t_constructor *node)
 {
 	char	*pwd;
 
-	if (!node->shell->oldpwd)
-	{
-		printf("cd: OLDPWD not set\n");
-		return ;
-	}
-	pwd = malloc((ft_strlen(node->shell->oldpwd) + 1) * sizeof(char));
-	if (!pwd)
-		return ;
-	strcpy(pwd, node->shell->oldpwd);
-	if (chdir(pwd) == 0)
-		refresh_directori(node->shell, pwd, 1);
-	else
-	{
-		printf("cd: %s: No such file or directory\n", pwd);
-		free(pwd);
-	}
+	if (!node->shell->oldpwd) // Verifica si OLDPWD es NULL
+    {
+        printf("cd: OLDPWD not set\n");
+        node->shell->last_exit = 1; // Actualiza el código de salida
+        return ;
+    }
+    pwd = malloc((ft_strlen(node->shell->oldpwd) + 1) * sizeof(char));
+    if (!pwd)
+        return ;
+    strcpy(pwd, node->shell->oldpwd);
+    if (chdir(pwd) == 0)
+        refresh_directori(node->shell, pwd, 1);
+    else
+    {
+        printf("cd: %s: No such file or directory\n", pwd);
+        free(pwd);
+        node->shell->last_exit = 1;
+    }
 }
 
 void	cd_directori(t_constructor *node)

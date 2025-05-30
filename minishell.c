@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/29 18:47:17 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/05/30 19:14:58 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,18 +82,17 @@ int	main(int argc, char **argv, char **envp)
 		printf("\n=== AST ===\n");
 		// ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
-		printf("OUT ast_to_constructor\n");
+		//printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
 		if (constructor)
 		{
-			constructor_print(constructor);
-			printf("\n=== Execute shell ===\n");
+			//constructor_print(constructor);
+			//printf("\n=== Execute shell ===\n");
 			display_shell(shell);
 		}
 		else
 			print_error("minishell: failed to prepare command execution");
 		collector_cleanup(&cycle_collector);
-		printf("last_exit-> %d\n", shell->last_exit);
 	}
 	free_path_array(shell->paths);
 	free_path_array(shell->env);

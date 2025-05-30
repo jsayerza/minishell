@@ -68,7 +68,7 @@ void close_used_pipes(t_shell *shell)
     current = shell->constructor;
     while (current && current->prev)
         current = current->prev;
-    
+
     while (current)
     {
         if (current->pipe_out == 1)
@@ -97,7 +97,7 @@ void process_command_nodes(t_shell *shell)
         }
         current = current->next;
     }
-    
+
     // ✅ AÑADIR: Cerrar pipes después de crear todos los procesos
     close_used_pipes(shell);
 }
@@ -107,5 +107,4 @@ void display_shell(t_shell *shell)
     assign_pipes(shell);
     process_command_nodes(shell); // Ya cierra los pipes internamente
     wait_for_all_processes(shell);
-    printf("last exit->%d", shell->last_exit);
 }

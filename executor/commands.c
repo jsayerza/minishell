@@ -191,7 +191,7 @@ void setup_middle_command_pipes(t_constructor *node)
         dup2(node->prev->fd[0], STDIN_FILENO);
     if (node->pipe_out == 1)
         dup2(node->fd[1], STDOUT_FILENO);
-    close_all_pipes_except(node, 0, 0); // Cerrar todos los pipes
+    close_all_pipes_except(node, 0, 0);
 }
 
 void setup_last_command_pipes(t_constructor *node)
