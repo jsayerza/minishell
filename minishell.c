@@ -55,6 +55,13 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
+		if (has_unclosed_quotes(line))
+		{
+			print_error("minishell: unclosed quotes");
+			freer(line);
+			collector_cleanup(&cycle_collector);
+			continue ;
+		}		
 		if (interact)
 			add_history(line);
 		tokens = NULL;
