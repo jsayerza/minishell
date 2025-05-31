@@ -80,7 +80,7 @@ int	main(int argc, char **argv, char **envp)
 			continue ;
 		}
 		printf("\n=== AST ===\n");
-		ast_print(ast, 0);
+		// ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
 		printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
