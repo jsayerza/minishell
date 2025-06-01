@@ -55,6 +55,13 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
+		if (has_unclosed_quotes(line))
+		{
+			print_error("minishell: unclosed quotes");
+			freer(line);
+			collector_cleanup(&cycle_collector);
+			continue ;
+		}		
 		if (interact)
 			add_history(line);
 		tokens = NULL;
@@ -65,15 +72,15 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		//tokens_print(tokens);
+		// tokens_print(tokens);
 		ast = parser(&cycle_collector, tokens, interact);
 		if (!ast)
 		{
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		//printf("\n=== AST ===\n");
-		//ast_print(ast, 0);
+		// printf("\n=== AST ===\n");
+		// ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
 		//printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;

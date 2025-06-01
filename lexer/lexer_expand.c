@@ -12,6 +12,22 @@
 
 #include "minishell.h"
 
+static char	*get_env_value_lexer(const char *name, t_shell *shell)
+{
+	int		i;
+	int		len;
+
+	i = 0;
+	len = ft_strlen(name);
+	while (shell->env && shell->env[i])
+	{
+		if (!ft_strncmp(shell->env[i], name, len) && shell->env[i][len] == '=')
+			return (shell->env[i] + len + 1);
+		i++;
+	}
+	return (NULL);
+}
+
 static char	*expand_variable(const char *str, int *i, t_shell *shell, t_collector **collector)
 {
 	int		start;
@@ -43,7 +59,7 @@ static char	*expand_variable(const char *str, int *i, t_shell *shell, t_collecto
 	var_name = ft_strndup(str + start, *i - start);
 	if (!var_name)
 		exit_program(collector, "Error malloc expand_variable varname", true);
-	var_value = getenv(var_name);
+	var_value = get_env_value_lexer(var_name, shell);
 	freer(var_name);
 	if (var_value)
 		result = ft_strdup(var_value);
@@ -72,54 +88,7 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 	while (str[i])
 	{
 		printf("    IN expand_string-str[%d]:%c\n", i, str[i]);
-		if (str[i] == '\'')
-		{
-			start = ++i;
-			while (str[i] && str[i] != '\'')
-				i++;
-			if (!str[i] || str[i] == '\'')
-				return (freer(result), NULL);
-			tmp = ft_strndup(str + start, i - start);
-			if (!tmp)
-				exit_program(collector, "Error malloc expand_string single quotes", true);
-			expanded = ft_strjoin(result, tmp);
-			freer(tmp);
-			if (!expanded)
-				exit_program(collector, "Error malloc expand_string join", true);
-			// freer(result);
-			result = expanded;
-			// collector_append(collector, result);
-			freer(expanded);
-			i++;
-		}
-		else if (str[i] == '"')
-		{
-			i++;
-			while (str[i] && str[i] != '"')
-			{
-				if (str[i] == '$')
-					expanded = expand_variable(str, &i, shell, collector);
-				else
-				{
-					start = i;
-					while (str[i] && str[i] != '"' && str[i] != '$')
-						i++;
-					expanded = ft_strndup(str + start, i - start);
-					if (!expanded)
-						exit_program(collector, "Error malloc expand_string double quotes", true);
-					// collector_append(collector, expanded);
-				}
-				tmp = ft_strjoin(result, expanded);
-				freer(expanded);
-				if (!tmp)
-					exit_program(collector, "Error malloc expand_string join dq", true);
-				result = ft_strdup(tmp);
-				freer(tmp);
-			}
-			if (str[i] == '"')
-				i++;
-		}
-		else if (str[i] == '$')
+		if (str[i] == '$')
 		{
 			printf("    IN expand_string-$\n");
 			expanded = expand_variable(str, &i, shell, collector);
@@ -135,7 +104,7 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 		{
 			printf("    IN expand_string-A\n");
 			start = i;
-			while (str[i] && str[i] != '$' && str[i] != '\'' && str[i] != '"')
+			while (str[i] && str[i] != '$')
 				i++;
 			expanded = ft_strndup(str + start, i - start);
 			if (!expanded)

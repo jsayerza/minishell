@@ -171,6 +171,7 @@ typedef struct s_constructor
 
 // utils.c
 void    freer(char *ptr);
+bool	has_unclosed_quotes(const char *line);
 int		is_only_whitespace(const char *str);
 void	print_error(const char *msg);
 void	exit_program(t_collector **collector, const char *msg,\
@@ -188,10 +189,7 @@ void	collector_append(t_collector **collector, void *ptr);
 t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_shell *shell);
 
 // lexer/lexer_funcs.c
-// bool	is_assignment(const char *str);
 int		handle_invalidchars(const char *input, int i);
-void	get_expand_var(const char *input, t_collector **collector, \
-	int *i, t_token **head);
 void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head);
 void	get_word(const char *input, t_collector **collector, int *i, t_token **head);
 
@@ -224,7 +222,6 @@ t_ast	*init_command_node(t_collector **collector);
 t_ast	*init_word_node(t_collector **collector, const char *value);
 
 // parser/parser_funcs.c
-// t_ast	*parse_redirection(t_collector **collector, t_token **tokens, t_ast *cmd);
 t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact);
 
 // parser/parser_test.c

@@ -28,7 +28,7 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 			else
 				*collector = curr->next;
 			free(curr);
-			printf("  Removed from collector: %p\n", ptr);
+			// printf("  Removed from collector: %p\n", ptr);
 			return ;
 		}
 		prev = curr;
@@ -41,13 +41,13 @@ void	collector_cleanup(t_collector **collector)
 	t_collector	*current;
 	t_collector	*next;
 
-	//printf("\nIN collector_cleanup\n");
+	// printf("\nIN collector_cleanup\n");
 	current = *collector;
 	while (current)
 	{
 		next = current->next;
-		//printf("  Free pointer:  %p\n", current);
-		//printf("    Free pointer value: %s\n", (char *)current->ptr);
+		// printf("  Free pointer:  %p\n", current);
+		// printf("    Free pointer value: %s\n", (char *)current->ptr);
 		if (current->ptr)
 			freer(current->ptr);
 		if (current)
@@ -55,7 +55,7 @@ void	collector_cleanup(t_collector **collector)
 		current = next;
 	}
 	*collector = NULL;
-	//printf("OUT collector_cleanup\n\n");
+	// printf("OUT collector_cleanup\n\n");
 }
 
 static bool	collector_contains(t_collector *collector, void *ptr)
@@ -64,7 +64,7 @@ static bool	collector_contains(t_collector *collector, void *ptr)
 	{
 		if (collector->ptr == ptr)
 		{
-			printf("      YURATENXIONPLIS!!!!!!!!! Pointer already in collector: %p\n", ptr);
+			// printf("      YURATENXIONPLIS!!!!!!!!! Pointer already in collector: %p\n", ptr);
 			return (true);
 		}
 		collector = collector->next;
@@ -76,7 +76,7 @@ void	collector_append(t_collector **collector, void *ptr)
 {
 	t_collector	*new_node;
 
-	//printf("  Appending to collector: %p\n", ptr);
+	// printf("  Appendking to collector: %p\n", ptr);
 	if (!ptr || collector_contains(*collector, ptr))
 		return ;
 	new_node = malloc(sizeof(t_collector));
@@ -85,8 +85,8 @@ void	collector_append(t_collector **collector, void *ptr)
 	new_node->ptr = ptr;
 	new_node->next = *collector;
 	*collector = new_node;
-	//if (ptr)
-		//printf("    Pointer value: %s\n", (char *)ptr);
-	//else
-	//	printf("    Pointer value: NULL\n");
+	// if (ptr)
+	// 	printf("    Pointer value: %s\n", (char *)ptr);
+	// else
+	// 	printf("    Pointer value: NULL\n");
 }
