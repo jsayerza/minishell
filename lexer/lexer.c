@@ -40,9 +40,9 @@ static int	handle_quotes(const char *input, t_collector **collector, int *i, t_t
 {
 	if (ft_strchr("'\"", input[*i]))
 	{
-	//	printf("IN handle_quotes\n");
+		printf("IN handle_quotes\n");
 		get_quoted_str(input, collector, i, head);
-	//	printf("OUT handle_quotes\n");
+		printf("OUT handle_quotes\n");
 		return (1);
 	}
 	return (0);
@@ -53,7 +53,7 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_she
 	int		i;
 	t_token	*first_token;
 
-	//printf("IN lexer\n");
+	printf("IN lexer\n");
 	i = 0;
 	while (input[i])
 	{
@@ -67,11 +67,11 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_she
 			|| handle_operator(input, collector, &i, head)
 			|| handle_quotes(input, collector, &i, head))
 			continue ;
-		//printf("  lexer-input[%d]: %c\n", i, input[i]);
+		printf("  lexer-input[%d]: %c\n", i, input[i]);
 		get_word(input, collector, &i, head);
 	}
 	tokens_expand(head, shell, collector);
-	//printf(" dins lexer 1\n");
+	printf(" dins lexer 1\n");
 	first_token = *head;
 	while (first_token && first_token->type == TOKEN_WHITESPACE)
 		first_token = first_token->next;
@@ -79,13 +79,13 @@ t_token	*lexer(const char *input, t_collector **collector, t_token **head, t_she
 	{
 		// exit_program(collector, "minishell: syntax error: unexpected token at start", false);
 		exit_program(collector, "minishell: syntax error: empty input", false);
-		//printf("OUT lexer NULL --------------------\n\n");
+		printf("OUT lexer NULL --------------------\n\n");
 		return (NULL);
 	}
-	//printf(" dins lexer 2\n");
+	printf(" dins lexer 2\n");
 	token_create(collector, TOKEN_EOF, "EOF", head);
-	//printf(" dins lexer 3\n");
+	printf(" dins lexer 3\n");
 	tokens_print(head);
-	//printf("OUT lexer --------------------\n\n");
+	printf("OUT lexer --------------------\n\n");
 	return (*head);
 }
