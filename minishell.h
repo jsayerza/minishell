@@ -23,8 +23,8 @@
 # include <ctype.h>
 # include <pwd.h>
 # include <limits.h>
-#include <sys/stat.h>
-#include <errno.h>       // Para errno, ENOENT, EACCES
+# include <sys/stat.h>
+# include <errno.h>       // Para errno, ENOENT, EACCES
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"

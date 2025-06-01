@@ -84,7 +84,6 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 	result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_string init", true);
-	//collector_append(collector, result);
 	while (str[i])
 	{
 		printf("    IN expand_string-str[%d]:%c\n", i, str[i]);
@@ -96,6 +95,7 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 			freer(expanded);
 			if (!tmp)
 				exit_program(collector, "Error malloc expand_string join var", true);
+			freer(result);
 			result = ft_strdup(tmp);
 			freer(tmp);
 			printf("    OUT expand_string-$\n");
@@ -113,6 +113,7 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 			freer(expanded);
 			if (!tmp)
 				exit_program(collector, "Error malloc expand_string join plain", true);
+			freer(result);
 			result = ft_strdup(tmp);
 			printf("     -->result: %s\n", result);
 			freer(tmp);
@@ -130,6 +131,7 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 	t_token	*next;
 	t_token	*token_tmp;
 	t_token *prev;
+	t_token	*del;
 	char	*joined;
 	char	*tmp;
 	char	*expanded;
@@ -138,22 +140,17 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 	curr = *head;
 	while (curr)
 	{
-		// ✨ Manejo especial: asignación con comillas (ej: a="ABC")
 		if ((curr->type == TOKEN_DQUOTE || curr->type == TOKEN_SQUOTE))
 		{
 			prev = get_prev_token(*head, curr);
 			if (prev && prev->type == TOKEN_WORD && ft_strchr(prev->value, '='))
 			{
 				printf("    IN tokens_expand fusion asignación + comillas\n");
-
 				start = curr;
 				curr = curr->next;
-
 				joined = ft_strdup("");
 				if (!joined)
 					exit_program(collector, "Error malloc tokens_expand assign+quote", true);
-				// collector_append(collector, joined);
-
 				while (curr && curr->type != start->type)
 				{
 					if (start->type == TOKEN_DQUOTE)
@@ -169,49 +166,35 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 						exit_program(collector, "Error join assign+quote", true);
 					freer(joined);
 					joined = tmp;
-
 					curr = curr->next;
 				}
-
 				if (!curr || curr->type != start->type)
 					exit_program(collector, "minishell: unclosed quote in assign", false);
-
-				// curr ahora está en comilla de cierre
-				next = curr->next; // ⚠️ Importante: guardar el siguiente token para continuar
-
-				tmp = ft_strjoin(prev->value, joined); // prev = token 'a='
+				next = curr->next;
+				tmp = ft_strjoin(prev->value, joined);
 				freer(prev->value);
 				prev->value = tmp;
-				// collector_append(collector, tmp);
 				freer(joined);
-
-				// Eliminar tokens: comilla apertura, contenido, comilla cierre
-				t_token *del = start;
+				del = start;
 				while (del != next)
 				{
 					token_tmp = del;
 					del = del->next;
 					token_remove(head, token_tmp, collector);
 				}
-
 				curr = next;
 				printf("    OUT tokens_expand fusion asignación + comillas\n");
 				continue;
 			}
 		}
-
-		// ✨ Expansión de comillas dobles/simples estándar
 		if (curr->type == TOKEN_DQUOTE || curr->type == TOKEN_SQUOTE)
 		{
 			printf(" IN tokens_expand TOKEN_%sQUOTE\n", curr->type == TOKEN_DQUOTE ? "D" : "S");
 			start = curr;
 			curr = curr->next;
-
 			joined = ft_strdup("");
 			if (!joined)
 				exit_program(collector, "Error malloc tokens_expand init join", true);
-			// collector_append(collector, joined);
-
 			while (curr && curr->type != start->type)
 			{
 				if (start->type == TOKEN_DQUOTE)
@@ -221,23 +204,18 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 					freer(expanded);
 				}
 				else
-				{
 					tmp = ft_strjoin(joined, curr->value);
-				}
 				if (!tmp)
 					exit_program(collector, "Error join tokens_expand (quote)", true);
 				freer(joined);
 				joined = tmp;
 				curr = curr->next;
 			}
-
 			if (!curr || curr->type != start->type)
 				exit_program(collector, "minishell: unclosed quote", false);
-
 			token_insert_before(head, start, TOKEN_WORD, joined, collector);
 			freer(joined);
 			next = curr->next;
-
 			while (start != next)
 			{
 				token_tmp = start;
@@ -245,7 +223,6 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 				token_remove(head, token_tmp, collector);
 			}
 			curr = next;
-
 			tokens_print(head);
 			printf(" OUT tokens_expand TOKEN_%sQUOTE\n\n", curr && curr->type == TOKEN_DQUOTE ? "D" : "S");
 			continue;
@@ -261,16 +238,13 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 				collector_remove_ptr(collector, curr->value);
 			printf("   dins tokens_expand TOKEN_WORD/COMMAND 2\n");
 			curr->value = ft_strdup(expanded);
+			freer(expanded);
 			if (!curr->value)
 				exit_program(collector, "Error strdup in expansion", true);
 			collector_append(collector, curr->value);
 			tokens_print(head);
 			printf(" OUT tokens_expand TOKEN_WORD/COMMAND\n\n");
 		}
-		// if (joined)
-		// 	freer(joined);
-		// if (tmp)
-		// 	freer(tmp);
 		printf("   dins while IN tokens_expand\n");
 		curr = curr->next;
 	}

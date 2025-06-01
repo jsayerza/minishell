@@ -139,10 +139,15 @@ void	token_create(t_collector **collector, t_token_type type, \
 		exit_program(collector, "Error malloc token", EXIT_FAILURE);
 	collector_append(collector, token_new);
 	token_new->type = type;
-	token_new->value = ft_strdup(value);
-	if (!token_new->value)
-		exit_program(collector, "Error malloc token value", EXIT_FAILURE);
-	collector_append(collector, token_new->value);
+	token_new->value = NULL;
+	if (value)
+	{
+		token_new->value = ft_strdup(value);
+		if (!token_new->value)
+			exit_program(collector, "Error malloc token value", EXIT_FAILURE);
+		// printf("ARA HE CREAT EL VALUE %s I ENVIO EL PUNTER %p AL COLLECTOR\n", token_new->value, token_new->value);
+		collector_append(collector, token_new->value);
+	}
 	token_new->next = NULL;
 	if (*head == NULL)
 		*head = token_new;
