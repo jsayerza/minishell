@@ -17,6 +17,7 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 	t_collector	*curr;
 	t_collector	*prev;
 
+	// printf("\nIN collector_remove_ptr\n");
 	curr = *collector;
 	prev = NULL;
 	while (curr)
@@ -27,6 +28,12 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 				prev->next = curr->next;
 			else
 				*collector = curr->next;
+
+			if (curr->ptr)
+			{
+				// printf("  Freer removed ptr: %p\n", curr->ptr);
+				freer(curr->ptr); // 👈 Evitas el leak
+			}
 			free(curr);
 			// printf("  Removed from collector: %p\n", ptr);
 			return ;
@@ -34,7 +41,9 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 		prev = curr;
 		curr = curr->next;
 	}
+	// printf("OUT collector_remove_ptr\n");
 }
+
 
 void	collector_cleanup(t_collector **collector)
 {
@@ -58,7 +67,7 @@ void	collector_cleanup(t_collector **collector)
 	// printf("OUT collector_cleanup\n\n");
 }
 
-static bool	collector_contains(t_collector *collector, void *ptr)
+bool	collector_contains(t_collector *collector, void *ptr)
 {
 	while (collector)
 	{
@@ -76,7 +85,7 @@ void	collector_append(t_collector **collector, void *ptr)
 {
 	t_collector	*new_node;
 
-	// printf("  Appendking to collector: %p\n", ptr);
+	// printf("  Appending to collector: %p\n", ptr);
 	if (!ptr || collector_contains(*collector, ptr))
 		return ;
 	new_node = malloc(sizeof(t_collector));

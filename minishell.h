@@ -23,8 +23,8 @@
 # include <ctype.h>
 # include <pwd.h>
 # include <limits.h>
-#include <sys/stat.h>
-#include <errno.h>       // Para errno, ENOENT, EACCES
+# include <sys/stat.h>
+# include <errno.h>       // Para errno, ENOENT, EACCES
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -181,6 +181,7 @@ void	exit_program(t_collector **collector, const char *msg,\
 char	*prompt_generate(t_collector **collector);
 
 // collector.c
+bool	collector_contains(t_collector *collector, void *ptr);
 void	collector_remove_ptr(t_collector **collector, void *ptr);
 void	collector_cleanup(t_collector **collector);
 void	collector_append(t_collector **collector, void *ptr);

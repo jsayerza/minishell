@@ -52,6 +52,11 @@ static t_ast	*parse_pipeline(t_collector **collector, \
 	while (curr && curr->type == TOKEN_PIPE)
 	{
 		*tokens = curr->next;
+		if (!*tokens || (*tokens)->type == TOKEN_EOF)
+		{
+			printf("minishell: syntax error near unexpected token `newline'\n");
+			return (NULL);
+		}
 		printf("  cap a IN parse_pipeline right\n");
 		right = parse_pipeline(collector, tokens, interact);
 		printf("  OUT parse_pipeline right\n");
