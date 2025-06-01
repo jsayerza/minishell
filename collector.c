@@ -67,7 +67,7 @@ void	collector_cleanup(t_collector **collector)
 	// printf("OUT collector_cleanup\n\n");
 }
 
-static bool	collector_contains(t_collector *collector, void *ptr)
+bool	collector_contains(t_collector *collector, void *ptr)
 {
 	while (collector)
 	{

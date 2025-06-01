@@ -171,9 +171,14 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 				if (!curr || curr->type != start->type)
 					exit_program(collector, "minishell: unclosed quote in assign", false);
 				next = curr->next;
+				//
 				tmp = ft_strjoin(prev->value, joined);
-				freer(prev->value);
+				// collector_remove_ptr(collector, prev->value);  // <-- important
+				if (!collector_contains(*collector, prev->value))
+					freer(prev->value);
 				prev->value = tmp;
+				collector_append(collector, prev->value);  // <-- opcional
+				//
 				freer(joined);
 				del = start;
 				while (del != next)

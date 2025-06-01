@@ -122,10 +122,10 @@ void	token_remove(t_token **head, t_token *target, t_collector **collector)
 	if (target->value)
 	{
 		collector_remove_ptr(collector, target->value);
-		freer(target->value);
+		// freer(target->value);
 	}
 	collector_remove_ptr(collector, target);
-	free(target);
+	// free(target);
 }
 
 void	token_create(t_collector **collector, t_token_type type, \

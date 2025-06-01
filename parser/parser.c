@@ -54,10 +54,6 @@ static t_ast	*parse_pipeline(t_collector **collector, \
 		*tokens = curr->next;
 		if (!*tokens || (*tokens)->type == TOKEN_EOF)
 		{
-			printf("minishell: syntax error unexpected token after `|`\n");
-			return (NULL);
-		}
-		{
 			printf("minishell: syntax error near unexpected token `newline'\n");
 			return (NULL);
 		}
