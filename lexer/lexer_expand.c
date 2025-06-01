@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static char	*get_env_value(const char *name, t_shell *shell)
+static char	*get_env_value_lexer(const char *name, t_shell *shell)
 {
 	int		i;
 	int		len;
@@ -59,7 +59,7 @@ static char	*expand_variable(const char *str, int *i, t_shell *shell, t_collecto
 	var_name = ft_strndup(str + start, *i - start);
 	if (!var_name)
 		exit_program(collector, "Error malloc expand_variable varname", true);
-	var_value = get_env_value(var_name, shell);
+	var_value = get_env_value_lexer(var_name, shell);
 	freer(var_name);
 	if (var_value)
 		result = ft_strdup(var_value);
