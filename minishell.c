@@ -72,22 +72,22 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		//tokens_print(tokens);
+		// tokens_print(tokens);
 		ast = parser(&cycle_collector, tokens, interact);
 		if (!ast)
 		{
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		printf("\n=== AST ===\n");
+		// printf("\n=== AST ===\n");
 		// ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
-		//printf("OUT ast_to_constructor\n");
+		printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
 		if (constructor)
 		{
-			//constructor_print(constructor);
-			//printf("\n=== Execute shell ===\n");
+			constructor_print(constructor);
+			printf("\n=== Execute shell ===\n");
 			display_shell(shell);
 		}
 		else

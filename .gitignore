@@ -12,6 +12,9 @@ minishell
 2
 3
 4
+a.out
+error.log
+type
 
 # Prerequisites
 *.d
