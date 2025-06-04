@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:14:31 by acarranz          #+#    #+#             */
-/*   Updated: 2025/06/04 18:43:45 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:14:05 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,18 +56,6 @@ static int	init_shell_fields(t_shell *shell, t_collector **collector)
 	shell->output = NULL;
 	shell->node_size = 0;
 	shell->collector = collector ? *collector : NULL;
-	shell->home = get_home(shell);
-	shell->pwd = getcwd(NULL, 0);
-	shell->oldpwd = shell->pwd ? ft_strdup(shell->pwd) : NULL;
-	if (collector)
-	{
-		if (shell->home)
-			collector_append(collector, shell->home);
-		if (shell->pwd)
-			collector_append(collector, shell->pwd);
-		if (shell->oldpwd)
-			collector_append(collector, shell->oldpwd);
-	}
 	shell->constructor = init_constructor(collector);
 	if (!shell->constructor)
 		return (0);

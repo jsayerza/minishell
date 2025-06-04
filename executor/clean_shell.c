@@ -50,10 +50,6 @@ static void free_shell(t_shell *shell)
 {
 	if (!shell)
 		return ;
-	if (shell->pwd)
-		free(shell->pwd);
-	if (shell->oldpwd)
-		free(shell->oldpwd);
 	if (shell->output)
 		free(shell->output);
 	free(shell);

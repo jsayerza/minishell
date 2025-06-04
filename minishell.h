@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/30 19:00:41 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/04 19:18:51 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -138,9 +138,6 @@ typedef struct s_shell
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
 	int				interactive;		// 1 si es interactivo, 0 si es un script
-	char			*home;				// Directorio home
-	char			*pwd;				// Directorio actual
-	char			*oldpwd;			// Directorio anterior
 	char			*output;			// Salida de shell
 	int				node_size;			// Tamanyo lista de nodos a ejecutar
 	t_constructor	*constructor;		// Estructura de ejecución
@@ -302,7 +299,7 @@ char	*get_oldpwd(t_shell *shell);
 char	*extract_home_path(t_shell *shell, const char *env_entry);
 char	*extract_pwd_path(const char *env_entry);
 char	*extract_oldpwd_path(const char *env_entry);
-void	refresh_directori(t_shell *shell, char *pwd, int type);
+void	refresh_directori(t_shell *shell, const char *pwd, int type);
 void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 char	*get_env_value(t_shell *shell, const char *var_name);
