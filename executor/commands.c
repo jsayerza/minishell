@@ -12,6 +12,49 @@
 
 #include "../minishell.h"
 
+void add_or_update_env_var(char ***env, char *key, char *value)
+{
+    int		i;
+    char	*new_var;
+    size_t	key_len;
+
+    key_len = ft_strlen(key);
+    new_var = ft_strjoin(key, "=");
+    if (!new_var)
+        return ;
+    new_var = ft_strjoin(new_var, value);
+    if (!new_var)
+        return ;
+
+    // Busca si la variable ya existe
+    i = 0;
+    while ((*env)[i])
+    {
+        if (ft_strncmp((*env)[i], key, key_len) == 0 && (*env)[i][key_len] == '=')
+        {
+            free((*env)[i]);
+            (*env)[i] = new_var;
+            return;
+        }
+        i++;
+    }
+
+    // Si no existe, agregarla al entorno
+    char **new_env = malloc(sizeof(char *) * (i + 2));
+    if (!new_env)
+        return ;
+    i = 0;
+    while ((*env)[i])
+    {
+        new_env[i] = (*env)[i];
+        i++;
+    }
+    new_env[i] = new_var;
+    new_env[i + 1] = NULL;
+    free(*env);
+    *env = new_env;
+}
+
 void	check_heredoc(t_constructor *node)
 {
 	t_constructor	*current;
@@ -166,16 +209,20 @@ int	handle_fork_error(t_constructor *node, char *path)
 	}
 	return (0);
 }
-
-void	execute_in_child(t_constructor *node, char *path)
+void execute_in_child(t_constructor *node, char *path)
 {
-	apply_all_redirections(node);
-	if (node->redirect_in_type == 6)
-		check_heredoc(node);
-	execve(path, node->executable, node->shell->env);
-	perror("Error al ejecutar el comando");
-	free(path);
-	exit(1);
+    apply_all_redirections(node);
+    if (node->redirect_in_type == 6)
+        check_heredoc(node);
+
+    // Actualizar la variable `_` en shell->env
+    add_or_update_env_var(&(node->shell->env), "_", path);
+
+    // Ejecutar el comando
+    execve(path, node->executable, node->shell->env);
+    perror("Error al ejecutar el comando");
+    free(path);
+    exit(1);
 }
 
 void setup_first_command_pipes(t_constructor *node)

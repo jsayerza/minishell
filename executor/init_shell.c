@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:14:31 by acarranz          #+#    #+#             */
-/*   Updated: 2025/05/30 19:26:19 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/04 18:43:45 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ t_shell	*init_shell(t_shell *shell, char **env, t_collector **collector)
         shell->collector = *collector;
     }
     copy_env_to_shell(shell, env);
-    remove_env_var(&(shell->env), "_");
+    //remove_env_var(&(shell->env), "_");
     env_to_export(shell);
     create_export(shell);
     if (shell->export && collector)

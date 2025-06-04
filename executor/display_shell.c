@@ -98,7 +98,7 @@ void process_command_nodes(t_shell *shell)
         current = current->next;
     }
 
-    // ✅ AÑADIR: Cerrar pipes después de crear todos los procesos
+
     close_used_pipes(shell);
 }
 
