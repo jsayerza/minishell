@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/30 19:14:58 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/04 20:00:41 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ int	main(int argc, char **argv, char **envp)
 			freer(line);
 			collector_cleanup(&cycle_collector);
 			continue ;
-		}		
+		}
 		if (interact)
 			add_history(line);
 		tokens = NULL;
@@ -84,6 +84,7 @@ int	main(int argc, char **argv, char **envp)
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
 		//printf("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
+		printf("%s\n", shell->constructor->executable[0]);
 		if (constructor)
 		{
 			//constructor_print(constructor);

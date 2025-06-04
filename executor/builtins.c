@@ -151,7 +151,6 @@ void file_append_builtin(t_constructor *node, char *buitlin)
 
 void	token_builtins(t_constructor *node)
 {
-	printf("Builtins\n");
 	if (node->redirect_out)
 	{
 		file_out_builtin(node, node->executable[0]);
