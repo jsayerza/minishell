@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/06/04 20:00:41 by acarranz         ###   ########.fr       */
@@ -72,7 +72,6 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		// tokens_print(tokens);
 		ast = parser(&cycle_collector, tokens, interact);
 		if (!ast)
 		{

@@ -12,8 +12,13 @@ EXEC_DIR		=	executor
 NAME			=	minishell
 PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					lexer/lexer.c lexer/lexer_funcs.c \
-					lexer/lexer_funcs_operator.c lexer/tokens.c \
+					lexer/lexer_funcs_operator.c \
+					lexer/lexer_funcs_handle.c \
 					lexer/lexer_expand.c \
+					lexer/lexer_expand_var.c \
+					lexer/lexer_expand_str.c \
+					lexer/tokens.c lexer/tokens_funcs.c \
+					lexer/tokens_funcs_insert.c \
 					parser/parser.c parser/parser_nodes.c \
 					parser/parser_utils.c parser/parser_funcs.c \
 					parser/parser_heredoc.c \

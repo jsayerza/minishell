@@ -191,24 +191,46 @@ int		handle_invalidchars(const char *input, int i);
 void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head);
 void	get_word(const char *input, t_collector **collector, int *i, t_token **head);
 
+// lexer/lexer_funcs_handle.c
+int	handle_whitespace(const char *input, int *i);
+int	handle_operator(const char *input, t_collector **collector, \
+	int *i, t_token **head);
+int	handle_quotes(const char *input, t_collector **collector, \
+	int *i, t_token **head);
+
 // lexer/lexer_funcs_operator.c
 void	get_operator(const char *input, t_collector **collector, \
 	int *i, t_token **head);
 
 // lexer/tokens.c
-void	tokens_free(t_token *head);
-void	token_print(t_token *token);
-void	tokens_print(t_token **head);
-void	token_insert_before(t_token **head, t_token *pos, \
-	t_token_type type, const char *value, t_collector **collector);
-void	token_remove(t_token **head, t_token *target, t_collector **collector);
-t_token *get_prev_token(t_token *head, t_token *target);
-t_token	*ft_lasttoken(t_token *lst);
+t_token *token_get_prev(t_token *head, t_token *target);
+t_token	*token_goto_last(t_token *lst);
 void	token_create(t_collector **collector, t_token_type type, \
 	const char *value, t_token **head);
 
+// lexer/tokens_funcs.c
+void	tokens_free(t_token *head);
+void	token_print(t_token *token);
+void	tokens_print(t_token **head);
+void	token_remove(t_token **head, t_token *target, t_collector **collector);
+
+// lexer/tokens_funcs_insert.c
+void	token_inserted_fill(t_token *new_token, t_token_type type, \
+	const char *value, t_collector **collector);
+t_token	*token_insert_before(t_token **head, t_token *pos, \
+	t_collector **collector);
+void	token_insert_after(t_token *prev, t_token *new_token);
+
 // lexer/lexer_expand.c
 void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector);
+
+// lexer/lexer_expand_var.c
+char	*expand_variable(const char *str, int *i, t_shell *shell, \
+	t_collector **collector);
+
+// lexer/lexer_expand_str.c
+char	*expand_string(const char *str, t_shell *shell, \
+	t_collector **collector);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact);

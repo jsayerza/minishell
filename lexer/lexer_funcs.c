@@ -23,56 +23,61 @@ int	handle_invalidchars(const char *input, int i)
 	return (0);
 }
 
-void	get_quoted_str(const char *input, t_collector **collector, int *i, t_token **head)
+t_token_type	get_token_type(const char *input, int *i, char quote_type)
+{
+	while (input[*i] && input[*i] != quote_type)
+		(*i)++;
+	if (!input[*i])
+		return (TOKEN_WORD);
+	if (quote_type == '"')
+		return (TOKEN_DQUOTE);
+	else if (quote_type == '\'')
+		return (TOKEN_SQUOTE);
+	else
+		return (TOKEN_ENV_ASSIGN);
+}
+
+void	get_quoted_str(const char *input, t_collector **collector, \
+	int *i, t_token **head)
 {
 	int				start;
 	char			*quoted;
 	char			quote_str[2];
 	char			quote_type;
-	t_token_type	token_type = TOKEN_WORD;
+	t_token_type	token_type;
 
-	//printf("IN get_quoted_str\n");
 	quote_type = input[*i];
 	start = ++(*i);
-	while (input[*i] && input[*i] != quote_type)
-		(*i)++;
-	if (!input[*i])
+	token_type = get_token_type(input, i, quote_type);
+	if (token_type == TOKEN_WORD)
 		return ;
-	if (quote_type == '"')
-		token_type = TOKEN_DQUOTE;
-	else if (quote_type == '\'')
-		token_type = TOKEN_SQUOTE;
-	else
+	else if (token_type == TOKEN_ENV_ASSIGN)
 		exit_program(collector, "minishell: unknown quote type", false);
 	quote_str[0] = quote_type;
 	quote_str[1] = '\0';
 	token_create(collector, token_type, quote_str, head);
 	quoted = ft_strndup(input + start, *i - start);
 	if (!quoted)
-		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+		exit_program(collector, "Error malloc get val for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, quoted, head);
 	freer(quoted);
 	token_create(collector, token_type, quote_str, head);
 	(*i)++;
-	//printf("OUT get_quoted_str\n");
 }
 
-void	get_word(const char *input, t_collector **collector, int *i, t_token **head)
+void	get_word(const char *input, t_collector **collector, \
+	int *i, t_token **head)
 {
 	int		istart;
 	char	*value;
 
-	//printf("IN get_word\n");
 	istart = *i;
 	while (input[*i]
 		&& (ft_strchr(" \f\r\n\t\v|<>;'\"\\", input[*i]) == NULL))
-		// && (ft_strchr(" \f\r\n\t\v|<>$;'\"\\", input[*i]) == NULL))
 		(*i)++;
 	value = ft_strndup(input + istart, *i - istart);
-	//printf("get_word-value:%s\n", value);
 	if (!value)
-		exit_program(collector, "Error malloc get value for token", EXIT_FAILURE);
+		exit_program(collector, "Error malloc get val for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, value, head);
 	freer(value);
-	//printf("OUT get_word\n");
 }
