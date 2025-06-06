@@ -14,23 +14,26 @@
 
 void add_or_update_env_var(char ***env, char *key, char *value)
 {
-    int		i;
-    char	*new_var;
-    size_t	key_len;
-
+    int i;
+    char *temp;
+    char *new_var;
+    size_t key_len;
+    
+    if (!env || !*env || !key || !value)
+        return;
     key_len = ft_strlen(key);
-    new_var = ft_strjoin(key, "=");
+    temp = ft_strjoin(key, "=");
+    if (!temp)
+        return;
+    new_var = ft_strjoin(temp, value);
+    free(temp);
     if (!new_var)
-        return ;
-    new_var = ft_strjoin(new_var, value);
-    if (!new_var)
-        return ;
-
-    // Busca si la variable ya existe
+        return;
     i = 0;
     while ((*env)[i])
     {
-        if (ft_strncmp((*env)[i], key, key_len) == 0 && (*env)[i][key_len] == '=')
+        if (ft_strncmp((*env)[i], key, key_len) == 0 && 
+            (*env)[i][key_len] == '=')
         {
             free((*env)[i]);
             (*env)[i] = new_var;
@@ -38,11 +41,12 @@ void add_or_update_env_var(char ***env, char *key, char *value)
         }
         i++;
     }
-
-    // Si no existe, agregarla al entorno
     char **new_env = malloc(sizeof(char *) * (i + 2));
     if (!new_env)
-        return ;
+    {
+        free(new_var);
+        return;
+    }
     i = 0;
     while ((*env)[i])
     {

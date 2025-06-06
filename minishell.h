@@ -65,33 +65,6 @@ typedef enum e_token_type
 	TOKEN_ENV_ASSIGN,
 }	t_token_type;
 
-// Enum representing various token error types in the minishell application
-typedef enum e_token_error
-{
-	NO_ERROR,						// No error occurred
-	ERROR_NOT_FOUND,				// Token not found
-	ERROR_NOT_ACCESS,              // Token not accessible
-	ERROR_NOT_EXEC,                // Token not executable
-	ERROR_NOT_PIPE,                // Pipe operation failed
-	ERROR_NOT_FORK,                // Fork operation failed
-	ERROR_NOT_DUP,                 // Duplication operation failed
-	ERROR_NOT_CLOSE,               // Close operation failed
-	ERROR_NOT_WAIT,                // Wait operation failed
-	ERROR_NOT_OPEN,                // Open operation failed
-	ERROR_NOT_READ,                // Read operation failed
-	ERROR_NOT_WRITE,               // Write operation failed
-	ERROR_NOT_MALLOC,              // Memory allocation failed
-	ERROR_NOT_FREE,                // Memory deallocation failed
-	ERROR_SYNTAX_ERROR,            // Syntax error in token
-	ERROR_VAR_NOT_FOUND,           // Variable not found
-	ERROR_REDIRECT_AMBIGUOUS,      // Ambiguous redirection
-	ERROR_PIPE_INVALID,            // Invalid pipe
-	ERROR_BUILTIN_ERROR,           // Built-in command error
-	ERROR_EOF,                     // End of file reached
-	ERROR_STDIN_CLOSED,            // Standard input closed
-	ERROR_SIGNAL_FAILED            // Signal operation failed
-}	t_token_error;
-
 typedef enum e_builtin
 {
     BUILTIN_NONE,
@@ -133,7 +106,6 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
-	char			**local_var;			// export
 	char			*path;				// path donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
@@ -160,7 +132,6 @@ typedef struct s_constructor
 	pid_t			pid;				// fork()
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
-	t_token_error	error;				// Estado de error
 	t_shell			*shell;				// Enlace a shell
 	t_constructor	*next;				// Sigueinte nodo
 	t_constructor	*prev;				// Anterior nodo
@@ -304,6 +275,7 @@ void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 char	*get_env_value(t_shell *shell, const char *var_name);
 void	process_exit(t_constructor *node);
+void add_or_update_env_var(char ***env, char *key, char *value);
 
 //funcions fd
 

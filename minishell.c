@@ -12,6 +12,37 @@
 
 #include "minishell.h"
 
+void update_shlvl(t_shell *shell, int increment) 
+{
+    char *shlvl_str;
+    int shlvl;
+    char *new_shlvl;
+    
+    if (!shell)
+        return;
+    
+    shlvl_str = get_env_value(shell, "SHLVL");
+    if (shlvl_str)
+        shlvl = ft_atoi(shlvl_str);
+    else
+        shlvl = 0;
+    
+    shlvl += increment;
+    if (shlvl < 0)
+        shlvl = 0;
+    
+    new_shlvl = ft_itoa(shlvl);
+    if (!new_shlvl)
+        return;
+    
+    // Actualizar en env y export
+    add_or_update_env_var(&shell->env, "SHLVL", new_shlvl);
+    add_or_update_env_var(&shell->export, "SHLVL", new_shlvl);
+    
+    free(new_shlvl);
+}
+
+
 int	main(int argc, char **argv, char **envp)
 {
 	t_collector		*collector;
@@ -31,8 +62,10 @@ int	main(int argc, char **argv, char **envp)
 	shell = init_shell(NULL, envp, &collector);
 	if (!shell)
 		exit_program(&collector, "Error al inicializar shell", true);
+	update_shlvl(shell, 1);
 	while (1)
 	{
+		
 		cycle_collector = NULL;
 		line = NULL;
 		if (interact)
@@ -100,5 +133,6 @@ int	main(int argc, char **argv, char **envp)
 	free_path_array(shell->export);
 	free(shell->path);
 	collector_cleanup(&collector);
+	update_shlvl(shell, -1);
 	return (EXIT_SUCCESS);
 }

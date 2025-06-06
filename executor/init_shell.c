@@ -28,7 +28,6 @@ static void	init_constructor_fields(t_constructor *new)
 	new->pipe_out = -1;
 	new->builtin = 0;
 	new->type = 0;
-	new->error = NO_ERROR;
 	new->shell = NULL;
 	new->next = NULL;
 	new->prev = NULL;
