@@ -143,28 +143,26 @@ void check_path(t_shell *shell)
 	}
 }
 
-char *acces_path(t_constructor *node)
-{
-	char *exec;
-	int i;
+char *acces_path(t_constructor *node) {
+    char *exec;
+    int i;
 
-	check_path(node->shell);
-	if (node->executable[0][0] == '/')
-	{
-		if (access(node->executable[0], X_OK) == 0)
-			return (ft_strdup(node->executable[0]));
-		return (NULL);
-	}
-	i = 0;
-	while (node->shell->paths && node->shell->paths[i])
-	{
-		exec = construct_exec(node->shell->paths[i], node->executable[0]);
-		if (exec && access(exec, X_OK) == 0)
-			return (exec);
-		free(exec);
-		i++;
-	}
-	return (NULL);
+
+    if (node->executable[0][0] == '/' || node->executable[0][0] == '.') {
+        if (access(node->executable[0], X_OK) == 0)
+            return (ft_strdup(node->executable[0])); // Retorna la ruta tal cual
+        return (NULL); // No tiene permisos o no existe
+    }
+    check_path(node->shell);
+    i = 0;
+    while (node->shell->paths && node->shell->paths[i]) {
+        exec = construct_exec(node->shell->paths[i], node->executable[0]);
+        if (exec && access(exec, X_OK) == 0)
+            return (exec);
+        free(exec);
+        i++;
+    }
+    return (NULL);
 }
 
 void close_all_pipes_except(t_constructor *node, int keep_in, int keep_out)
