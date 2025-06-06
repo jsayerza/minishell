@@ -34,14 +34,37 @@ void update_shlvl(t_shell *shell, int increment)
     new_shlvl = ft_itoa(shlvl);
     if (!new_shlvl)
         return;
-    
-    // Actualizar en env y export
     add_or_update_env_var(&shell->env, "SHLVL", new_shlvl);
-    add_or_update_env_var(&shell->export, "SHLVL", new_shlvl);
-    
+    add_or_update_env_var(&shell->export, "declare -x SHLVL", new_shlvl);
     free(new_shlvl);
 }
 
+void cleanup_shell(t_shell *shell)
+{
+    if (!shell)
+        return;
+    
+    if (shell->paths)
+    {
+        free_path_array(shell->paths);
+        shell->paths = NULL;
+    }
+    if (shell->env)
+    {
+        free_path_array(shell->env);
+        shell->env = NULL;
+    }
+    if (shell->export)
+    {
+        free_path_array(shell->export);
+        shell->export = NULL;
+    }
+    if (shell->path)
+    {
+        free(shell->path);
+        shell->path = NULL;
+    }
+}
 
 int	main(int argc, char **argv, char **envp)
 {
@@ -62,6 +85,8 @@ int	main(int argc, char **argv, char **envp)
 	shell = init_shell(NULL, envp, &collector);
 	if (!shell)
 		exit_program(&collector, "Error al inicializar shell", true);
+		 g_shell = shell;        
+    setup_signals(); 
 	update_shlvl(shell, 1);
 	while (1)
 	{
@@ -128,11 +153,7 @@ int	main(int argc, char **argv, char **envp)
 			print_error("minishell: failed to prepare command execution");
 		collector_cleanup(&cycle_collector);
 	}
-	free_path_array(shell->paths);
-	free_path_array(shell->env);
-	free_path_array(shell->export);
-	free(shell->path);
-	collector_cleanup(&collector);
-	update_shlvl(shell, -1);
+	cleanup_shell(shell);	
+	collector_cleanup(&collector);	
 	return (EXIT_SUCCESS);
 }

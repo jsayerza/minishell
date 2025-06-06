@@ -137,6 +137,7 @@ typedef struct s_constructor
 	t_constructor	*prev;				// Anterior nodo
 }	t_constructor;
 
+extern t_shell *g_shell;  // ✅ CORRECTO - es una DECLARACIÓN
 // utils.c
 void    freer(char *ptr);
 bool	has_unclosed_quotes(const char *line);
@@ -309,10 +310,13 @@ void	free_path_array(char **path);
 char	*get_path_value(char **env);
 char	**try_alternative_path(char **env);
 
-//Signal Functions
+// Configuración de señales
+void setup_signals(void);
+void setup_child_signals(void);
 
-void setup_signals(t_shell *shell);
-void handle_signals_in_loop(t_shell *shell, char *line);
+// Handlers de señales
+void signal_handler(int sig);
+void signal_handler_child(int sig);
 //print functions
 void	print_builtin(char **builtin);
 void	print_token_list(t_shell *shell);
