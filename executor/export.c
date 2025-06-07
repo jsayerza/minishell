@@ -92,15 +92,10 @@ void	export(t_constructor *node)
 		{
 			if (!(ft_isalpha(node->executable[j][0])
 				|| node->executable[j][0] == '_'))
-			{
 				printf("minishell: export: `%s': not a valid identifier\n",
 					node->executable[j]);
-				node->error = ERROR_SYNTAX_ERROR;
-			}
 			else
-			{
 				process_export_var(node, node->executable[j]);
-			}
 			j++;
 		}
 	}

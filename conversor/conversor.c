@@ -164,7 +164,6 @@ t_constructor	*create_constructor_node(t_collector **collector, \
 	node->pid = -1;
 	node->builtin = BUILTIN_NONE;
 	node->type = ast->type;
-	node->error = 0;
 	node->next = NULL;
 	node->prev = NULL;
 	create_constructor_node_builtin(node);
@@ -221,7 +220,6 @@ static t_constructor	*find_or_create_command_node(t_collector **collector, \
 	cmd_node->pid = -1;
 	cmd_node->builtin = BUILTIN_NONE;
 	cmd_node->type = TOKEN_COMMAND;
-	cmd_node->error = 0;
 	cmd_node->next = *first_node;
 	cmd_node->prev = NULL;
 	if (*first_node)

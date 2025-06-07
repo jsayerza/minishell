@@ -72,7 +72,11 @@ void	free_path_array(char **path)
 	if (!path)
 		return ;
 	while (path[i])
-		free(path[i++]);
+	{
+		free(path[i]);
+		path[i] = NULL;
+		i++;
+	}
 	free(path);
 }
 

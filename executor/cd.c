@@ -65,8 +65,6 @@ void cd_directori(t_constructor *node)
         node->shell->last_exit = 1;
         return;
     }
-
-    // Determinar si es ruta absoluta o relativa
     int is_absolute = (target_path[0] == '/');
     refresh_directori(node->shell, target_path, is_absolute);
 }

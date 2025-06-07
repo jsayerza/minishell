@@ -99,7 +99,6 @@ void	constructor_print(t_constructor *list)
 		printf("Redirect in -->%d\n", list->redirect_in_type);
 		printf("Redirect out -->%d\n", list->redirect_out_type);
 		printf("Token Type: %s\n", get_token_type_name(list->type));
-		printf("Error: %d\n", list->error);
 		printf("Pipe in: %d  Pipe out: %d\n", list->pipe_in, list->pipe_out);
 		printf("-------------------------\n");
 		list = list->next;

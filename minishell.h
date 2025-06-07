@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/04 19:18:51 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/07 10:23:12 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,33 +65,6 @@ typedef enum e_token_type
 	TOKEN_ENV_ASSIGN,
 }	t_token_type;
 
-// Enum representing various token error types in the minishell application
-typedef enum e_token_error
-{
-	NO_ERROR,						// No error occurred
-	ERROR_NOT_FOUND,				// Token not found
-	ERROR_NOT_ACCESS,              // Token not accessible
-	ERROR_NOT_EXEC,                // Token not executable
-	ERROR_NOT_PIPE,                // Pipe operation failed
-	ERROR_NOT_FORK,                // Fork operation failed
-	ERROR_NOT_DUP,                 // Duplication operation failed
-	ERROR_NOT_CLOSE,               // Close operation failed
-	ERROR_NOT_WAIT,                // Wait operation failed
-	ERROR_NOT_OPEN,                // Open operation failed
-	ERROR_NOT_READ,                // Read operation failed
-	ERROR_NOT_WRITE,               // Write operation failed
-	ERROR_NOT_MALLOC,              // Memory allocation failed
-	ERROR_NOT_FREE,                // Memory deallocation failed
-	ERROR_SYNTAX_ERROR,            // Syntax error in token
-	ERROR_VAR_NOT_FOUND,           // Variable not found
-	ERROR_REDIRECT_AMBIGUOUS,      // Ambiguous redirection
-	ERROR_PIPE_INVALID,            // Invalid pipe
-	ERROR_BUILTIN_ERROR,           // Built-in command error
-	ERROR_EOF,                     // End of file reached
-	ERROR_STDIN_CLOSED,            // Standard input closed
-	ERROR_SIGNAL_FAILED            // Signal operation failed
-}	t_token_error;
-
 typedef enum e_builtin
 {
     BUILTIN_NONE,
@@ -133,7 +106,6 @@ typedef struct s_shell
 {
 	char			**env;				// Variables de entorno
 	char			**export;			// export
-	char			**local_var;			// export
 	char			*path;				// path donde buscar ejecutables
 	char			**paths;			// Lista de paths donde buscar ejecutables
 	int				last_exit;			// Último código de salida
@@ -160,12 +132,12 @@ typedef struct s_constructor
 	pid_t			pid;				// fork()
 	t_builtin		builtin;			// si es buitlin , que tipo
 	t_token_type	type;				// typo de ejecutable
-	t_token_error	error;				// Estado de error
 	t_shell			*shell;				// Enlace a shell
 	t_constructor	*next;				// Sigueinte nodo
 	t_constructor	*prev;				// Anterior nodo
 }	t_constructor;
 
+extern t_shell *g_shell;  // ✅ CORRECTO - es una DECLARACIÓN
 // utils.c
 void    freer(char *ptr);
 bool	has_unclosed_quotes(const char *line);
@@ -334,6 +306,7 @@ void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 char	*get_env_value(t_shell *shell, const char *var_name);
 void	process_exit(t_constructor *node);
+void add_or_update_env_var(char ***env, char *key, char *value);
 
 //funcions fd
 
@@ -367,10 +340,15 @@ void	free_path_array(char **path);
 char	*get_path_value(char **env);
 char	**try_alternative_path(char **env);
 
-//Signal Functions
+// Configuración de señales
+void setup_signals(void);
+void setup_child_signals(void);
 
-void setup_signals(t_shell *shell);
-void handle_signals_in_loop(t_shell *shell, char *line);
+// Handlers de señales
+void signal_handler(int sig);
+void signal_handler_child(int sig);
+void wait_for_child_processes(t_constructor *node);
+
 //print functions
 void	print_builtin(char **builtin);
 void	print_token_list(t_shell *shell);

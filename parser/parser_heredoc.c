@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 11:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2024/11/19 18:47:36 by jsayerza         ###   ########.fr       */
+/*   Updated: 2025/06/07 10:55:37 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,5 +100,7 @@ char	*heredoc_read(const char *delim, int interact, t_collector **collector)
 		total_len += line_len + 1;
 		freer(line);
 	}
+	if (!heredoc)
+		return (ft_strdup(""));
 	return (heredoc);
 }
