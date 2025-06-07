@@ -17,6 +17,8 @@ PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					lexer/lexer_expand.c \
 					lexer/lexer_expand_var.c \
 					lexer/lexer_expand_str.c \
+					lexer/lexer_expand_quotes.c \
+					lexer/lexer_expand_ass_quote.c \
 					lexer/tokens.c lexer/tokens_funcs.c \
 					lexer/tokens_funcs_insert.c \
 					parser/parser.c parser/parser_nodes.c \

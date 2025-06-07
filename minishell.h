@@ -232,6 +232,14 @@ char	*expand_variable(const char *str, int *i, t_shell *shell, \
 char	*expand_string(const char *str, t_shell *shell, \
 	t_collector **collector);
 
+// lexer/lexer_expand_quotes.c
+void	expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
+	t_collector **collector);
+	
+// lexer/lexer_expand_ass_quote.c
+void	expand_assignment_quote(t_token **head, t_token *curr, \
+	t_shell *shell, t_collector **collector);
+
 // parser/parser.c // Abstract Syntax Tree (AST)
 t_ast	*parser(t_collector **collector, t_token *tokens, int interact);
 
