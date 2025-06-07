@@ -17,7 +17,7 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 	t_collector	*curr;
 	t_collector	*prev;
 
-	// printf("\nIN collector_remove_ptr\n");
+	// ft_putstr_fd("\nIN collector_remove_ptr\n");
 	curr = *collector;
 	prev = NULL;
 	while (curr)
@@ -31,17 +31,17 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 
 			if (curr->ptr)
 			{
-				// printf("  Freer removed ptr: %p\n", curr->ptr);
+				// ft_putstr_fd("  Freer removed ptr: %p\n", curr->ptr);
 				freer(curr->ptr); // 👈 Evitas el leak
 			}
 			free(curr);
-			// printf("  Removed from collector: %p\n", ptr);
+			// ft_putstr_fd("  Removed from collector: %p\n", ptr);
 			return ;
 		}
 		prev = curr;
 		curr = curr->next;
 	}
-	// printf("OUT collector_remove_ptr\n");
+	// ft_putstr_fd("OUT collector_remove_ptr\n");
 }
 
 
@@ -50,13 +50,13 @@ void	collector_cleanup(t_collector **collector)
 	t_collector	*current;
 	t_collector	*next;
 
-	// printf("\nIN collector_cleanup\n");
+	// ft_putstr_fd("\nIN collector_cleanup\n");
 	current = *collector;
 	while (current)
 	{
 		next = current->next;
-		// printf("  Free pointer:  %p\n", current);
-		// printf("    Free pointer value: %s\n", (char *)current->ptr);
+		// ft_putstr_fd("  Free pointer:  %p\n", current);
+		// ft_putstr_fd("    Free pointer value: %s\n", (char *)current->ptr);
 		if (current->ptr)
 			freer(current->ptr);
 		if (current)
@@ -64,7 +64,7 @@ void	collector_cleanup(t_collector **collector)
 		current = next;
 	}
 	*collector = NULL;
-	// printf("OUT collector_cleanup\n\n");
+	// ft_putstr_fd("OUT collector_cleanup\n\n");
 }
 
 bool	collector_contains(t_collector *collector, void *ptr)
@@ -73,7 +73,7 @@ bool	collector_contains(t_collector *collector, void *ptr)
 	{
 		if (collector->ptr == ptr)
 		{
-			// printf("      YURATENXIONPLIS!!!!!!!!! Pointer already in collector: %p\n", ptr);
+			// ft_putstr_fd("      YURATENXIONPLIS!!!!!!!!! Pointer already in collector: %p\n", ptr);
 			return (true);
 		}
 		collector = collector->next;
@@ -85,7 +85,7 @@ void	collector_append(t_collector **collector, void *ptr)
 {
 	t_collector	*new_node;
 
-	// printf("  Appending to collector: %p\n", ptr);
+	// ft_putstr_fd("  Appending to collector: %p\n", ptr);
 	if (!ptr || collector_contains(*collector, ptr))
 		return ;
 	new_node = malloc(sizeof(t_collector));
@@ -95,7 +95,7 @@ void	collector_append(t_collector **collector, void *ptr)
 	new_node->next = *collector;
 	*collector = new_node;
 	// if (ptr)
-	// 	printf("    Pointer value: %s\n", (char *)ptr);
+	// 	ft_putstr_fd("    Pointer value: %s\n", (char *)ptr);
 	// else
-	// 	printf("    Pointer value: NULL\n");
+	// 	ft_putstr_fd("    Pointer value: NULL\n");
 }

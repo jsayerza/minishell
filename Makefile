@@ -19,7 +19,6 @@ PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					parser/parser_heredoc.c \
 					parser/parser_ast_print.c \
 					conversor/conversor.c \
-					conversor/conversor_constructor_print.c
 
 EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \

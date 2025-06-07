@@ -35,7 +35,6 @@ static char	*expand_variable(const char *str, int *i, t_shell *shell, t_collecto
 	char	*var_value;
 	char	*result;
 
-	printf("     IN expand_variable\n");
 	(*i)++;
 	//TODO: revisar aquest codi
 	if (str[*i] == '?')
@@ -67,7 +66,6 @@ static char	*expand_variable(const char *str, int *i, t_shell *shell, t_collecto
 		result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_variable result", true);
-	printf("     OUT expand_variable\n");
 	return (result);
 }
 
@@ -79,17 +77,14 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 	char	*expanded;
 	int		start;
 
-	printf("   IN expand_string\n");
 	i = 0;
 	result = ft_strdup("");
 	if (!result)
 		exit_program(collector, "Error malloc expand_string init", true);
 	while (str[i])
 	{
-		printf("    IN expand_string-str[%d]:%c\n", i, str[i]);
 		if (str[i] == '$')
 		{
-			printf("    IN expand_string-$\n");
 			expanded = expand_variable(str, &i, shell, collector);
 			tmp = ft_strjoin(result, expanded);
 			freer(expanded);
@@ -98,11 +93,9 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 			freer(result);
 			result = ft_strdup(tmp);
 			freer(tmp);
-			printf("    OUT expand_string-$\n");
 		}
 		else
 		{
-			printf("    IN expand_string-A\n");
 			start = i;
 			while (str[i] && str[i] != '$')
 				i++;
@@ -115,12 +108,9 @@ static char	*expand_string(const char *str, t_shell *shell, t_collector **collec
 				exit_program(collector, "Error malloc expand_string join plain", true);
 			freer(result);
 			result = ft_strdup(tmp);
-			printf("     -->result: %s\n", result);
 			freer(tmp);
-			printf("    OUT expand_string-A\n");
 		}
 	}
-	printf("   OUT expand_string\n");
 	return (result);
 }
 
@@ -136,7 +126,6 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 	char	*tmp;
 	char	*expanded;
 
-	printf("IN tokens_expand\n");
 	curr = *head;
 	while (curr)
 	{
@@ -145,7 +134,6 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 			prev = get_prev_token(*head, curr);
 			if (prev && prev->type == TOKEN_WORD && ft_strchr(prev->value, '='))
 			{
-				printf("    IN tokens_expand fusion asignación + comillas\n");
 				start = curr;
 				curr = curr->next;
 				joined = ft_strdup("");
@@ -188,13 +176,11 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 					token_remove(head, token_tmp, collector);
 				}
 				curr = next;
-				printf("    OUT tokens_expand fusion asignación + comillas\n");
 				continue;
 			}
 		}
 		if (curr->type == TOKEN_DQUOTE || curr->type == TOKEN_SQUOTE)
 		{
-			printf(" IN tokens_expand TOKEN_%sQUOTE\n", curr->type == TOKEN_DQUOTE ? "D" : "S");
 			start = curr;
 			curr = curr->next;
 			joined = ft_strdup("");
@@ -228,30 +214,21 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 				token_remove(head, token_tmp, collector);
 			}
 			curr = next;
-			tokens_print(head);
-			printf(" OUT tokens_expand TOKEN_%sQUOTE\n\n", curr && curr->type == TOKEN_DQUOTE ? "D" : "S");
 			continue;
 		}
 		else if (curr->type == TOKEN_WORD || curr->type == TOKEN_COMMAND)
 		{
-			printf(" IN tokens_expand TOKEN_WORD/COMMAND\n");
 			expanded = expand_string(curr->value, shell, collector);
 			if (!expanded)
 				exit_program(collector, "Error in expand_string", true);
-			printf("   dins tokens_expand TOKEN_WORD/COMMAND 1\n");
 			if (curr->value)
 				collector_remove_ptr(collector, curr->value);
-			printf("   dins tokens_expand TOKEN_WORD/COMMAND 2\n");
 			curr->value = ft_strdup(expanded);
 			freer(expanded);
 			if (!curr->value)
 				exit_program(collector, "Error strdup in expansion", true);
 			collector_append(collector, curr->value);
-			tokens_print(head);
-			printf(" OUT tokens_expand TOKEN_WORD/COMMAND\n\n");
 		}
-		printf("   dins while IN tokens_expand\n");
 		curr = curr->next;
 	}
-	printf("OUT tokens_expand\n");
 }

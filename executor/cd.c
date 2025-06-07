@@ -18,7 +18,7 @@ void cd_home(t_constructor *node)
 
     if (!home)
     {
-        printf("cd: HOME not set\n");
+        ft_putstr_fd("cd: HOME not set\n", 2);
         node->shell->last_exit = 1;
         return;
     }
@@ -35,19 +35,20 @@ void cd_home(t_constructor *node)
 
 void cd_oldpwd(t_constructor *node)
 {
-    const char *oldpwd = get_env_value(node->shell, "OLDPWD");
+    char    *oldpwd = get_env_value(node->shell, "OLDPWD");
 
     if (!oldpwd)
     {
-        printf("cd: OLDPWD not set\n");
+        ft_putstr_fd("cd: OLDPWD not set\n", 2);
         node->shell->last_exit = 1;
         return;
     }
 
-    printf("%s\n", oldpwd);
     if (chdir(oldpwd) == -1)
     {
-        printf("cd: %s: No such file or directory\n", oldpwd);
+        ft_putstr_fd("cd: ", 2);
+        ft_putstr_fd(oldpwd, 2);
+        ft_putstr_fd(": No such file or directory\n", 2);
         node->shell->last_exit = 1;
         return;
     }
@@ -61,7 +62,9 @@ void cd_directori(t_constructor *node)
 
     if (chdir(target_path) == -1)
     {
-        printf("cd: %s: No such file or directory\n", target_path);
+        ft_putstr_fd("cd: ", 2);
+        ft_putstr_fd(target_path, 2);
+        ft_putstr_fd(": No such file or directory\n", 2);
         node->shell->last_exit = 1;
         return;
     }
@@ -79,7 +82,7 @@ void cd(t_constructor *node)
         cd_directori(node);
     else
     {
-        printf("cd: too many arguments\n");
+        ft_putstr_fd("cd: too many arguments\n", 2);
         node->shell->last_exit = 1;
     }
 }

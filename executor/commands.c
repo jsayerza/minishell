@@ -195,7 +195,7 @@ int	handle_command_not_found(t_constructor *node, char *path)
 {
 	if (!path)
 	{
-		printf("Command not found\n");
+		ft_putstr_fd("Command not found\n", 2);
 		node->shell->last_exit = 127;
 		return (1);
 	}
@@ -305,9 +305,9 @@ void wait_for_child_processes(t_constructor *node)
                 {
                     current->shell->last_exit = 131;
                     if (WCOREDUMP(status))
-                        printf("Quit (core dumped)\n");
+                        ft_putstr_fd("Quit (core dumped)\n", 2);
                     else
-                        printf("Quit\n");
+                        ft_putstr_fd("Quit\n", 2);
                 }
                 else
                 {
@@ -316,7 +316,7 @@ void wait_for_child_processes(t_constructor *node)
             }
             else
             {
-                printf("DEBUG: Estado de terminación desconocido\n"); // DEBUG
+                ft_putstr_fd("DEBUG: Estado de terminación desconocido\n", 2); // DEBUG
             }
 
         }

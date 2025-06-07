@@ -20,7 +20,7 @@ void signal_handler(int sig)
 {
     if (sig == SIGINT)  // Ctrl+C
     {
-        printf("\n");
+        ft_putstr_fd("\n", 1);
         rl_on_new_line();      // Readline: nueva línea
         rl_replace_line("", 0); // Limpiar línea actual
         rl_redisplay();        // Mostrar prompt nuevamente
@@ -35,12 +35,12 @@ void signal_handler_child(int sig)
 {
     if (sig == SIGINT)  // Ctrl+C
     {
-        printf("\n");
+        ft_putstr_fd("\n", 1);
         exit(130);  // Terminar con exit code 130
     }
     else if (sig == SIGQUIT)  // Ctrl+backslash
     {
-        printf("Quit: 3\n");
+        ft_putstr_fd("Quit: 3\n", 1);
         exit(131);  // Terminar con exit code 131
     }
 }

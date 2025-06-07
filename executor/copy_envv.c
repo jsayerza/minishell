@@ -70,7 +70,7 @@ void	copy_env_to_shell(t_shell *shell, char **envv)
 		env_count++;
 	if (env_count == 0)
 	{
-		fprintf(stderr, "Error: El entorno está vacío.\n");
+		ft_putstr_fd("Error: El entorno está vacío.\n", 2);
 		return ;
 	}
 	env = allocate_env(env_count);

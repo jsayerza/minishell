@@ -2,5 +2,5 @@
 
 int	main(void)
 {
-	printf("Hola mundo\n");
+	ft_putstr_fd("Hola mundo\n", 1);
 }

@@ -12,8 +12,6 @@
 
 #include "../minishell.h"
 
-#include "../minishell.h"
-
 static int	is_valid_n_flag(const char *arg)
 {
     int i;
@@ -23,7 +21,7 @@ static int	is_valid_n_flag(const char *arg)
     i = 1;
     while (arg[i])
     {
-        if (arg[i] != 'n') // Verifica que todos los caracteres sean 'n'
+        if (arg[i] != 'n') 
             return (0);
         i++;
     }
@@ -46,13 +44,13 @@ void	execute_echo(char **args)
     }
     while (args[i])
     {
-        printf("%s", args[i]);
+        ft_putstr_fd(args[i], 1);
         if (args[i + 1])
-            printf(" ");
+            ft_putstr_fd(" ", 1);
         i++;
     }
     if (!jump)
-        printf("\n");
+        ft_putstr_fd("\n", 1);
 }
 
 void	redirect_echo(t_constructor *node)

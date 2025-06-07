@@ -16,26 +16,29 @@ static void	ast_print_indent(int depth)
 {
 	int	i = 0;
 	while (i++ < depth)
-		printf("  ");
+		ft_putstr_fd("  ", 1);
 }
 
 static void	ast_print_str_array(char *label, char **array, int depth)
 {
 	int	i;
-
 	if (!array)
 	{
 		ast_print_indent(depth);
-		printf("%s: [NULL]\n", label);
+		ft_putstr_fd(label, 1);
+		ft_putstr_fd(": [NULL]\n", 1);
 		return;
 	}
 	ast_print_indent(depth);
-	printf("%s:\n", label);
+	ft_putstr_fd(label, 1);
+	ft_putstr_fd(":\n", 1);
 	i = 0;
 	while (array[i])
 	{
 		ast_print_indent(depth + 1);
-		printf("- %s\n", array[i]);
+		ft_putstr_fd("- ", 1);
+		ft_putstr_fd(array[i], 1);
+		ft_putstr_fd("\n", 1);
 		i++;
 	}
 }
@@ -44,37 +47,41 @@ static void	ast_print_type(t_ast *root, int depth)
 {
 	ast_print_indent(depth);
 	if (root->type == TOKEN_COMMAND)
-		printf(BOLD GREEN "CMD\n" RESET);
+		ft_putstr_fd(BOLD GREEN "CMD\n" RESET, 1);
 	else if (root->type == TOKEN_WORD)
-		printf(BOLD GREEN "WORD\n" RESET);
+		ft_putstr_fd(BOLD GREEN "WORD\n" RESET, 1);
 	else if (root->type == TOKEN_PIPE)
-		printf(YELLOW "PIPE\n" RESET);
+		ft_putstr_fd(YELLOW "PIPE\n" RESET, 1);
 	else if (root->type == TOKEN_REDIRECT_IN)
-		printf(BOLD RED "REDIRECT_IN (<)\n" RESET);
+		ft_putstr_fd(BOLD RED "REDIRECT_IN (<)\n" RESET, 1);
 	else if (root->type == TOKEN_REDIRECT_OUT)
-		printf(BOLD RED "REDIRECT_OUT (>)\n" RESET);
+		ft_putstr_fd(BOLD RED "REDIRECT_OUT (>)\n" RESET, 1);
 	else if (root->type == TOKEN_HEREDOC)
 	{
-		printf(MAGENTA "HEREDOC (<<): %s\n" RESET, root->file);
+		ft_putstr_fd(MAGENTA "HEREDOC (<<): ", 1);
+		ft_putstr_fd(root->file, 1);
+		ft_putstr_fd("\n" RESET, 1);
 		ast_print_indent(depth);
-		printf("CONTENT:\n");
+		ft_putstr_fd("CONTENT:\n", 1);
 		ast_print_indent(depth + 1);
-		printf("%s\n", root->heredoc_content ? root->heredoc_content : "[NULL]");
+		ft_putstr_fd(root->heredoc_content ? root->heredoc_content : "[NULL]", 1);
+		ft_putstr_fd("\n", 1);
 		return;
 	}
 	else if (root->type == TOKEN_APPEND)
-		printf(MAGENTA "APPEND (>>)\n" RESET);
+		ft_putstr_fd(MAGENTA "APPEND (>>)\n" RESET, 1);
 	else
-		printf(RED "UNKNOWN NODE\n" RESET);
-
+		ft_putstr_fd(RED "UNKNOWN NODE\n" RESET, 1);
+	
 	if (root->file &&
 		(root->type == TOKEN_REDIRECT_IN || root->type == TOKEN_REDIRECT_OUT ||
 		 root->type == TOKEN_APPEND))
 	{
 		ast_print_indent(depth);
-		printf("file: %s\n", root->file);
+		ft_putstr_fd("file: ", 1);
+		ft_putstr_fd(root->file, 1);
+		ft_putstr_fd("\n", 1);
 	}
-
 	ast_print_str_array("args", root->args, depth);
 	// ast_print_str_array("envp", root->envp, depth);
 }
@@ -82,13 +89,15 @@ static void	ast_print_type(t_ast *root, int depth)
 static void	ast_print_branch(char *label, t_ast *child, int depth)
 {
 	ast_print_indent(depth);
-	printf(CYAN "%s →\n" RESET, label);
+	ft_putstr_fd(CYAN, 1);
+	ft_putstr_fd(label, 1);
+	ft_putstr_fd(" →\n" RESET, 1);
 	if (child)
 		ast_print(child, depth + 1);
 	else
 	{
 		ast_print_indent(depth + 1);
-		printf("[NULL]\n");
+		ft_putstr_fd("[NULL]\n", 1);
 	}
 }
 

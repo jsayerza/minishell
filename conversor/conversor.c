@@ -281,6 +281,5 @@ static t_constructor	*process_ast_node(t_collector **collector, t_ast *ast, t_sh
 
 t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, t_shell *shell)
 {
-	printf("\n\nIN ast_to_constructor\n");
 	return (process_ast_node(collector, ast, shell));
 }

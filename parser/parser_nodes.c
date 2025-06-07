@@ -31,7 +31,9 @@ t_ast	*init_redir_node(t_collector **collector, \
 
 	if (!next || next->type != TOKEN_WORD)
 	{
-		printf("minishell: syntax error near unexpected token `%s`\n", curr->value);
+		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+		ft_putstr_fd(curr->value, 2);
+		ft_putstr_fd("`\n", 2);	
 		return (NULL);
 	}
 	redir_node = malloc(sizeof(t_ast));
@@ -56,7 +58,6 @@ t_ast	*init_command_node(t_collector **collector)
 {
 	t_ast	*node;
 
-	printf("IN init_command_node\n");
 	node = malloc(sizeof(t_ast));
 	if (!node)
 		exit_program(collector, "Error malloc parser command node", EXIT_FAILURE);
@@ -70,7 +71,6 @@ t_ast	*init_command_node(t_collector **collector)
 	if (!node->args)
 		exit_program(collector, "Error malloc parser command node args", EXIT_FAILURE);
 	collector_append(collector, node->args);
-	printf("OUT init_command_node\n");
 	return (node);
 }
 

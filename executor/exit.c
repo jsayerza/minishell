@@ -20,31 +20,33 @@ static bool is_numeric(const char *str)
 void process_exit(t_constructor *node)
 {
 	long long exit_code;
+	int final_exit_code;
 
 	if (node->size_exec > 2)
 	{
-		printf("exit: too many arguments\n");
-		node->shell->last_exit = 2;
+		ft_putstr_fd("exit: too many arguments\n", 2);
+		node->shell->last_exit = 1;
 		return;
 	}
 	if (node->size_exec == 2)
 	{
 		if (!is_numeric(node->executable[1]))
 		{
-			printf("exit: %s: numeric argument required\n", node->executable[1]);
+			ft_putstr_fd("exit: ", 2);
+			ft_putstr_fd(node->executable[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
 			node->shell->last_exit = 2;
 			exit(2);
 		}
 		exit_code = atoll(node->executable[1]);
-		if (exit_code > 255 || exit_code < 0)
-		{
-			printf("exit: %s: numeric argument required\n", node->executable[1]);
-			node->shell->last_exit = 2;
-			exit(2);
-		}
-		node->shell->last_exit = exit_code;
-		exit(exit_code);
+		// Manejar overflow/underflow usando módulo 256 para simular comportamiento de 8 bits
+		final_exit_code = (int)(exit_code % 256);
+		if (final_exit_code < 0)
+			final_exit_code += 256;
+		
+		node->shell->last_exit = final_exit_code;
+		exit(final_exit_code);
 	}
-	printf("exit\n");
+	// Exit sin argumentos - usar el último exit code
 	exit(node->shell->last_exit);
 }

@@ -24,24 +24,6 @@ void	tokens_free(t_token *head)
 	}
 }
 
-void	token_print(t_token *token)
-{
-	printf("Type: %d, Value: '%s'\n", token->type, token->value);
-}
-
-void	tokens_print(t_token **head)
-{
-	t_token	*token;
-
-	token = *head;
-	printf("\n=== Tokens ===\n");
-	while (token)
-	{
-		token_print(token);
-		token = token->next;
-	}
-	printf("\n");
-}
 
 t_token *get_prev_token(t_token *head, t_token *target)
 {
@@ -145,7 +127,7 @@ void	token_create(t_collector **collector, t_token_type type, \
 		token_new->value = ft_strdup(value);
 		if (!token_new->value)
 			exit_program(collector, "Error malloc token value", EXIT_FAILURE);
-		// printf("ARA HE CREAT EL VALUE %s I ENVIO EL PUNTER %p AL COLLECTOR\n", token_new->value, token_new->value);
+		// ft_putstr_fd("ARA HE CREAT EL VALUE %s I ENVIO EL PUNTER %p AL COLLECTOR\n", token_new->value, token_new->value);
 		collector_append(collector, token_new->value);
 	}
 	token_new->next = NULL;

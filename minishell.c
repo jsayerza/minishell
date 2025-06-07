@@ -137,16 +137,15 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		// printf("\n=== AST ===\n");
+		// ft_putstr_fd("\n=== AST ===\n");
 		// ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
-		//printf("OUT ast_to_constructor\n");
+		//ft_putstr_fd("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
-		printf("%s\n", shell->constructor->executable[0]);
 		if (constructor)
 		{
 			//constructor_print(constructor);
-			//printf("\n=== Execute shell ===\n");
+			//ft_putstr_fd("\n=== Execute shell ===\n");
 			display_shell(shell);
 		}
 		else

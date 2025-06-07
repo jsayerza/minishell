@@ -35,40 +35,34 @@ static t_ast	*parse_pipeline(t_collector **collector, \
 	t_ast	*right;
 	t_token	*curr;
 
-	printf("IN parse_pipeline\n");
 	if (!tokens || !*tokens)
 	{
-		printf("minishell: syntax error unexpected token `|`\n");
+		ft_putstr_fd("minishell: syntax error unexpected token `|`\n", 2);
 		return (NULL);
 	}
 	left = parse_command(collector, tokens, interact);
 	if (!left)
 	{
-		printf("OUT parse_pipeline !left\n");
 		return (NULL);
 	}
-	printf(" IN parse_pipeline 1\n");
 	curr = *tokens;
 	while (curr && curr->type == TOKEN_PIPE)
 	{
 		*tokens = curr->next;
 		if (!*tokens || (*tokens)->type == TOKEN_EOF)
 		{
-			printf("minishell: syntax error near unexpected token `newline'\n");
+			ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 			return (NULL);
 		}
-		printf("  cap a IN parse_pipeline right\n");
 		right = parse_pipeline(collector, tokens, interact);
-		printf("  OUT parse_pipeline right\n");
 		if (!right)
 		{
-			printf("minishell: syntax error unexpected token after `|`\n");
+			ft_putstr_fd("minishell: syntax error unexpected token after `|`\n", 2);
 			return (NULL);
 		}
 		parse_pipeline_add_node(collector, &left, right);
 		curr = *tokens;
 	}
-	printf("OUT parse_pipeline\n");
 	return (left);
 }
 
@@ -76,10 +70,8 @@ t_ast	*parser(t_collector **collector, t_token *tokens, int interact)
 {
 	t_ast	*ast;
 
-	printf("IN parser\n");
 	if (!tokens_validate(tokens))
 		return (NULL);
 	ast = parse_pipeline(collector, &tokens, interact);
-	printf("OUT parser --------------------\n\n");
 	return (ast);
 }

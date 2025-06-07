@@ -18,9 +18,12 @@ void	pwd(void)
 
 	pwd = getcwd(NULL, 0);
 	if (pwd)
-		printf("%s\n", pwd);
+	{
+		ft_putstr_fd(pwd, 1);
+		ft_putstr_fd("\n", 1);
+	}
 	else
-		printf("minishell: pwd: PWD not set\n");
+		ft_putstr_fd("minishell: pwd: PWD not set\n", 2);
 
 	free(pwd);
 }

@@ -48,7 +48,9 @@ static int	is_token_invalid(t_token *prev, t_token *curr)
 		}
 		if (curr->next->type >= TOKEN_REDIRECT_IN && curr->next->type <= TOKEN_APPEND)
 		{
-			printf("minishell: syntax error near unexpected token `%s`\n", curr->next->value);
+			ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
+			ft_putstr_fd(curr->next->value, 2);
+			ft_putstr_fd("`\n", 2);	
 			return (1);
 		}
 	}
