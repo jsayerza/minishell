@@ -41,8 +41,6 @@
 
 # define MAX_CMD_ARGS 256		//Permet fins 256 args per a un command
 
-extern int interact;			// 1 = mode interactiu, 0 = no interactiu
-
 typedef enum e_token_type
 {
 	TOKEN_EOF,			// 0
@@ -91,7 +89,6 @@ typedef struct s_ast {
 	char			*heredoc_content;
 	struct s_ast	*left;	// Represent child nodes for pipes & redirections
 	struct s_ast	*right;	// Represent child nodes for pipes & redirections
-	//char			**envp;
 }	t_ast;
 
 typedef struct s_collector
@@ -213,36 +210,74 @@ void	expand_assignment_quote(t_token **head, t_token *curr, \
 	t_shell *shell, t_collector **collector);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
-t_ast	*parser(t_collector **collector, t_token *tokens, int interact);
+t_ast	*parser(t_collector **collector, t_token *tokens);
+
+// parser/parser_pipeline.c
+t_ast	*parse_pipeline(t_collector **collector, t_token **tokens);
 
 // parser/parser_nodes.c
+void	init_redir_node_fill_left(t_ast *redir_node, \
+	t_ast **final_node, t_token **tokens);
 t_ast	*init_redir_node(t_collector **collector, \
-	t_token *curr, t_token *next, t_ast *cmd_node, int interact);
+	t_token *curr, t_token *next);
 t_ast	*init_command_node(t_collector **collector);
 t_ast	*init_word_node(t_collector **collector, const char *value);
 
 // parser/parser_funcs.c
-t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact);
+t_ast	*parse_command(t_collector **collector, t_token **tokens);
 
 // parser/parser_test.c
 t_token	*build_test_tokens(void);
 
 // parser/parser_heredoc.c
-char	*heredoc_read(const char *delim, int interact, t_collector **collector);
+char	*heredoc_read(const char *delim, t_collector **collector);
+
+// parser/parser_heredoc_should_break.c
+int	heredoc_should_break(char *line, const char *delim);
 
 // parser/parser_ast_print.c
+void	ast_print_indent(int depth);
 void	ast_print(t_ast *root, int depth);
+
+// parser/parser_ast_print_type.c
+void	ast_print_type(t_ast *root, int depth);
 
 // parser/parser_utils.c
 int		tokens_validate(t_token *tokens);
 void	remove_trailing_newline(char *line);
 int		is_assignment(const char *str);
 
-// conversor/conversor.c
-t_constructor	*ast_to_constructor(t_collector **collector, \
+// parser/parser_utils_token_invalid.c
+int	is_token_invalid(t_token *prev, t_token *curr);
+
+// constructor/constructor.c
+t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, \
+	t_shell *shell);
+
+// constructor/constructor_funcs.c
+void	add_redirect_file_in(t_collector **collector, \
+	t_constructor *node, char *file);
+void	add_redirect_file_out(t_collector **collector, \
+	t_constructor *node, char *file);
+void	add_redirect_file_append(t_collector **collector, \
+	t_constructor *node, char *file);
+void	add_heredoc(t_collector **collector, t_constructor *node, \
+	char *file);
+void	set_pipe_flags_and_link(t_constructor *left, t_constructor *right);
+
+// constructor/constructor_add_redirs.c
+void	add_redirections(t_collector **collector, t_ast *ast, \
+	t_constructor *cmd);
+
+// constructor/constructor_node_create.c
+t_constructor	*constructor_node_create(t_collector **collector, \
 	t_ast *ast, t_shell *shell);
 
-// conversor/conversor_constructor_print.c
+// constructor/constructor_cmd_node_create.c	
+t_constructor	*find_or_create_command_node(t_collector **collector, \
+	t_ast *ast, t_shell *shell, t_constructor **first_node);
+
+// constructor/constructor_print.c
 void	constructor_print(t_constructor *list);
 
 //init functions

@@ -21,6 +21,7 @@ minishell
 a.out
 error.log
 type
+main.c
 
 # Prerequisites
 *.d

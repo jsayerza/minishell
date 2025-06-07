@@ -22,11 +22,19 @@ PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					lexer/tokens.c lexer/tokens_funcs.c \
 					lexer/tokens_funcs_insert.c \
 					parser/parser.c parser/parser_nodes.c \
+					parser/parser_pipeline.c \
 					parser/parser_utils.c parser/parser_funcs.c \
+					parser/parser_utils_token_invalid.c \
 					parser/parser_heredoc.c \
+					parser/parser_heredoc_should_break.c \
 					parser/parser_ast_print.c \
-					conversor/conversor.c \
-					conversor/conversor_constructor_print.c
+					parser/parser_ast_print_type.c \
+					constructor/constructor.c \
+					constructor/constructor_funcs.c \
+					constructor/constructor_add_redirs.c \
+					constructor/constructor_node_create.c \
+					constructor/constructor_cmd_node_create.c \
+					constructor/constructor_print.c
 
 EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \

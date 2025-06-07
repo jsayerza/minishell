@@ -12,59 +12,82 @@
 
 #include "minishell.h"
 
-t_ast	*parse_command(t_collector **collector, t_token **tokens, int interact)
+static int	parse_cmd_handle_word(t_ast *cmd_node, t_token **tokens,
+	t_collector **collector, int *i)
+{
+	char	*arg_val;
+	t_token	*curr;
+
+	curr = *tokens;
+	arg_val = ft_strdup(curr->value);
+	if (!arg_val)
+		exit_program(collector, "Error malloc parse t_word args", EXIT_FAILURE);
+	collector_append(collector, arg_val);
+	cmd_node->args[*i] = arg_val;
+	(*i)++;
+	*tokens = curr->next;
+	return (false);
+}
+
+static int	parse_cmd_hle_redir(t_token **tokens, t_token *curr, \
+	t_ast **final_node, t_collector **collector)
+{
+	t_ast	*redir_node;
+	t_token	*target;
+
+	*tokens = curr->next;
+	target = curr->next;
+	if (!target || target->type != TOKEN_WORD)
+	{
+		printf("minishell: syntax error near unexpected token `%s`\n",
+			curr->value);
+		return (true);
+	}
+	redir_node = init_redir_node(collector, curr, target);
+	if (!redir_node)
+		return (true);
+	redir_node->left = *final_node;
+	*final_node = redir_node;
+	*tokens = (*tokens)->next;
+	return (false);
+}
+
+static t_ast	*parse_command_init_cmd_node(t_collector **collector, \
+	t_ast **final_node)
 {
 	t_ast	*cmd_node;
-	t_ast	*final_node;
-	t_ast	*redir_node;
-	t_token	*curr;
-	int		i;
 
-	i = 0;
-	printf("IN parse_command\n");
 	cmd_node = init_command_node(collector);
 	if (!cmd_node)
 		return (NULL);
-	final_node = cmd_node; // este se actualizará si hay redirecciones
+	*final_node = cmd_node;
+	return (cmd_node);
+}
 
+t_ast	*parse_command(t_collector **collector, t_token **tokens)
+{
+	t_ast	*cmd_node;
+	t_ast	*final_node;
+	t_token	*curr;
+	int		i;
+
+	cmd_node = parse_command_init_cmd_node(collector, &final_node);
+	if (!cmd_node)
+		return (NULL);
+	i = 0;
 	while (*tokens && (*tokens)->type != TOKEN_PIPE)
 	{
 		curr = *tokens;
 		if (curr->type == TOKEN_WORD)
-		{
-			printf(" IN parse_command WORD\n");
-			cmd_node->args[i] = ft_strdup(curr->value);
-			if (!cmd_node->args[i])
-				exit_program(collector, "malloc args", EXIT_FAILURE);
-			collector_append(collector, cmd_node->args[i]);
-			i++;
-			*tokens = curr->next;
-			printf(" OUT parse_command WORD\n");
-		}
+			parse_cmd_handle_word(cmd_node, tokens, collector, &i);
 		else if (curr->type >= TOKEN_REDIRECT_IN && curr->type <= TOKEN_HEREDOC)
 		{
-			printf(" IN parse_command REDIR\n");
-			*tokens = curr->next;
-			if (!(*tokens) || (*tokens)->type != TOKEN_WORD)
-			{
-				printf("minishell: syntax error near unexpected token `%s`\n", curr->value);
+			if (parse_cmd_hle_redir(tokens, curr, &final_node, collector))
 				return (NULL);
-			}
-			redir_node = init_redir_node(collector, curr, *tokens, final_node, interact);
-			if (!redir_node)
-				return (NULL);
-			final_node = redir_node;
-			*tokens = (*tokens)->next;
-			printf(" OUT parse_command REDIR\n");
 		}
 		else
-		{
-			printf(" OUT parse_command break\n");
-			break;
-		}
+			break ;
 	}
-	printf(" IN parse_command 2\n");
-	cmd_node->args[i] = NULL; // ✅ cmd_node sigue siendo el de tipo COMMAND
-	printf("OUT parse_command\n");
-	return (final_node); // devolvemos el nodo raíz (puede ser una redirección)
+	cmd_node->args[i] = NULL;
+	return (final_node);
 }

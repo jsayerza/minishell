@@ -1,9 +1,9 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   conversor_constructor_print.c                      :+:      :+:    :+:   */
+/*   constructor_print.c                                :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/11 19:30:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/05/29 20:41:04 by acarranz         ###   ########.fr       */
@@ -50,52 +50,55 @@ static const char	*get_token_type_name(t_token_type type)
 	return ("OTHER");
 }
 
-void	constructor_print(t_constructor *list)
+void	print_redirect_array(char **array, char *label)
 {
 	int	i;
+
+	if (!array)
+		return ;
+	printf("%s\n", label);
+	i = 0;
+	while (array[i])
+	{
+		printf("  %s\n", array[i]);
+		i++;
+	}
+}
+
+void	print_executable(t_constructor *node)
+{
+	int	i;
+
+	i = 0;
+	if (!node->executable)
+	{
+		printf("(null)\n");
+		return ;
+	}
+	while (node->executable[i])
+	{
+		printf("%s ", node->executable[i]);
+		i++;
+	}
+	printf("\n");
+}
+
+void	constructor_print(t_constructor *list)
+{
 	int	index;
 
 	index = 0;
 	while (list)
 	{
-		printf("\n== Constructor Node %d ==\nExecutable: ", index++);
-		if (list->executable)
-		{
-			i = 0;
-			while (list->executable[i])
-				printf("%s ", list->executable[i++]);
-			printf("\n");
-		}
+		printf("\n== Constructor Node %d ==\nExecutable: ", index);
+		index++;
+		print_executable(list);
 		printf("Size exec : %d\n", list->size_exec);
 		printf("Builtin: %s\n", get_builtin_name(list->builtin));
-		if (list->redirect_in)
-		{
-			printf("Redirect in:\n");
-			int i = 0;
-			while (list->redirect_in[i])
-				printf("  %s\n", list->redirect_in[i++]);
-		}
-		if (list->redirect_out)
-		{
-			printf("Redirect out:\n");
-			int i = 0;
-			while (list->redirect_out[i])
-				printf("  %s\n", list->redirect_out[i++]);
-		}
-		if (list->redirect_append)
-		{
-			printf("Append:\n");
-			int i = 0;
-			while (list->redirect_append[i])
-				printf("  %s\n", list->redirect_append[i++]);
-		}
-		if (list->heredoc)
-		{
-			printf("Heredoc:\n");
-			int i = 0;
-			while (list->heredoc[i])
-				printf("  %s\n", list->heredoc[i++]);
-		}
+		print_redirect_array(list->redirect_in, "Redirect in:");
+		print_redirect_array(list->redirect_out, "Redirect out:");
+		print_redirect_array(list->redirect_append, "Append:");
+		print_redirect_array(list->heredoc, "Heredoc:");
 		printf("Redirect in -->%d\n", list->redirect_in_type);
 		printf("Redirect out -->%d\n", list->redirect_out_type);
 		printf("Token Type: %s\n", get_token_type_name(list->type));

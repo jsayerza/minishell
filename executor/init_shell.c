@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	init_constructor_fields(t_constructor *new)
+static void	constructor_fields_init(t_constructor *new)
 {
 	if (!new)
 		return ;
@@ -40,7 +40,7 @@ t_constructor	*init_constructor(t_collector **collector)
 	new = (t_constructor *)malloc(sizeof(t_constructor));
 	if (!new)
 		return (NULL);
-	init_constructor_fields(new);
+	constructor_fields_init(new);
 	if (collector)
 		collector_append(collector, new);
 	return (new);

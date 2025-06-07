@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   parser_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 11:00:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/06/07 10:55:37 by acarranz         ###   ########.fr       */
@@ -12,14 +12,11 @@
 
 #include "minishell.h"
 
-static char	*heredoc_read_line(int interact)
+static char	*heredoc_read_line(void)
 {
 	char	*line;
 
-	if (interact)
-		line = readline("> ");
-	else
-		line = get_next_line(STDIN_FILENO);
+	line = readline("> ");
 	return (line);
 }
 
@@ -65,39 +62,33 @@ static char	*heredoc_read_new(char *line, char *heredoc, \
 	return (new_heredoc);
 }
 
-int	is_delimiter(char *line, const char *delim)
+static void	heredoc_update_vars(char **heredoc, char *line, \
+	size_t *len, t_collector **collector)
 {
-	if (ft_strcmp(line, delim) == 0)
-	{
-		freer(line);
-		return (true);
-	}
-	return (false);
+	size_t		line_len;
+	char		*old;
+
+	line_len = ft_strlen(line);
+	old = *heredoc;
+	*heredoc = heredoc_read_new(line, *heredoc, line_len, *len);
+	heredoc_read_ctrl(*heredoc, old, line, collector);
+	*len += line_len + 1;
 }
 
-char	*heredoc_read(const char *delim, int interact, t_collector **collector)
+char	*heredoc_read(const char *delim, t_collector **collector)
 {
-	char	*line;
-	char	*heredoc;
-	char	*heredoc_old;
-	size_t	total_len;
-	size_t	line_len;
+	char		*line;
+	char		*heredoc;
+	size_t		total_len;
 
 	heredoc = NULL;
 	total_len = 0;
 	while (1)
 	{
-		line = heredoc_read_line(interact);
-		if (!line)
+		line = heredoc_read_line();
+		if (heredoc_should_break(line, delim))
 			break ;
-		remove_trailing_newline(line);
-		if (is_delimiter(line, delim))
-			break ;
-		line_len = ft_strlen(line);
-		heredoc_old = heredoc;
-		heredoc = heredoc_read_new(line, heredoc, line_len, total_len);
-		heredoc_read_ctrl(heredoc, heredoc_old, line, collector);
-		total_len += line_len + 1;
+		heredoc_update_vars(&heredoc, line, &total_len, collector);
 		freer(line);
 	}
 	if (!heredoc)
