@@ -69,8 +69,7 @@ char	*prompt_generate(t_collector **collector)
 	char	*short_pwd;
 	char	*prompt;
 
-	if (!getcwd(cwd, sizeof(cwd)))
-		exit_program(collector, "Error getcwd", true);
+	getcwd(cwd, sizeof(cwd));
 	user = getenv("USER");
 	if (!user)
 		user = "unknown";

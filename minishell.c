@@ -6,31 +6,31 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/04 20:00:41 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/07 08:02:34 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-void update_shlvl(t_shell *shell, int increment) 
+void update_shlvl(t_shell *shell, int increment)
 {
     char *shlvl_str;
     int shlvl;
     char *new_shlvl;
-    
+
     if (!shell)
         return;
-    
+
     shlvl_str = get_env_value(shell, "SHLVL");
     if (shlvl_str)
         shlvl = ft_atoi(shlvl_str);
     else
         shlvl = 0;
-    
+
     shlvl += increment;
     if (shlvl < 0)
         shlvl = 0;
-    
+
     new_shlvl = ft_itoa(shlvl);
     if (!new_shlvl)
         return;
@@ -43,7 +43,7 @@ void cleanup_shell(t_shell *shell)
 {
     if (!shell)
         return;
-    
+
     if (shell->paths)
     {
         free_path_array(shell->paths);
@@ -85,12 +85,12 @@ int	main(int argc, char **argv, char **envp)
 	shell = init_shell(NULL, envp, &collector);
 	if (!shell)
 		exit_program(&collector, "Error al inicializar shell", true);
-		 g_shell = shell;        
-    setup_signals(); 
+		 g_shell = shell;
+    setup_signals();
 	update_shlvl(shell, 1);
 	while (1)
 	{
-		
+
 		cycle_collector = NULL;
 		line = NULL;
 		if (interact)
@@ -153,7 +153,7 @@ int	main(int argc, char **argv, char **envp)
 			print_error("minishell: failed to prepare command execution");
 		collector_cleanup(&cycle_collector);
 	}
-	cleanup_shell(shell);	
-	collector_cleanup(&collector);	
+	cleanup_shell(shell);
+	collector_cleanup(&collector);
 	return (EXIT_SUCCESS);
 }

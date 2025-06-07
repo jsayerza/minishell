@@ -32,6 +32,7 @@ char	**allocate_exp(int env_count)
 	exp = malloc(sizeof(char *) * (env_count + 1));
 	if (!exp)
 		return (NULL);
+
 	return (exp);
 }
 

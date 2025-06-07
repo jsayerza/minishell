@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/04 19:18:51 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/07 10:23:12 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -317,6 +317,8 @@ void setup_child_signals(void);
 // Handlers de señales
 void signal_handler(int sig);
 void signal_handler_child(int sig);
+void wait_for_child_processes(t_constructor *node);
+
 //print functions
 void	print_builtin(char **builtin);
 void	print_token_list(t_shell *shell);

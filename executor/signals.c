@@ -6,14 +6,13 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 12:00:00 by acarranz          #+#    #+#             */
-/*   Updated: 2025/06/06 12:00:00 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/07 10:39:58 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
 // Variable global para acceder al shell desde el handler
-
 t_shell *g_shell = NULL;
 
 // Handler para el proceso padre (minishell)
@@ -31,20 +30,18 @@ void signal_handler(int sig)
     // SIGQUIT (Ctrl+\) se ignora en modo interactivo
 }
 
-// Handler para procesos hijos
+// Handler para procesos hijos - ESTOS DEBEN TERMINAR EL PROCESO
 void signal_handler_child(int sig)
 {
     if (sig == SIGINT)  // Ctrl+C
     {
         printf("\n");
-        if (g_shell)
-            g_shell->last_exit = 130;
+        exit(130);  // Terminar con exit code 130
     }
     else if (sig == SIGQUIT)  // Ctrl+backslash
     {
         printf("Quit: 3\n");
-        if (g_shell)
-            g_shell->last_exit = 131;
+        exit(131);  // Terminar con exit code 131
     }
 }
 
@@ -55,9 +52,9 @@ void setup_signals(void)
     signal(SIGQUIT, SIG_IGN);         // Ignorar Ctrl+\ en shell
 }
 
-// Configurar señales para procesos hijos
+// ALTERNATIVA: Usar comportamiento por defecto (más simple y correcto)
 void setup_child_signals(void)
 {
-    signal(SIGINT, signal_handler_child);   // Ctrl+C
-    signal(SIGQUIT, signal_handler_child);  // Ctrl+
+    signal(SIGINT, SIG_DFL);    // Comportamiento por defecto para Ctrl+C
+    signal(SIGQUIT, SIG_DFL);   // Comportamiento por defecto para Ctrl+
 }

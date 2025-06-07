@@ -116,5 +116,15 @@ void display_shell(t_shell *shell)
 {
     assign_pipes(shell);
     process_command_nodes(shell);
-    wait_for_all_processes(shell);
+
+    // Esperar a todos los procesos hijo
+    t_constructor *current = shell->constructor;
+    while (current && current->prev)
+        current = current->prev;
+    while(current)
+    {
+        wait_for_child_processes(current);
+        current = current->next;
+    }
+    close_remaining_pipes(shell);
 }

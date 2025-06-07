@@ -18,7 +18,7 @@ void add_or_update_env_var(char ***env, char *key, char *value)
     char *temp;
     char *new_var;
     size_t key_len;
-    
+
     if (!env || !*env || !key || !value)
         return;
     key_len = ft_strlen(key);
@@ -32,7 +32,7 @@ void add_or_update_env_var(char ***env, char *key, char *value)
     i = 0;
     while ((*env)[i])
     {
-        if (ft_strncmp((*env)[i], key, key_len) == 0 && 
+        if (ft_strncmp((*env)[i], key, key_len) == 0 &&
             (*env)[i][key_len] == '=')
         {
             free((*env)[i]);
@@ -68,6 +68,10 @@ void	check_heredoc(t_constructor *node)
 
 	if (!node->heredoc)
 		return;
+
+	// Configurar señales para heredoc (debe poder ser interrumpido)
+	signal(SIGINT, SIG_DFL);  // Permitir interrupción con Ctrl+C
+
 	i = 0;
 	current = node;
 	while (current->heredoc[i])
@@ -116,7 +120,6 @@ void check_path(t_shell *shell)
 	char *path_value;
 	int i;
 
-
 	path_value = NULL;
 	i = 0;
 	while (shell->env && shell->env[i])
@@ -150,7 +153,6 @@ void check_path(t_shell *shell)
 char *acces_path(t_constructor *node) {
     char *exec;
     int i;
-
 
     if (node->executable[0][0] == '/' || node->executable[0][0] == '.') {
         if (access(node->executable[0], X_OK) == 0)
@@ -211,8 +213,10 @@ int	handle_fork_error(t_constructor *node, char *path)
 	}
 	return (0);
 }
+
 void execute_in_child(t_constructor *node, char *path)
 {
+	setup_child_signals();
     apply_all_redirections(node);
     if (node->redirect_in_type == 6)
         check_heredoc(node);
@@ -223,7 +227,7 @@ void execute_in_child(t_constructor *node, char *path)
     // Ejecutar el comando
     execve(path, node->executable, node->shell->env);
     perror("Error al ejecutar el comando");
-    free(path);
+    // NO liberar path aquí - ya se liberó en el padre
     exit(1);
 }
 
@@ -250,7 +254,6 @@ void setup_last_command_pipes(t_constructor *node)
     close_all_pipes_except(node, 0, 0); // Cerrar todos los pipes
 }
 
-
 void execute_command_with_path(t_constructor *node, char *path,
                              void (*setup_pipes)(t_constructor *))
 {
@@ -259,12 +262,68 @@ void execute_command_with_path(t_constructor *node, char *path,
         return;
 
     if (node->pid == 0) { // Proceso hijo
+        // Configurar señales ANTES de hacer cualquier otra cosa
+        setup_child_signals();
+
         if (setup_pipes)
             setup_pipes(node);
         execute_in_child(node, path);
     }
-   free(path);
+    // En el proceso padre liberamos path después del fork
+    free(path);
 }
+
+
+void wait_for_child_processes(t_constructor *node)
+{
+    int status;
+    t_constructor *current = node;
+
+    // Ir al primer nodo
+    while (current && current->prev)
+        current = current->prev;
+
+    while (current)
+    {
+        if (current->type == TOKEN_COMMAND && current->pid > 0)
+        {
+            waitpid(current->pid, &status, 0);
+            if (WIFEXITED(status))
+            {
+                int exit_code = WEXITSTATUS(status);
+                current->shell->last_exit = exit_code;
+            }
+            else if (WIFSIGNALED(status))
+            {
+                int sig = WTERMSIG(status);
+
+                if (sig == SIGINT)  // Señal 2
+                {
+                    current->shell->last_exit = 130;
+                }
+                else if (sig == SIGQUIT)  // Señal 3
+                {
+                    current->shell->last_exit = 131;
+                    if (WCOREDUMP(status))
+                        printf("Quit (core dumped)\n");
+                    else
+                        printf("Quit\n");
+                }
+                else
+                {
+                    current->shell->last_exit = 128 + sig;
+                }
+            }
+            else
+            {
+                printf("DEBUG: Estado de terminación desconocido\n"); // DEBUG
+            }
+
+        }
+        current = current->next;
+    }
+}
+
 void	execute_command(t_constructor *node)
 {
 	char	*path;
