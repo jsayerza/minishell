@@ -46,7 +46,7 @@ void	clean_paths(t_shell *shell)
 	}
 }
 
-static void free_shell(t_shell *shell)
+void	free_shell(t_shell *shell)
 {
 	if (!shell)
 		return ;

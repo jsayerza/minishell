@@ -12,49 +12,43 @@
 
 #include "minishell.h"
 
-// Variable global para acceder al shell desde el handler
-t_shell *g_shell = NULL;
+t_shell	*g_shell = NULL;
 
-// Handler para el proceso padre (minishell)
-void signal_handler(int sig)
+void	signal_handler(int sig)
 {
-    if (sig == SIGINT)  // Ctrl+C
-    {
-        ft_putstr_fd("\n", 1);
-        rl_on_new_line();      // Readline: nueva línea
-        rl_replace_line("", 0); // Limpiar línea actual
-        rl_redisplay();        // Mostrar prompt nuevamente
-        if (g_shell)
-            g_shell->last_exit = 130; // Exit code para SIGINT
-    }
-    // SIGQUIT (Ctrl+\) se ignora en modo interactivo
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 1);
+		rl_on_new_line();
+		rl_replace_line("", 0);
+		rl_redisplay();
+		if (g_shell)
+			g_shell->last_exit = 130;
+	}
 }
 
-// Handler para procesos hijos - ESTOS DEBEN TERMINAR EL PROCESO
-void signal_handler_child(int sig)
+void	signal_handler_child(int sig)
 {
-    if (sig == SIGINT)  // Ctrl+C
-    {
-        ft_putstr_fd("\n", 1);
-        exit(130);  // Terminar con exit code 130
-    }
-    else if (sig == SIGQUIT)  // Ctrl+backslash
-    {
-        ft_putstr_fd("Quit: 3\n", 1);
-        exit(131);  // Terminar con exit code 131
-    }
+	if (sig == SIGINT)
+	{
+		ft_putstr_fd("\n", 1);
+		exit(130);
+	}
+	else if (sig == SIGQUIT)
+	{
+		ft_putstr_fd("Quit: 3\n", 1);
+		exit(131);
+	}
 }
 
-// Configurar señales para el proceso padre
-void setup_signals(void)
+void	setup_signals(void)
 {
-    signal(SIGINT, signal_handler);   // Ctrl+C
-    signal(SIGQUIT, SIG_IGN);         // Ignorar Ctrl+\ en shell
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 }
 
-// ALTERNATIVA: Usar comportamiento por defecto (más simple y correcto)
-void setup_child_signals(void)
+void	setup_child_signals(void)
 {
-    signal(SIGINT, SIG_DFL);    // Comportamiento por defecto para Ctrl+C
-    signal(SIGQUIT, SIG_DFL);   // Comportamiento por defecto para Ctrl+
+	signal(SIGINT, SIG_DFL);
+	signal(SIGQUIT, SIG_DFL);
 }

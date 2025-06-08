@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-void env(t_constructor *node)
+void	env(t_constructor *node)
 {
 	if (!node || !node->executable || !node->shell)
-		return;
+		return ;
 	if (node->pipe_out)
 		redirect_builtin(node, node->shell->env);
 	else if (!node->executable[1])

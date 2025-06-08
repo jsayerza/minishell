@@ -61,61 +61,58 @@ static int	init_shell_fields(t_shell *shell, t_collector **collector)
 	return (1);
 }
 
-void remove_env_var(char ***env, const char *var_name)
+void	remove_env_var(char ***env, const char *var_name)
 {
-    int		len;
-    int		i;
-    int		j;
-    char	**new_env;
+	int		len;
+	int		i;
+	int		j;
+	char	**new_env;
 
-    len = 0;
-    while ((*env)[len])
-        len++;
-    new_env = malloc(sizeof(char *) * len);
-    if (!new_env)
-        return ;
-    i = 0;
-    j = 0;
-    while ((*env)[i])
-    {
-        if (ft_strncmp((*env)[i], var_name, ft_strlen(var_name)) != 0
-            || (*env)[i][ft_strlen(var_name)] != '=')
-        {
-            new_env[j] = ft_strdup((*env)[i]);
-            j++;
-        }
-        free((*env)[i]);
-        i++;
-    }
-    new_env[j] = NULL;
-    free(*env);
-    *env = new_env;
+	len = 0;
+	while ((*env)[len])
+		len++;
+	new_env = malloc(sizeof(char *) * len);
+	if (!new_env)
+		return ;
+	i = 0;
+	j = 0;
+	while ((*env)[i])
+	{
+		if (ft_strncmp((*env)[i], var_name, ft_strlen(var_name)) != 0
+			|| (*env)[i][ft_strlen(var_name)] != '=')
+		{
+			new_env[j] = ft_strdup((*env)[i]);
+			j++;
+		}
+		free((*env)[i]);
+		i++;
+	}
+	new_env[j] = NULL;
+	free(*env);
+	*env = new_env;
 }
 
 t_shell	*init_shell(t_shell *shell, char **env, t_collector **collector)
 {
-    if (shell)
-        clean_shell(shell);
-    shell = (t_shell *)malloc(sizeof(t_shell));
-    if (!shell)
-        return (NULL);
-    ft_memset(shell, 0, sizeof(t_shell));
-    if (collector)
-    {
-        collector_append(collector, shell);
-        shell->collector = *collector;
-    }
-    copy_env_to_shell(shell, env);
-    //remove_env_var(&(shell->env), "_");
-    env_to_export(shell);
-    create_export(shell);
-    //if (shell->export && collector)
-    //    collector_append(collector, shell->export);
-    path(shell);
-    if (!init_shell_fields(shell, collector))
-    {
-        clean_shell(shell);
-        return (NULL);
-    }
-    return (shell);
+	if (shell)
+		clean_shell(shell);
+	shell = (t_shell *)malloc(sizeof(t_shell));
+	if (!shell)
+		return (NULL);
+	ft_memset(shell, 0, sizeof(t_shell));
+	if (collector)
+	{
+		collector_append(collector, shell);
+		shell->collector = *collector;
+	}
+	copy_env_to_shell(shell, env);
+	env_to_export(shell);
+	create_export(shell);
+	path(shell);
+	if (!init_shell_fields(shell, collector))
+	{
+		clean_shell(shell);
+		return (NULL);
+	}
+	return (shell);
 }

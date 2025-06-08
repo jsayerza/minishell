@@ -14,43 +14,43 @@
 
 static int	is_valid_n_flag(const char *arg)
 {
-    int i;
+	int	i;
 
-    if (!arg || arg[0] != '-')
-        return (0);
-    i = 1;
-    while (arg[i])
-    {
-        if (arg[i] != 'n') 
-            return (0);
-        i++;
-    }
-    return (1);
+	if (!arg || arg[0] != '-')
+		return (0);
+	i = 1;
+	while (arg[i])
+	{
+		if (arg[i] != 'n')
+			return (0);
+		i++;
+	}
+	return (1);
 }
 
 void	execute_echo(char **args)
 {
-    int	jump;
-    int	i;
+	int	jump;
+	int	i;
 
-    jump = 0;
-    i = 1;
-    if (!args || !args[0])
-        return ;
-    while (args[i] && is_valid_n_flag(args[i])) // Maneja cualquier argumento válido de tipo -n
-    {
-        jump = 1;
-        i++;
-    }
-    while (args[i])
-    {
-        ft_putstr_fd(args[i], 1);
-        if (args[i + 1])
-            ft_putstr_fd(" ", 1);
-        i++;
-    }
-    if (!jump)
-        ft_putstr_fd("\n", 1);
+	jump = 0;
+	i = 1;
+	if (!args || !args[0])
+		return ;
+	while (args[i] && is_valid_n_flag(args[i]))
+	{
+		jump = 1;
+		i++;
+	}
+	while (args[i])
+	{
+		ft_putstr_fd(args[i], 1);
+		if (args[i + 1])
+			ft_putstr_fd(" ", 1);
+		i++;
+	}
+	if (!jump)
+		ft_putstr_fd("\n", 1);
 }
 
 void	redirect_echo(t_constructor *node)

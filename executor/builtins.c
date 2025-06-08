@@ -41,31 +41,24 @@ void	redirect_builtin(t_constructor *node, char **builtin)
 	}
 }
 
-void file_out_builtin(t_constructor *node, char *buitlin)
+static void	open_output_files(t_constructor *node, int *original_stdout)
 {
-	int fd;
-	int size;
-	int i;
-	int original_stdout;
+	int	fd;
+	int	size;
+	int	i;
 
 	i = 0;
 	size = 0;
 	while (node->redirect_out[size])
 		size++;
-	original_stdout = dup(STDOUT_FILENO);
-	if (original_stdout < 0)
-	{
-		perror("Error duplicando stdout");
-		return;
-	}
 	while (node->redirect_out[i])
 	{
 		fd = open(node->redirect_out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
 		if (fd < 0)
 		{
 			perror("Error open");
-			close(original_stdout);
-			return;
+			close(*original_stdout);
+			return ;
 		}
 		if (i == size - 1)
 		{
@@ -73,53 +66,66 @@ void file_out_builtin(t_constructor *node, char *buitlin)
 			{
 				perror("Error dup2");
 				close(fd);
-				close(original_stdout);
-				return;
+				close(*original_stdout);
+				return ;
 			}
 		}
 		close(fd);
 		i++;
 	}
-	if (ft_strcmp("env", buitlin) == 0)
+}
+
+static void	execute_builtin_command(t_constructor *node, char *builtin)
+{
+	if (ft_strcmp("env", builtin) == 0)
 		env(node);
-	if (ft_strcmp("export", buitlin) == 0)
+	if (ft_strcmp("export", builtin) == 0)
 		export(node);
-	if (ft_strcmp("echo", buitlin) == 0)
+	if (ft_strcmp("echo", builtin) == 0)
 		echo(node);
-	if (ft_strcmp("pwd", buitlin) == 0)
+	if (ft_strcmp("pwd", builtin) == 0)
 		pwd(node);
+}
+
+void	file_out_builtin(t_constructor *node, char *builtin)
+{
+	int	original_stdout;
+
+	original_stdout = dup(STDOUT_FILENO);
+	if (original_stdout < 0)
+	{
+		perror("Error duplicando stdout");
+		return ;
+	}
+	open_output_files(node, &original_stdout);
+	execute_builtin_command(node, builtin);
 	if (dup2(original_stdout, STDOUT_FILENO) < 0)
 	{
 		perror("Error restaurando stdout");
+		close(original_stdout);
 	}
 	close(original_stdout);
 }
 
-void file_append_builtin(t_constructor *node, char *buitlin)
+static void	open_append_files(t_constructor *node, int *original_stdout)
 {
-	int fd;
-	int size;
-	int i;
-	int original_stdout;
+	int	fd;
+	int	size;
+	int	i;
 
 	i = 0;
 	size = 0;
 	while (node->redirect_append[size])
 		size++;
-	original_stdout = dup(STDOUT_FILENO);
-	if (original_stdout < 0)
-	{
-		perror("Error duplicando stdout");
-		return;
-	}
 	while (node->redirect_append[i])
 	{
-		fd = open(node->redirect_append[i], O_WRONLY | O_CREAT | O_APPEND, 0644);
+		fd = open(node->redirect_append[i],
+				O_WRONLY | O_CREAT | O_APPEND, 0644);
 		if (fd < 0)
 		{
 			perror("Error open");
-			close(original_stdout);
-			return;
+			close(*original_stdout);
+			return ;
 		}
 		if (i == size - 1)
 		{
@@ -127,25 +133,29 @@ void file_append_builtin(t_constructor *node, char *buitlin)
 			{
 				perror("Error dup2");
 				close(fd);
-				close(original_stdout);
-				return;
+				close(*original_stdout);
+				return ;
 			}
 		}
 		close(fd);
 		i++;
 	}
-	if (ft_strcmp("env", buitlin) == 0)
-		env(node);
-	if (ft_strcmp("export", buitlin) == 0)
-		export(node);
-	if (ft_strcmp("echo", buitlin) == 0)
-		echo(node);
-	if (ft_strcmp("pwd", buitlin) == 0)
-		pwd(node);
-	if (dup2(original_stdout, STDOUT_FILENO) < 0)
+}
+
+void	file_append_builtin(t_constructor *node, char *builtin)
+{
+	int	original_stdout;
+
+	original_stdout = dup(STDOUT_FILENO);
+	if (original_stdout < 0)
 	{
-		perror("Error restaurando stdout");
+		perror("Error duplicando stdout");
+		return ;
 	}
+	open_append_files(node, &original_stdout);
+	execute_builtin_command(node, builtin);
+	if (dup2(original_stdout, STDOUT_FILENO) < 0)
+		perror("Error restaurando stdout");
 	close(original_stdout);
 }
 

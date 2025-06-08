@@ -24,6 +24,5 @@ void	pwd(void)
 	}
 	else
 		ft_putstr_fd("minishell: pwd: PWD not set\n", 2);
-
 	free(pwd);
 }
