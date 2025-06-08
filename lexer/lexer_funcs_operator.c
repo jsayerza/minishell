@@ -35,7 +35,6 @@ void	get_operator(const char *input, t_collector **collector, \
 	t_token_type	type;
 	char			op[3];
 
-	//ft_putstr_fd("IN get_operator\n");
 	op[0] = input[*i];
 	op[1] = '\0';
 	op[2] = '\0';
@@ -49,5 +48,4 @@ void	get_operator(const char *input, t_collector **collector, \
 	if (type == 999)
 		exit_program(collector, "Error in get_operator", EXIT_FAILURE);
 	token_create(collector, type, op, head);
-	//ft_putstr_fd("OUT get_operator\n");
 }

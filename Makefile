@@ -12,13 +12,29 @@ EXEC_DIR		=	executor
 NAME			=	minishell
 PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
 					lexer/lexer.c lexer/lexer_funcs.c \
-					lexer/lexer_funcs_operator.c lexer/tokens.c \
+					lexer/lexer_funcs_operator.c \
+					lexer/lexer_funcs_handle.c \
 					lexer/lexer_expand.c \
+					lexer/lexer_expand_var.c \
+					lexer/lexer_expand_str.c \
+					lexer/lexer_expand_quotes.c \
+					lexer/lexer_expand_ass_quote.c \
+					lexer/tokens.c lexer/tokens_funcs.c \
+					lexer/tokens_funcs_insert.c \
 					parser/parser.c parser/parser_nodes.c \
+					parser/parser_pipeline.c \
 					parser/parser_utils.c parser/parser_funcs.c \
+					parser/parser_utils_token_invalid.c \
 					parser/parser_heredoc.c \
+					parser/parser_heredoc_should_break.c \
 					parser/parser_ast_print.c \
-					conversor/conversor.c \
+					parser/parser_ast_print_type.c \
+					constructor/constructor.c \
+					constructor/constructor_funcs.c \
+					constructor/constructor_add_redirs.c \
+					constructor/constructor_node_create.c \
+					constructor/constructor_cmd_node_create.c \
+					constructor/constructor_print.c
 
 EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/copy_envv.c \
@@ -26,7 +42,6 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/create_export.c \
 			$(EXEC_DIR)/display_shell.c \
 			$(EXEC_DIR)/builtins.c \
-			$(EXEC_DIR)/prints.c \
 			$(EXEC_DIR)/export.c \
 			$(EXEC_DIR)/export_utils00.c \
 			$(EXEC_DIR)/export_utils01.c \
@@ -35,6 +50,7 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/env.c \
 			$(EXEC_DIR)/pwd.c \
 			$(EXEC_DIR)/echo.c \
+			$(EXEC_DIR)/prints.c \
 			$(EXEC_DIR)/unset.c \
 			$(EXEC_DIR)/unset_export.c \
 			$(EXEC_DIR)/path.c \

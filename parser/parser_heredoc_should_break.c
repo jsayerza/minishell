@@ -1,23 +1,33 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parser.c                                           :+:      :+:    :+:   */
+/*   parser_heredoc_should_break.c                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/03/30 11:40:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 11:05:48 by acarranz         ###   ########.fr       */
+/*   Created: 2025/06/07 11:00:00 by jsayerza          #+#    #+#             */
+/*   Updated: 2025/06/07 10:55:37 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-t_ast	*parser(t_collector **collector, t_token *tokens)
+static int	is_delimiter(char *line, const char *delim)
 {
-	t_ast	*ast;
+	if (ft_strcmp(line, delim) == 0)
+	{
+		freer(line);
+		return (true);
+	}
+	return (false);
+}
 
-	if (!tokens_validate(tokens))
-		return (NULL);
-	ast = parse_pipeline(collector, &tokens);
-	return (ast);
+int	heredoc_should_break(char *line, const char *delim)
+{
+	if (!line)
+		return (1);
+	remove_trailing_newline(line);
+	if (is_delimiter(line, delim))
+		return (1);
+	return (0);
 }

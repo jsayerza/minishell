@@ -3,7 +3,7 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/16 09:05:00 by jsayerza          #+#    #+#             */
 /*   Updated: 2025/06/07 08:02:34 by acarranz         ###   ########.fr       */
@@ -76,12 +76,10 @@ int	main(int argc, char **argv, char **envp)
 	t_constructor	*constructor;
 	char			*line;
 	char			*prompt;
-	int				interact;
 
 	(void)argc;
 	(void)argv;
 	collector = NULL;
-	interact = isatty(STDIN_FILENO);
 	shell = init_shell(NULL, envp, &collector);
 	if (!shell)
 		exit_program(&collector, "Error al inicializar shell", true);
@@ -93,18 +91,13 @@ int	main(int argc, char **argv, char **envp)
 
 		cycle_collector = NULL;
 		line = NULL;
-		if (interact)
+		prompt = prompt_generate(&cycle_collector);
+		line = readline(prompt);
+		if (!line)
 		{
-			prompt = prompt_generate(&cycle_collector);
-			line = readline(prompt);
-			if (!line)
-			{
-				collector_cleanup(&cycle_collector);
-				break ;
-			}
+			collector_cleanup(&cycle_collector);
+			break ;
 		}
-		else
-			line = get_next_line(STDIN_FILENO);
 		if (!line)
 			break ;
 		if (line[0] == '\0' || is_only_whitespace(line))
@@ -120,8 +113,7 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		if (interact)
-			add_history(line);
+		add_history(line);
 		tokens = NULL;
 		tokens = lexer(line, &cycle_collector, &tokens, shell);
 		freer(line);
@@ -130,17 +122,13 @@ int	main(int argc, char **argv, char **envp)
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		// tokens_print(tokens);
-		ast = parser(&cycle_collector, tokens, interact);
+		ast = parser(&cycle_collector, tokens);
 		if (!ast)
 		{
 			collector_cleanup(&cycle_collector);
 			continue ;
 		}
-		// ft_putstr_fd("\n=== AST ===\n");
-		// ast_print(ast, 0);
 		constructor = ast_to_constructor(&cycle_collector, ast, shell);
-		//ft_putstr_fd("OUT ast_to_constructor\n");
 		shell->constructor = constructor;
 		if (constructor)
 		{
