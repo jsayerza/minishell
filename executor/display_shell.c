@@ -80,6 +80,27 @@ void	close_used_pipes(t_shell *shell)
 	}
 }
 
+static void	process_single_command(t_constructor *current)
+{
+	if (current->builtin && ft_strcmp(current->executable[0], "env") == 0)
+	{
+		if (current->executable[1]
+			&& ft_strcmp(current->executable[1], "-i") == 0
+			&& current->executable[2]
+			&& ft_strcmp(current->executable[2], "bash") == 0)
+		{
+			current->builtin = 0;
+			token_commands(current);
+		}
+		else
+			token_builtins(current);
+	}
+	else if (current->builtin)
+		token_builtins(current);
+	else
+		token_commands(current);
+}
+
 void	process_command_nodes(t_shell *shell)
 {
 	t_constructor	*current;
@@ -88,26 +109,7 @@ void	process_command_nodes(t_shell *shell)
 	while (current)
 	{
 		if (current->type == TOKEN_COMMAND)
-		{
-			if (current->builtin
-				&& ft_strcmp(current->executable[0], "env") == 0)
-			{
-				if (current->executable[1]
-					&& ft_strcmp(current->executable[1], "-i") == 0
-					&& current->executable[2]
-					&& ft_strcmp(current->executable[2], "bash") == 0)
-				{
-					current->builtin = 0;
-					token_commands(current);
-				}
-				else
-					token_builtins(current);
-			}
-			else if (current->builtin)
-				token_builtins(current);
-			else
-				token_commands(current);
-		}
+			process_single_command(current);
 		current = current->next;
 	}
 	close_used_pipes(shell);

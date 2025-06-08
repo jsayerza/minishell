@@ -18,33 +18,48 @@ static bool	is_numeric(const char *str)
 	return (true);
 }
 
-void	process_exit(t_constructor *node)
+static void	handle_too_many_args(t_constructor *node)
+{
+	ft_putstr_fd("exit: too many arguments\n", 2);
+	node->shell->last_exit = 1;
+}
+
+static void	handle_non_numeric_arg(t_constructor *node)
+{
+	ft_putstr_fd("exit: ", 2);
+	ft_putstr_fd(node->executable[1], 2);
+	ft_putstr_fd(": numeric argument required\n", 2);
+	node->shell->last_exit = 2;
+	exit(2);
+}
+
+static void	handle_numeric_arg(t_constructor *node)
 {
 	long long	exit_code;
 	int			final_exit_code;
 
+	exit_code = atoll(node->executable[1]);
+	final_exit_code = (int)(exit_code % 256);
+	if (final_exit_code < 0)
+		final_exit_code += 256;
+	node->shell->last_exit = final_exit_code;
+	exit(final_exit_code);
+}
+
+void	process_exit(t_constructor *node)
+{
 	if (node->size_exec > 2)
 	{
-		ft_putstr_fd("exit: too many arguments\n", 2);
-		node->shell->last_exit = 1;
+		handle_too_many_args(node);
 		return ;
 	}
 	if (node->size_exec == 2)
 	{
 		if (!is_numeric(node->executable[1]))
 		{
-			ft_putstr_fd("exit: ", 2);
-			ft_putstr_fd(node->executable[1], 2);
-			ft_putstr_fd(": numeric argument required\n", 2);
-			node->shell->last_exit = 2;
-			exit(2);
+			handle_non_numeric_arg(node);
 		}
-		exit_code = atoll(node->executable[1]);
-		final_exit_code = (int)(exit_code % 256);
-		if (final_exit_code < 0)
-			final_exit_code += 256;
-		node->shell->last_exit = final_exit_code;
-		exit(final_exit_code);
+		handle_numeric_arg(node);
 	}
 	exit(node->shell->last_exit);
 }

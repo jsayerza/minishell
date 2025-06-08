@@ -1,6 +1,6 @@
 #include "../minishell.h"
 
-void 	check_heredoc(t_constructor *node)
+void	check_heredoc(t_constructor *node)
 {
 	t_constructor	*current;
 	int				i;

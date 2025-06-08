@@ -10,6 +10,18 @@
 /*																			  */
 /* ************************************************************************** */
 
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 builtins.c											:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:13:24 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:13:24 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	redirect_builtin(t_constructor *node, char **builtin)
@@ -32,18 +44,38 @@ void	redirect_builtin(t_constructor *node, char **builtin)
 		print_builtin(builtin);
 		exit(1);
 	}
-	else
+	close(node->fd[1]);
+	waitpid(pid, &status, 0);
+	if (WIFEXITED(status))
+		node->shell->last_exit = WEXITSTATUS(status);
+}
+
+static void	process_output_file(t_constructor *node, int i, int size, int *orig)
+{
+	int	fd;
+
+	fd = open(node->redirect_out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0)
 	{
-		close(node->fd[1]);
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			node->shell->last_exit = WEXITSTATUS(status);
+		perror("Error open");
+		close(*orig);
+		return ;
 	}
+	if (i == size - 1)
+	{
+		if (dup2(fd, STDOUT_FILENO) < 0)
+		{
+			perror("Error dup2");
+			close(fd);
+			close(*orig);
+			return ;
+		}
+	}
+	close(fd);
 }
 
 static void	open_output_files(t_constructor *node, int *original_stdout)
 {
-	int	fd;
 	int	size;
 	int	i;
 
@@ -53,38 +85,9 @@ static void	open_output_files(t_constructor *node, int *original_stdout)
 		size++;
 	while (node->redirect_out[i])
 	{
-		fd = open(node->redirect_out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
-		if (fd < 0)
-		{
-			perror("Error open");
-			close(*original_stdout);
-			return ;
-		}
-		if (i == size - 1)
-		{
-			if (dup2(fd, STDOUT_FILENO) < 0)
-			{
-				perror("Error dup2");
-				close(fd);
-				close(*original_stdout);
-				return ;
-			}
-		}
-		close(fd);
+		process_output_file(node, i, size, original_stdout);
 		i++;
 	}
-}
-
-static void	execute_builtin_command(t_constructor *node, char *builtin)
-{
-	if (ft_strcmp("env", builtin) == 0)
-		env(node);
-	if (ft_strcmp("export", builtin) == 0)
-		export(node);
-	if (ft_strcmp("echo", builtin) == 0)
-		echo(node);
-	if (ft_strcmp("pwd", builtin) == 0)
-		pwd(node);
 }
 
 void	file_out_builtin(t_constructor *node, char *builtin)
@@ -98,62 +101,14 @@ void	file_out_builtin(t_constructor *node, char *builtin)
 		return ;
 	}
 	open_output_files(node, &original_stdout);
-	execute_builtin_command(node, builtin);
-	if (dup2(original_stdout, STDOUT_FILENO) < 0)
-	{
-		perror("Error restaurando stdout");
-		close(original_stdout);
-	}
-	close(original_stdout);
-}
-
-static void	open_append_files(t_constructor *node, int *original_stdout)
-{
-	int	fd;
-	int	size;
-	int	i;
-
-	i = 0;
-	size = 0;
-	while (node->redirect_append[size])
-		size++;
-	while (node->redirect_append[i])
-	{
-		fd = open(node->redirect_append[i],
-				O_WRONLY | O_CREAT | O_APPEND, 0644);
-		if (fd < 0)
-		{
-			perror("Error open");
-			close(*original_stdout);
-			return ;
-		}
-		if (i == size - 1)
-		{
-			if (dup2(fd, STDOUT_FILENO) < 0)
-			{
-				perror("Error dup2");
-				close(fd);
-				close(*original_stdout);
-				return ;
-			}
-		}
-		close(fd);
-		i++;
-	}
-}
-
-void	file_append_builtin(t_constructor *node, char *builtin)
-{
-	int	original_stdout;
-
-	original_stdout = dup(STDOUT_FILENO);
-	if (original_stdout < 0)
-	{
-		perror("Error duplicando stdout");
-		return ;
-	}
-	open_append_files(node, &original_stdout);
-	execute_builtin_command(node, builtin);
+	if (ft_strcmp("env", builtin) == 0)
+		env(node);
+	if (ft_strcmp("export", builtin) == 0)
+		export(node);
+	if (ft_strcmp("echo", builtin) == 0)
+		echo(node);
+	if (ft_strcmp("pwd", builtin) == 0)
+		pwd(node);
 	if (dup2(original_stdout, STDOUT_FILENO) < 0)
 		perror("Error restaurando stdout");
 	close(original_stdout);
@@ -164,11 +119,6 @@ void	token_builtins(t_constructor *node)
 	if (node->redirect_out)
 	{
 		file_out_builtin(node, node->executable[0]);
-		return ;
-	}
-	if (node->redirect_append)
-	{
-		file_append_builtin(node, node->executable[0]);
 		return ;
 	}
 	if (node->builtin == BUILTIN_EXPORT)
