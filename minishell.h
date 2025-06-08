@@ -135,6 +135,11 @@ typedef struct s_constructor
 }	t_constructor;
 
 extern t_shell *g_shell;  // ✅ CORRECTO - es una DECLARACIÓN
+
+// minishell_funcs.c
+void	update_shlvl(t_shell *shell, int increment);
+void	cleanup_shell(t_shell *shell);
+
 // utils.c
 void    freer(char *ptr);
 bool	has_unclosed_quotes(const char *line);
