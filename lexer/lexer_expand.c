@@ -42,13 +42,13 @@ void	tokens_expand(t_token **head, t_shell *shell, t_collector **collector)
 			prev = token_get_prev(*head, curr);
 			if (prev && prev->type == TOKEN_WORD && ft_strchr(prev->value, '='))
 			{
-				expand_assignment_quote(head, curr, shell, collector);
+				curr = expand_assignment_quote(head, curr, shell, collector);
 				continue ;
 			}
 		}
 		if (curr->type == TOKEN_DQUOTE || curr->type == TOKEN_SQUOTE)
 		{
-			expand_quotes(head, curr, shell, collector);
+			curr = expand_quotes(head, curr, shell, collector);
 			continue ;
 		}
 		else if (curr->type == TOKEN_WORD || curr->type == TOKEN_COMMAND)

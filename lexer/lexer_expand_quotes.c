@@ -60,7 +60,7 @@ static void	expand_quotes_tmp_ctrl(char *tmp, char **joined, \
 	*joined = tmp;
 }
 
-void	expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
+t_token	*expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
 	t_collector **collector)
 {
 	t_token	*start;
@@ -87,5 +87,5 @@ void	expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
 	expand_quotes_token_insert(head, start, &joined, collector);
 	next = curr->next;
 	expand_quote_token_remove(head, start, next, collector);
-	curr = next;
+	return (next);
 }

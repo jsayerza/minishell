@@ -1,5 +1,5 @@
 CC				=	cc
-FLAGS			=	-g -Wextra -Werror -Wall #--sanitize=address
+FLAGS			=	-g -Wextra -Werror -Wall --sanitize=address
 USE_READLINE	=	1
 ifeq ($(USE_READLINE), 1)
 	READLINE_LIB = -lreadline
