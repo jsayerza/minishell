@@ -114,6 +114,8 @@ typedef struct s_shell
 	t_collector		*collector;
 }	t_shell;
 
+extern t_shell					*g_shell;
+
 typedef struct s_constructor
 {
 	char			**executable;	
@@ -134,8 +136,6 @@ typedef struct s_constructor
 	t_const			*next;				
 	t_const			*prev;				
 }	t_const;
-
-extern t_shell		*g_shell;
 
 // minishell_funcs.c
 void	update_shlvl(t_shell *shell, int increment);
