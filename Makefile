@@ -1,5 +1,5 @@
 CC				=	cc
-FLAGS			=	-g -Wextra -Werror -Wall #--sanitize=address
+FLAGS			=	-g -Wextra -Werror -Wall
 USE_READLINE	=	1
 ifeq ($(USE_READLINE), 1)
 	READLINE_LIB = -lreadline
@@ -10,7 +10,8 @@ RM				=	rm -f
 INCLUDES		=	-I. -Ilibft -Ignl
 EXEC_DIR		=	executor
 NAME			=	minishell
-PROG_SRC		=	minishell.c collector.c utils.c prompt.c\
+PROG_SRC		=	minishell.c minishell_funcs.c \
+					collector.c utils.c prompt.c\
 					lexer/lexer.c lexer/lexer_funcs.c \
 					lexer/lexer_funcs_operator.c \
 					lexer/lexer_funcs_handle.c \
@@ -48,6 +49,7 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/export_utils02.c \
 			$(EXEC_DIR)/export_utils03.c \
 			$(EXEC_DIR)/env.c \
+			$(EXEC_DIR)/env_utils00.c \
 			$(EXEC_DIR)/pwd.c \
 			$(EXEC_DIR)/echo.c \
 			$(EXEC_DIR)/prints.c \
@@ -61,8 +63,14 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/cd_utils01.c \
 			$(EXEC_DIR)/exit.c \
 			$(EXEC_DIR)/commands.c \
+			$(EXEC_DIR)/commands_utils00.c \
+			$(EXEC_DIR)/commands_utils01.c \
 			$(EXEC_DIR)/redirects.c \
+			$(EXEC_DIR)/redirects_utils00.c \
 			$(EXEC_DIR)/signals.c \
+			$(EXEC_DIR)/heredoc.c \
+			$(EXEC_DIR)/acces_path.c \
+			$(EXEC_DIR)/wait_children.c \
 			$(EXEC_DIR)/clean_shell.c
 
 SRC_GNL =	gnl/get_next_line.c

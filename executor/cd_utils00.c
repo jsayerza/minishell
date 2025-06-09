@@ -12,6 +12,23 @@
 
 #include "../minishell.h"
 
+int	find_env_index(t_shell *shell, const char *key)
+{
+	int		i;
+	size_t	key_len;
+
+	key_len = ft_strlen(key);
+	i = 0;
+	while (shell->env[i])
+	{
+		if (ft_strncmp(shell->env[i], key, key_len) == 0
+			&& shell->env[i][key_len] == '=')
+			return (i);
+		i++;
+	}
+	return (-1);
+}
+
 char	*extract_home_path(t_shell *shell, const char *env_entry)
 {
 	char	*home;

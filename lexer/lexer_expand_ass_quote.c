@@ -67,7 +67,7 @@ static char	*expand_ass_quote_expand(t_token *start, t_token *curr, \
 	return (expanded);
 }
 
-void	expand_assignment_quote(t_token **head, t_token *curr, \
+t_token	*expand_assignment_quote(t_token **head, t_token *curr, \
 	t_shell *shell, t_collector **collector)
 {
 	t_token	*start;
@@ -94,5 +94,5 @@ void	expand_assignment_quote(t_token **head, t_token *curr, \
 	next = curr->next;
 	expand_ass_quote_join_prev(prev, joined, collector);
 	expand_ass_quote_token_remove(head, start, next, collector);
-	curr = next;
+	return (next);
 }

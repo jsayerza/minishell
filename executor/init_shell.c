@@ -64,54 +64,6 @@ static int	init_shell_fields(t_shell *shell, t_collector **collector)
 	return (1);
 }
 
-static char	**copy_env_excluding_var(char **env,
-		const char *var_name, int env_len)
-{
-	char	**new_env;
-	int		i;
-	int		j;
-
-	new_env = malloc(sizeof(char *) * env_len);
-	if (!new_env)
-		return (NULL);
-	i = 0;
-	j = 0;
-	while (env[i])
-	{
-		if (ft_strncmp(env[i], var_name, ft_strlen(var_name)) != 0
-			|| env[i][ft_strlen(var_name)] != '=')
-		{
-			new_env[j] = ft_strdup(env[i]);
-			j++;
-		}
-		i++;
-	}
-	new_env[j] = NULL;
-	return (new_env);
-}
-
-void	remove_env_var(char ***env, const char *var_name)
-{
-	int		len;
-	int		i;
-	char	**new_env;
-
-	len = 0;
-	while ((*env)[len])
-		len++;
-	new_env = copy_env_excluding_var(*env, var_name, len);
-	if (!new_env)
-		return ;
-	i = 0;
-	while ((*env)[i])
-	{
-		free((*env)[i]);
-		i++;
-	}
-	free(*env);
-	*env = new_env;
-}
-
 t_shell	*init_shell(t_shell *shell, char **env, t_collector **collector)
 {
 	if (shell)

@@ -135,6 +135,11 @@ typedef struct s_constructor
 }	t_constructor;
 
 extern t_shell *g_shell;  // ✅ CORRECTO - es una DECLARACIÓN
+
+// minishell_funcs.c
+void	update_shlvl(t_shell *shell, int increment);
+void	cleanup_shell(t_shell *shell);
+
 // utils.c
 void    freer(char *ptr);
 bool	has_unclosed_quotes(const char *line);
@@ -202,11 +207,11 @@ char	*expand_string(const char *str, t_shell *shell, \
 	t_collector **collector);
 
 // lexer/lexer_expand_quotes.c
-void	expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
+t_token	*	expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
 	t_collector **collector);
 	
 // lexer/lexer_expand_ass_quote.c
-void	expand_assignment_quote(t_token **head, t_token *curr, \
+t_token	*	expand_assignment_quote(t_token **head, t_token *curr, \
 	t_shell *shell, t_collector **collector);
 
 // parser/parser.c // Abstract Syntax Tree (AST)
@@ -341,7 +346,23 @@ void	refresh_var(t_shell *shell);
 void	cd(t_constructor *node);
 char	*get_env_value(t_shell *shell, const char *var_name);
 void	process_exit(t_constructor *node);
-void add_or_update_env_var(char ***env, char *key, char *value);
+void 	add_or_update_env_var(char ***env, char *key, char *value);
+int		find_env_index(t_shell *shell, const char *key);
+char	**copy_env_excluding_var(char **env,
+		const char *var_name, int env_len);
+void	remove_env_var(char ***env, const char *var_name);
+void	add_or_update_env_var(char ***env, char *key, char *value);
+void	check_heredoc(t_constructor *node);
+char	*acces_path(t_constructor *node);
+void	wait_for_child_processes(t_constructor *node);
+void	execute_command_with_path(t_constructor *node, char *path, void (*setup_pipes)(t_constructor *));
+void	setup_last_command_pipes(t_constructor *node);
+void	setup_middle_command_pipes(t_constructor *node);
+void	setup_first_command_pipes(t_constructor *node);
+int	handle_fork_error(t_constructor *node, char *path);
+int	handle_command_not_found(t_constructor *node, char *path);
+void	close_all_pipes_except(t_constructor *node, int keep_in, int keep_out);
+void	execute_in_child(t_constructor *node, char *path);
 
 //funcions fd
 
@@ -358,6 +379,8 @@ void	execute_command(t_constructor *node);
 void check_redirect_in_file_exists(t_constructor *node);
 void apply_redirect_in(t_constructor *node);
 void apply_all_redirections(t_constructor *node);
+void	create_append_files(t_constructor *node);
+void	create_output_files(t_constructor *node);
 
 /* Función principal exportada */
 void path(t_shell *shell);
