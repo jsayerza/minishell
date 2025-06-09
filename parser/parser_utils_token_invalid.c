@@ -57,7 +57,7 @@ static int	is_invalid_redirect(t_token *curr)
 	if (curr->next->type >= TOKEN_REDIRECT_IN
 		&& curr->next->type <= TOKEN_APPEND)
 	{
-		printf("minishell: syntax error near unexpected token `%s`\n", \
+		printf("minishell: syntax error near unexpected token `%s`\n",
 			curr->next->value);
 		return (1);
 	}

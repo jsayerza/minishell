@@ -16,7 +16,7 @@ int	handle_invalidchars(const char *input, int i)
 {
 	if (ft_strchr("*&(){}[];\\", input[i]))
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `%c`\n", \
+		ft_putstr_fd("minishell: syntax error near unexpected token `%c`\n",
 			input[i]);
 		return (1);
 	}
@@ -37,7 +37,7 @@ t_token_type	get_token_type(const char *input, int *i, char quote_type)
 		return (TOKEN_ENV_ASSIGN);
 }
 
-void	get_quoted_str(const char *input, t_collector **collector, \
+void	get_quoted_str(const char *input, t_collector **collector,
 	int *i, t_token **head)
 {
 	int				start;
@@ -65,7 +65,7 @@ void	get_quoted_str(const char *input, t_collector **collector, \
 	(*i)++;
 }
 
-void	get_word(const char *input, t_collector **collector, \
+void	get_word(const char *input, t_collector **collector,
 	int *i, t_token **head)
 {
 	int		istart;

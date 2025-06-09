@@ -60,7 +60,7 @@ void	remove_env_var(char ***env, const char *var_name)
 	*env = new_env;
 }
 
-void	env(t_constructor *node)
+void	env(t_const *node)
 {
 	if (!node || !node->executable || !node->shell)
 		return ;

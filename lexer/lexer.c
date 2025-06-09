@@ -27,7 +27,7 @@ static void	process_input_tokens(const char *input, t_collector **collector,
 	}
 }
 
-static t_token	*finalize_tokens(t_token **head, t_collector **collector, \
+static t_token	*finalize_tokens(t_token **head, t_collector **collector,
 	t_shell *shell)
 {
 	t_token	*first_token;

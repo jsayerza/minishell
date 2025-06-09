@@ -83,7 +83,7 @@ void	copy_temp(char *export, char *temp, int *i)
 	}
 }
 
-void	update_export_var(t_constructor *node, char *new_var, int index_export)
+void	update_export_var(t_const *node, char *new_var, int index_export)
 {
 	if (index_export != -1)
 	{

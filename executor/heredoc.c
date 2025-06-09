@@ -50,7 +50,7 @@ static void	setup_stdin_redirect(int pipefd)
 	close(pipefd);
 }
 
-void	check_heredoc(t_constructor *node)
+void	check_heredoc(t_const *node)
 {
 	int	pipefd[2];
 	int	last_index;

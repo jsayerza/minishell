@@ -12,14 +12,14 @@
 
 #include "minishell.h"
 
-static void	parse_pipeline_add_node(t_collector **collector, \
+static void	parse_pipeline_add_node(t_collector **collector,
 	t_ast **left, t_ast *right)
 {
 	t_ast	*node;
 
 	node = malloc(sizeof(t_ast));
 	if (!node)
-		exit_program(collector, \
+		exit_program(collector,
 			"Error malloc parser command node", EXIT_FAILURE);
 	collector_append(collector, node);
 	node->type = TOKEN_PIPE;

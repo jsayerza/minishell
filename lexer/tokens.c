@@ -33,7 +33,7 @@ t_token	*token_goto_last(t_token *lst)
 	return (lst);
 }
 
-void	token_create(t_collector **collector, t_token_type type, \
+void	token_create(t_collector **collector, t_token_type type,
 	const char *value, t_token **head)
 {
 	t_token	*token_new;

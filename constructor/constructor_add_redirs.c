@@ -12,8 +12,8 @@
 
 #include "../minishell.h"
 
-void	add_redirections(t_collector **collector, t_ast *ast, \
-	t_constructor *cmd)
+void	add_redirections(t_collector **collector, t_ast *ast,
+	t_const *cmd)
 {
 	if (ast->type == TOKEN_REDIRECT_IN && ast->file)
 		add_redirect_file_in(collector, cmd, ast->file);

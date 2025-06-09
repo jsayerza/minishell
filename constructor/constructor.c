@@ -12,10 +12,10 @@
 
 #include "../minishell.h"
 
-static t_constructor	*process_redir_nodes_l_r(t_constructor *left, \
-	t_constructor *right)
+static t_const	*process_redir_nodes_l_r(t_const *left,
+	t_const *right)
 {
-	t_constructor	*curr;
+	t_const	*curr;
 
 	if (right)
 	{
@@ -28,18 +28,18 @@ static t_constructor	*process_redir_nodes_l_r(t_constructor *left, \
 	return (left);
 }
 
-static void	process_redir_nodes(t_collector **collector, \
-	t_ast *ast, t_shell *shell, t_constructor *left)
+static void	process_redir_nodes(t_collector **collector,
+	t_ast *ast, t_shell *shell, t_const *left)
 {
-	t_constructor	*cmd;
+	t_const	*cmd;
 
 	cmd = find_or_create_command_node(collector, ast, shell, &left);
 	add_redirections(collector, ast, cmd);
 }
 
-static t_constructor	*handle_pipe(t_constructor *left, t_constructor *right)
+static t_const	*handle_pipe(t_const *left, t_const *right)
 {
-	t_constructor	*curr;
+	t_const	*curr;
 
 	if (!left)
 		return (right);
@@ -52,11 +52,11 @@ static t_constructor	*handle_pipe(t_constructor *left, t_constructor *right)
 	return (left);
 }
 
-static t_constructor	*ast_node_process(t_collector **collector, \
+static t_const	*ast_node_process(t_collector **collector,
 	t_ast *ast, t_shell *shell)
 {
-	t_constructor	*left_nodes;
-	t_constructor	*right_nodes;
+	t_const	*left_nodes;
+	t_const	*right_nodes;
 
 	if (!ast)
 		return (NULL);
@@ -70,7 +70,7 @@ static t_constructor	*ast_node_process(t_collector **collector, \
 	return (process_redir_nodes_l_r(left_nodes, right_nodes));
 }
 
-t_constructor	*ast_to_constructor(t_collector **collector, t_ast *ast, \
+t_const	*ast_to_constructor(t_collector **collector, t_ast *ast,
 	t_shell *shell)
 {
 	return (ast_node_process(collector, ast, shell));

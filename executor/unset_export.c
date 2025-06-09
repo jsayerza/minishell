@@ -40,7 +40,7 @@ int	should_keep_export(char *export_str, char **cmds)
 	return (keep);
 }
 
-void	unset_export(t_constructor *node)
+void	unset_export(t_const *node)
 {
 	char	**new_export;
 	int		export_len;

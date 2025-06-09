@@ -80,7 +80,7 @@ void	free_env(char **env)
 	free(env);
 }
 
-void	unset(t_constructor *node)
+void	unset(t_const *node)
 {
 	char	**new_env;
 	int		env_len;

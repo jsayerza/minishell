@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	execute_command(t_constructor *node)
+void	execute_command(t_const *node)
 {
 	char	*path;
 
@@ -25,7 +25,7 @@ void	execute_command(t_constructor *node)
 	execute_command_with_path(node, path, NULL);
 }
 
-void	execute_first_command(t_constructor *node)
+void	execute_first_command(t_const *node)
 {
 	char	*path;
 
@@ -38,7 +38,7 @@ void	execute_first_command(t_constructor *node)
 	execute_command_with_path(node, path, setup_first_command_pipes);
 }
 
-void	execute_middle_command(t_constructor *node)
+void	execute_middle_command(t_const *node)
 {
 	char	*path;
 
@@ -51,7 +51,7 @@ void	execute_middle_command(t_constructor *node)
 	execute_command_with_path(node, path, setup_middle_command_pipes);
 }
 
-void	execute_last_command(t_constructor *node)
+void	execute_last_command(t_const *node)
 {
 	char	*path;
 
@@ -64,7 +64,7 @@ void	execute_last_command(t_constructor *node)
 	execute_command_with_path(node, path, setup_last_command_pipes);
 }
 
-void	token_commands(t_constructor *node)
+void	token_commands(t_const *node)
 {
 	if (node->type != TOKEN_COMMAND)
 		return ;

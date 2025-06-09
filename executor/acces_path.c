@@ -88,7 +88,7 @@ void	check_path(t_shell *shell)
 	}
 }
 
-char	*acces_path(t_constructor *node)
+char	*acces_path(t_const *node)
 {
 	check_path(node->shell);
 	return (search_executable(node->shell->paths, node->executable[0]));

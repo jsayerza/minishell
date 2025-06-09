@@ -16,7 +16,7 @@ static void	process_line(char *line, t_shell *shell, t_collector **cycle)
 {
 	t_token			*tokens;
 	t_ast			*ast;
-	t_constructor	*constructor;
+	t_const			*constructor;
 
 	add_history(line);
 	tokens = NULL;

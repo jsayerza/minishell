@@ -12,12 +12,12 @@
 
 #include "minishell.h"
 
-static void	redir_node_heredoc(t_collector **collector, \
+static void	redir_node_heredoc(t_collector **collector,
 	t_token *next, t_ast *redir_node)
 {
 	redir_node->heredoc_content = heredoc_read(next->value, collector);
 	if (!redir_node->heredoc_content)
-		exit_program(collector, \
+		exit_program(collector,
 			"Error saving heredoc content", EXIT_FAILURE);
 	collector_append(collector, redir_node->heredoc_content);
 }
@@ -30,7 +30,7 @@ t_ast	*init_redir_node(t_collector **collector, t_token *curr, t_token *next)
 	{
 		ft_putstr_fd("minishell: syntax error near unexpected token `", 2);
 		ft_putstr_fd(curr->value, 2);
-		ft_putstr_fd("`\n", 2);	
+		ft_putstr_fd("`\n", 2);
 		return (NULL);
 	}
 	redir_node = malloc(sizeof(t_ast));
@@ -65,7 +65,7 @@ t_ast	*init_command_node(t_collector **collector)
 	node->heredoc_content = NULL;
 	node->args = malloc(sizeof(char *) * MAX_CMD_ARGS);
 	if (!node->args)
-		exit_program(collector, \
+		exit_program(collector,
 			"Error malloc parser cmd node args", EXIT_FAILURE);
 	collector_append(collector, node->args);
 	return (node);

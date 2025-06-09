@@ -12,11 +12,11 @@
 
 #include "../minishell.h"
 
-void	check_redirect_in_file_exists(t_constructor *node)
+void	check_redirect_in_file_exists(t_const *node)
 {
-	t_constructor	*current;
-	int				fd;
-	int				i;
+	t_const	*current;
+	int		fd;
+	int		i;
 
 	if (!node)
 		return ;
@@ -37,7 +37,7 @@ void	check_redirect_in_file_exists(t_constructor *node)
 	}
 }
 
-void	create_output_files(t_constructor *node)
+void	create_output_files(t_const *node)
 {
 	int	fd;
 	int	i;
@@ -62,7 +62,7 @@ void	create_output_files(t_constructor *node)
 	}
 }
 
-void	create_append_files(t_constructor *node)
+void	create_append_files(t_const *node)
 {
 	int	fd;
 	int	i;

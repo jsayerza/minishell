@@ -35,7 +35,7 @@ void	add_to_env(char ***env, char *var)
 	*env = new_env;
 }
 
-void	update_env_var(t_constructor *node, char *arg, int index_env)
+void	update_env_var(t_const *node, char *arg, int index_env)
 {
 	if (index_env != -1)
 	{
@@ -48,7 +48,7 @@ void	update_env_var(t_constructor *node, char *arg, int index_env)
 	}
 }
 
-void	process_var_with_value(t_constructor *node, char *arg,
+void	process_var_with_value(t_const *node, char *arg,
 						int index_env, int index_export)
 {
 	char	*new_var;
@@ -60,7 +60,7 @@ void	process_var_with_value(t_constructor *node, char *arg,
 	free(new_var);
 }
 
-void	process_export_var(t_constructor *node, char *arg)
+void	process_export_var(t_const *node, char *arg)
 {
 	int		index_env;
 	int		index_export;
@@ -77,7 +77,7 @@ void	process_export_var(t_constructor *node, char *arg)
 	sort_export(node->shell);
 }
 
-void	export(t_constructor *node)
+void	export(t_const *node)
 {
 	int	j;
 

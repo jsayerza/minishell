@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	expand_no_quotes(t_token *curr, t_shell *shell, \
+static void	expand_no_quotes(t_token *curr, t_shell *shell,
 	t_collector **collector)
 {
 	char	*expanded;

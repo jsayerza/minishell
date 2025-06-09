@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	expand_ass_quote_token_remove(t_token **head, t_token	*start, \
+static void	expand_ass_quote_token_remove(t_token **head, t_token	*start,
 	t_token	*next, t_collector **collector)
 {
 	t_token	*del;
@@ -27,7 +27,7 @@ static void	expand_ass_quote_token_remove(t_token **head, t_token	*start, \
 	}
 }
 
-static void	expand_ass_quote_join_prev(t_token *prev, \
+static void	expand_ass_quote_join_prev(t_token *prev,
 	char *joined, t_collector **collector)
 {
 	char	*tmp;
@@ -40,7 +40,7 @@ static void	expand_ass_quote_join_prev(t_token *prev, \
 	freer(joined);
 }
 
-static void	expand_ass_quote_join_expanded(char *expanded, \
+static void	expand_ass_quote_join_expanded(char *expanded,
 	char **joined, t_collector **collector)
 {
 	char	*tmp;
@@ -53,7 +53,7 @@ static void	expand_ass_quote_join_expanded(char *expanded, \
 	*joined = tmp;
 }
 
-static char	*expand_ass_quote_expand(t_token *start, t_token *curr, \
+static char	*expand_ass_quote_expand(t_token *start, t_token *curr,
 	t_shell *shell, t_collector **collector)
 {
 	char	*expanded;
@@ -67,7 +67,7 @@ static char	*expand_ass_quote_expand(t_token *start, t_token *curr, \
 	return (expanded);
 }
 
-t_token	*expand_assignment_quote(t_token **head, t_token *curr, \
+t_token	*expand_assignment_quote(t_token **head, t_token *curr,
 	t_shell *shell, t_collector **collector)
 {
 	t_token	*start;
@@ -89,7 +89,7 @@ t_token	*expand_assignment_quote(t_token **head, t_token *curr, \
 		curr = curr->next;
 	}
 	if (!curr || curr->type != start->type)
-		exit_program(collector, \
+		exit_program(collector,
 			"minishell: unclosed quote in assign", false);
 	next = curr->next;
 	expand_ass_quote_join_prev(prev, joined, collector);

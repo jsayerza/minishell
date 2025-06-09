@@ -14,7 +14,7 @@
 
 void	assign_pipes(t_shell *shell)
 {
-	t_constructor	*current;
+	t_const	*current;
 
 	current = shell->constructor;
 	while (current)
@@ -27,7 +27,7 @@ void	assign_pipes(t_shell *shell)
 
 void	close_pipes(t_shell *shell)
 {
-	t_constructor	*current;
+	t_const	*current;
 
 	current = shell->constructor;
 	while (current)
@@ -43,8 +43,8 @@ void	close_pipes(t_shell *shell)
 
 void	wait_processes(t_shell *shell)
 {
-	t_constructor	*current;
-	int				status;
+	t_const	*current;
+	int		status;
 
 	current = shell->constructor;
 	while (current && current->prev)
@@ -64,7 +64,7 @@ void	wait_processes(t_shell *shell)
 
 void	process_commands(t_shell *shell)
 {
-	t_constructor	*current;
+	t_const	*current;
 
 	current = shell->constructor;
 	while (current)
@@ -93,7 +93,7 @@ void	process_commands(t_shell *shell)
 
 void	display_shell(t_shell *shell)
 {
-	t_constructor	*current;
+	t_const	*current;
 
 	assign_pipes(shell);
 	process_commands(shell);

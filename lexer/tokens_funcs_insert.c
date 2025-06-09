@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-void	token_inserted_fill(t_token *new_token, t_token_type type, \
+void	token_inserted_fill(t_token *new_token, t_token_type type,
 	const char *value, t_collector **collector)
 {
 	new_token->type = type;
@@ -22,7 +22,7 @@ void	token_inserted_fill(t_token *new_token, t_token_type type, \
 	collector_append(collector, new_token->value);
 }
 
-t_token	*token_insert_before(t_token **head, t_token *pos, \
+t_token	*token_insert_before(t_token **head, t_token *pos,
 	t_collector **collector)
 {
 	t_token	*new_token;

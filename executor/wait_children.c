@@ -39,7 +39,7 @@ static void	handle_signal_exit(t_shell *shell, int status)
 		shell->last_exit = 128 + sig;
 }
 
-static void	process_child_status(t_constructor *current, int status)
+static void	process_child_status(t_const *current, int status)
 {
 	if (WIFEXITED(status))
 		handle_normal_exit(current->shell, status);
@@ -49,10 +49,10 @@ static void	process_child_status(t_constructor *current, int status)
 		ft_putstr_fd("DEBUG: Error terminacion\n", 2);
 }
 
-void	wait_for_child_processes(t_constructor *node)
+void	wait_for_child_processes(t_const *node)
 {
-	int				status;
-	t_constructor	*current;
+	int		status;
+	t_const	*current;
 
 	current = node;
 	while (current && current->prev)

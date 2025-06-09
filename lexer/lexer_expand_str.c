@@ -42,8 +42,8 @@ static char	*expand_plain_text(const char *str, int *i,
 	expanded = ft_strndup(str + start, *i - start);
 	if (!expanded)
 		exit_program(collector, "Error malloc exp_str plain txt", true);
-	return (append_to_result(result, expanded, \
-		collector, "Error malloc exp_str join plain"));
+	return (append_to_result(result, expanded,
+			collector, "Error malloc exp_str join plain"));
 }
 
 char	*expand_string(const char *str, t_shell *shell,

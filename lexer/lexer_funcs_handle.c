@@ -22,7 +22,7 @@ int	handle_whitespace(const char *input, int *i)
 	return (0);
 }
 
-int	handle_operator(const char *input, t_collector **collector, \
+int	handle_operator(const char *input, t_collector **collector,
 	int *i, t_token **head)
 {
 	if (ft_strchr("<>|", input[*i]))
@@ -34,7 +34,7 @@ int	handle_operator(const char *input, t_collector **collector, \
 	return (0);
 }
 
-int	handle_quotes(const char *input, t_collector **collector, \
+int	handle_quotes(const char *input, t_collector **collector,
 	int *i, t_token **head)
 {
 	if (ft_strchr("'\"", input[*i]))

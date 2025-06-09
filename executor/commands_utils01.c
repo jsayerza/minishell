@@ -12,9 +12,9 @@
 
 #include "../minishell.h"
 
-void	close_all_pipes_except(t_constructor *node, int keep_in, int keep_out)
+void	close_all_pipes_except(t_const *node, int keep_in, int keep_out)
 {
-	t_constructor	*temp;
+	t_const	*temp;
 
 	temp = node->shell->constructor;
 	while (temp && temp->prev)
@@ -32,7 +32,7 @@ void	close_all_pipes_except(t_constructor *node, int keep_in, int keep_out)
 	}
 }
 
-int	handle_command_not_found(t_constructor *node, char *path)
+int	handle_command_not_found(t_const *node, char *path)
 {
 	if (!path)
 	{
@@ -43,7 +43,7 @@ int	handle_command_not_found(t_constructor *node, char *path)
 	return (0);
 }
 
-int	handle_fork_error(t_constructor *node, char *path)
+int	handle_fork_error(t_const *node, char *path)
 {
 	if (node->pid == -1)
 	{
@@ -55,7 +55,7 @@ int	handle_fork_error(t_constructor *node, char *path)
 	return (0);
 }
 
-void	execute_in_child(t_constructor *node, char *path)
+void	execute_in_child(t_const *node, char *path)
 {
 	setup_child_signals();
 	apply_all_redirections(node);

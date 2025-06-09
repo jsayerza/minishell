@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	clean_executable(t_constructor *current)
+static void	clean_executable(t_const *current)
 {
 	int	i;
 
@@ -25,10 +25,10 @@ static void	clean_executable(t_constructor *current)
 	current->executable = NULL;
 }
 
-void	clean_constructor(t_constructor *constructor)
+void	clean_constructor(t_const *constructor)
 {
-	t_constructor	*current;
-	t_constructor	*next;
+	t_const	*current;
+	t_const	*next;
 
 	if (!constructor)
 		return ;

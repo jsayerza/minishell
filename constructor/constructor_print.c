@@ -65,7 +65,7 @@ void	print_redirect_array(char **array, char *label)
 	}
 }
 
-void	print_executable(t_constructor *node)
+void	print_executable(t_const *node)
 {
 	int	i;
 
@@ -83,7 +83,7 @@ void	print_executable(t_constructor *node)
 	printf("\n");
 }
 
-void	constructor_print(t_constructor *list)
+void	constructor_print(t_const *list)
 {
 	int	index;
 

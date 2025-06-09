@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	redirect_builtin(t_constructor *node, char **builtin)
+void	redirect_builtin(t_const *node, char **builtin)
 {
 	pid_t	pid;
 	int		status;
@@ -38,7 +38,7 @@ void	redirect_builtin(t_constructor *node, char **builtin)
 		node->shell->last_exit = WEXITSTATUS(status);
 }
 
-static void	process_output_file(t_constructor *node, int i, int size, int *orig)
+static void	process_output_file(t_const *node, int i, int size, int *orig)
 {
 	int	fd;
 
@@ -62,7 +62,7 @@ static void	process_output_file(t_constructor *node, int i, int size, int *orig)
 	close(fd);
 }
 
-static void	open_output_files(t_constructor *node, int *original_stdout)
+static void	open_output_files(t_const *node, int *original_stdout)
 {
 	int	size;
 	int	i;
@@ -78,7 +78,7 @@ static void	open_output_files(t_constructor *node, int *original_stdout)
 	}
 }
 
-void	file_out_builtin(t_constructor *node, char *builtin)
+void	file_out_builtin(t_const *node, char *builtin)
 {
 	int	original_stdout;
 
@@ -96,13 +96,13 @@ void	file_out_builtin(t_constructor *node, char *builtin)
 	if (ft_strcmp("echo", builtin) == 0)
 		echo(node);
 	if (ft_strcmp("pwd", builtin) == 0)
-		pwd(node);
+		pwd();
 	if (dup2(original_stdout, STDOUT_FILENO) < 0)
 		perror("Error restaurando stdout");
 	close(original_stdout);
 }
 
-void	token_builtins(t_constructor *node)
+void	token_builtins(t_const *node)
 {
 	if (node->redirect_out)
 	{

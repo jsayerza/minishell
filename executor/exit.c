@@ -30,13 +30,13 @@ static bool	is_numeric(const char *str)
 	return (true);
 }
 
-static void	handle_too_many_args(t_constructor *node)
+static void	handle_too_many_args(t_const *node)
 {
 	ft_putstr_fd("exit: too many arguments\n", 2);
 	node->shell->last_exit = 1;
 }
 
-static void	handle_non_numeric_arg(t_constructor *node)
+static void	handle_non_numeric_arg(t_const *node)
 {
 	ft_putstr_fd("exit: ", 2);
 	ft_putstr_fd(node->executable[1], 2);
@@ -45,7 +45,7 @@ static void	handle_non_numeric_arg(t_constructor *node)
 	exit(2);
 }
 
-static void	handle_numeric_arg(t_constructor *node)
+static void	handle_numeric_arg(t_const *node)
 {
 	long long	exit_code;
 	int			final_exit_code;
@@ -58,7 +58,7 @@ static void	handle_numeric_arg(t_constructor *node)
 	exit(final_exit_code);
 }
 
-void	process_exit(t_constructor *node)
+void	process_exit(t_const *node)
 {
 	if (node->size_exec > 2)
 	{

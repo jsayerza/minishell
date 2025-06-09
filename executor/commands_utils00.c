@@ -12,14 +12,14 @@
 
 #include "../minishell.h"
 
-void	setup_first_command_pipes(t_constructor *node)
+void	setup_first_command_pipes(t_const *node)
 {
 	if (node->pipe_out == 1)
 		dup2(node->fd[1], STDOUT_FILENO);
 	close_all_pipes_except(node, 0, 0);
 }
 
-void	setup_middle_command_pipes(t_constructor *node)
+void	setup_middle_command_pipes(t_const *node)
 {
 	if (node->prev && node->prev->pipe_out == 1)
 		dup2(node->prev->fd[0], STDIN_FILENO);
@@ -28,15 +28,15 @@ void	setup_middle_command_pipes(t_constructor *node)
 	close_all_pipes_except(node, 0, 0);
 }
 
-void	setup_last_command_pipes(t_constructor *node)
+void	setup_last_command_pipes(t_const *node)
 {
 	if (node->prev && node->prev->pipe_out == 1)
 		dup2(node->prev->fd[0], STDIN_FILENO);
 	close_all_pipes_except(node, 0, 0);
 }
 
-void	execute_command_with_path(t_constructor *node, char *path,
-	void (*setup_pipes)(t_constructor *))
+void	execute_command_with_path(t_const *node, char *path,
+	void (*setup_pipes)(t_const *))
 {
 	node->pid = fork();
 	if (handle_fork_error(node, path))

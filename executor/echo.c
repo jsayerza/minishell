@@ -53,7 +53,7 @@ void	execute_echo(char **args)
 		ft_putstr_fd("\n", 1);
 }
 
-void	redirect_echo(t_constructor *node)
+void	redirect_echo(t_const *node)
 {
 	pid_t	pid;
 	int		status;
@@ -82,7 +82,7 @@ void	redirect_echo(t_constructor *node)
 	}
 }
 
-void	echo(t_constructor *node)
+void	echo(t_const *node)
 {
 	if (node->pipe_out)
 		redirect_echo(node);

@@ -29,7 +29,7 @@ static t_token_type	get_operator_type(const char *input, int *i)
 	return (999);
 }
 
-void	get_operator(const char *input, t_collector **collector, \
+void	get_operator(const char *input, t_collector **collector,
 	int *i, t_token **head)
 {
 	t_token_type	type;

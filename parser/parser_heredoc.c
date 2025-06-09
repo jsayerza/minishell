@@ -20,7 +20,7 @@ static char	*heredoc_read_line(void)
 	return (line);
 }
 
-static void	heredoc_read_ctrl(char *heredoc, char *heredoc_old, char *line, \
+static void	heredoc_read_ctrl(char *heredoc, char *heredoc_old, char *line,
 	t_collector **collector)
 {
 	if (heredoc_old)
@@ -35,7 +35,7 @@ static void	heredoc_read_ctrl(char *heredoc, char *heredoc_old, char *line, \
 	}
 }
 
-static char	*heredoc_read_new(char *line, char *heredoc, \
+static char	*heredoc_read_new(char *line, char *heredoc,
 	size_t line_len, size_t total_len)
 {
 	char	*new_heredoc;
@@ -62,7 +62,7 @@ static char	*heredoc_read_new(char *line, char *heredoc, \
 	return (new_heredoc);
 }
 
-static void	heredoc_update_vars(char **heredoc, char *line, \
+static void	heredoc_update_vars(char **heredoc, char *line,
 	size_t *len, t_collector **collector)
 {
 	size_t		line_len;

@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	cd_home(t_constructor *node)
+void	cd_home(t_const *node)
 {
 	const char	*home;
 
@@ -32,7 +32,7 @@ void	cd_home(t_constructor *node)
 	refresh_directori(node->shell, home, 1);
 }
 
-void	cd_oldpwd(t_constructor *node)
+void	cd_oldpwd(t_const *node)
 {
 	char	*oldpwd;
 
@@ -54,7 +54,7 @@ void	cd_oldpwd(t_constructor *node)
 	refresh_directori(node->shell, oldpwd, 1);
 }
 
-void	cd_directori(t_constructor *node)
+void	cd_directori(t_const *node)
 {
 	char	*target_path;
 	int		is_absolute;
@@ -72,7 +72,7 @@ void	cd_directori(t_constructor *node)
 	refresh_directori(node->shell, target_path, is_absolute);
 }
 
-void	cd(t_constructor *node)
+void	cd(t_const *node)
 {
 	if (node->size_exec == 1)
 		cd_home(node);

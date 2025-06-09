@@ -12,8 +12,8 @@
 
 #include "../minishell.h"
 
-static void	link_new_cmd_node(t_constructor *new_node, \
-	t_constructor **first_node)
+static void	link_new_cmd_node(t_const *new_node,
+	t_const **first_node)
 {
 	if (*first_node)
 		(*first_node)->prev = new_node;
@@ -21,7 +21,7 @@ static void	link_new_cmd_node(t_constructor *new_node, \
 	*first_node = new_node;
 }
 
-static void	init_cmd_node_defaults(t_constructor *node, t_shell *shell)
+static void	init_cmd_node_defaults(t_const *node, t_shell *shell)
 {
 	node->redirect_in = NULL;
 	node->redirect_out = NULL;
@@ -39,7 +39,7 @@ static void	init_cmd_node_defaults(t_constructor *node, t_shell *shell)
 	node->prev = NULL;
 }
 
-static void	count_exec_args(t_constructor *node)
+static void	count_exec_args(t_const *node)
 {
 	char	**args;
 
@@ -48,13 +48,13 @@ static void	count_exec_args(t_constructor *node)
 		node->size_exec++;
 }
 
-static t_constructor	*create_new_cmd_node(t_collector **collector, \
+static t_const	*create_new_cmd_node(t_collector **collector,
 	t_ast *ast, t_shell *shell)
 {
-	t_constructor	*node;
-	char			**args;
+	t_const	*node;
+	char	**args;
 
-	node = malloc(sizeof(t_constructor));
+	node = malloc(sizeof(t_const));
 	if (!node)
 		exit_program(collector, "Error malloc command node", EXIT_FAILURE);
 	args = NULL;
@@ -67,11 +67,11 @@ static t_constructor	*create_new_cmd_node(t_collector **collector, \
 	return (node);
 }
 
-t_constructor	*find_or_create_command_node(t_collector **collector, \
-	t_ast *ast, t_shell *shell, t_constructor **first_node)
+t_const	*find_or_create_command_node(t_collector **collector,
+	t_ast *ast, t_shell *shell, t_const **first_node)
 {
-	t_constructor	*cmd_node;
-	t_constructor	*curr;
+	t_const	*cmd_node;
+	t_const	*curr;
 
 	curr = *first_node;
 	while (curr)

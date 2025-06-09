@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-void	apply_input_redirection(t_constructor *node)
+void	apply_input_redirection(t_const *node)
 {
 	int	fd;
 	int	i;
@@ -39,7 +39,7 @@ void	apply_input_redirection(t_constructor *node)
 	}
 }
 
-void	apply_output_redirection(t_constructor *node)
+void	apply_output_redirection(t_const *node)
 {
 	int	fd;
 	int	i;
@@ -67,7 +67,7 @@ void	apply_output_redirection(t_constructor *node)
 	}
 }
 
-void	apply_append_redirection(t_constructor *node)
+void	apply_append_redirection(t_const *node)
 {
 	int	fd;
 	int	i;
@@ -96,7 +96,7 @@ void	apply_append_redirection(t_constructor *node)
 	}
 }
 
-void	apply_all_redirections(t_constructor *node)
+void	apply_all_redirections(t_const *node)
 {
 	if (!node)
 		return ;

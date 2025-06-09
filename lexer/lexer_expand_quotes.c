@@ -12,7 +12,7 @@
 
 #include "minishell.h"
 
-static void	expand_quote_token_remove(t_token **head, t_token	*start, \
+static void	expand_quote_token_remove(t_token **head, t_token	*start,
 	t_token	*next, t_collector **collector)
 {
 	t_token	*token_tmp;
@@ -25,7 +25,7 @@ static void	expand_quote_token_remove(t_token **head, t_token	*start, \
 	}
 }
 
-static void	expand_quotes_token_insert(t_token **head, t_token *start, \
+static void	expand_quotes_token_insert(t_token **head, t_token *start,
 	char **joined, t_collector **collector)
 {
 	t_token	*token_tmp;
@@ -37,7 +37,7 @@ static void	expand_quotes_token_insert(t_token **head, t_token *start, \
 	freer(*joined);
 }
 
-static char	*expand_quotes_token_dquote(char *joined, t_token *curr, \
+static char	*expand_quotes_token_dquote(char *joined, t_token *curr,
 	t_shell *shell, t_collector **collector)
 {
 	char	*expanded;
@@ -51,7 +51,7 @@ static char	*expand_quotes_token_dquote(char *joined, t_token *curr, \
 	return (tmp);
 }
 
-static void	expand_quotes_tmp_ctrl(char *tmp, char **joined, \
+static void	expand_quotes_tmp_ctrl(char *tmp, char **joined,
 	t_collector **collector)
 {
 	if (!tmp)
@@ -60,7 +60,7 @@ static void	expand_quotes_tmp_ctrl(char *tmp, char **joined, \
 	*joined = tmp;
 }
 
-t_token	*expand_quotes(t_token **head, t_token *curr, t_shell *shell, \
+t_token	*expand_quotes(t_token **head, t_token *curr, t_shell *shell,
 	t_collector **collector)
 {
 	t_token	*start;

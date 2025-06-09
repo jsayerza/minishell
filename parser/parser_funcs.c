@@ -29,7 +29,7 @@ static int	parse_cmd_handle_word(t_ast *cmd_node, t_token **tokens,
 	return (false);
 }
 
-static int	parse_cmd_hle_redir(t_token **tokens, t_token *curr, \
+static int	parse_cmd_hle_redir(t_token **tokens, t_token *curr,
 	t_ast **final_node, t_collector **collector)
 {
 	t_ast	*redir_node;
@@ -52,7 +52,7 @@ static int	parse_cmd_hle_redir(t_token **tokens, t_token *curr, \
 	return (false);
 }
 
-static t_ast	*parse_command_init_cmd_node(t_collector **collector, \
+static t_ast	*parse_command_init_cmd_node(t_collector **collector,
 	t_ast **final_node)
 {
 	t_ast	*cmd_node;

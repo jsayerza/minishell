@@ -12,8 +12,8 @@
 
 #include "../minishell.h"
 
-void	add_redirect_file_in(t_collector **collector, \
-	t_constructor *node, char *file)
+void	add_redirect_file_in(t_collector **collector,
+	t_const *node, char *file)
 {
 	char	**new_array;
 	int		i;
@@ -40,8 +40,8 @@ void	add_redirect_file_in(t_collector **collector, \
 	collector_append(collector, new_array);
 }
 
-void	add_redirect_file_out(t_collector **collector, \
-	t_constructor *node, char *file)
+void	add_redirect_file_out(t_collector **collector,
+	t_const *node, char *file)
 {
 	char	**new_array;
 	int		i;
@@ -68,8 +68,8 @@ void	add_redirect_file_out(t_collector **collector, \
 	collector_append(collector, new_array);
 }
 
-void	add_redirect_file_append(t_collector **collector, \
-	t_constructor *node, char *file)
+void	add_redirect_file_append(t_collector **collector,
+	t_const *node, char *file)
 {
 	char	**new_array;
 	int		i;
@@ -96,7 +96,7 @@ void	add_redirect_file_append(t_collector **collector, \
 	collector_append(collector, new_array);
 }
 
-void	add_heredoc(t_collector **collector, t_constructor *node, \
+void	add_heredoc(t_collector **collector, t_const *node,
 	char *file)
 {
 	char	**new_array;
@@ -124,7 +124,7 @@ void	add_heredoc(t_collector **collector, t_constructor *node, \
 	collector_append(collector, new_array);
 }
 
-void	set_pipe_flags_and_link(t_constructor *left, t_constructor *right)
+void	set_pipe_flags_and_link(t_const *left, t_const *right)
 {
 	if (left)
 	{

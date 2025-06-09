@@ -12,7 +12,7 @@
 
 #include "../minishell.h"
 
-static void	constructor_node_create_builtin(t_constructor *node)
+static void	constructor_node_create_builtin(t_const *node)
 {
 	if (node->executable && node->executable[0])
 	{
@@ -33,7 +33,7 @@ static void	constructor_node_create_builtin(t_constructor *node)
 	}
 }
 
-static void	constructor_fields_init(t_constructor *node, t_ast *ast, \
+static void	constructor_fields_init(t_const *node, t_ast *ast,
 	t_shell *shell)
 {
 	node->executable = ast->args;
@@ -54,7 +54,7 @@ static void	constructor_fields_init(t_constructor *node, t_ast *ast, \
 	node->prev = NULL;
 }
 
-static void	count_exec_args(t_constructor *node)
+static void	count_exec_args(t_const *node)
 {
 	char	**args;
 
@@ -63,12 +63,12 @@ static void	count_exec_args(t_constructor *node)
 		node->size_exec++;
 }
 
-t_constructor	*constructor_node_create(t_collector **collector, \
+t_const	*constructor_node_create(t_collector **collector,
 	t_ast *ast, t_shell *shell)
 {
-	t_constructor	*node;
+	t_const	*node;
 
-	node = malloc(sizeof(t_constructor));
+	node = malloc(sizeof(t_const));
 	if (!node)
 		exit_program(collector, "Error malloc constructor node", EXIT_FAILURE);
 	constructor_fields_init(node, ast, shell);
