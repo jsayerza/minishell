@@ -47,17 +47,13 @@ void	create_output_files(t_const *node)
 	i = 0;
 	while (node->redirect_out[i])
 	{
-		if (node->redirect_out[i + 1] != NULL)
+		fd = open(node->redirect_out[i], O_WRONLY | O_CREAT | O_TRUNC, 0644);
+		if (fd < 0)
 		{
-			fd = open(node->redirect_out[i], O_WRONLY
-					| O_CREAT | O_TRUNC, 0644);
-			if (fd < 0)
-			{
-				perror("open");
-				return ;
-			}
-			close(fd);
+			perror("open");
+			return ;
 		}
+		close(fd);
 		i++;
 	}
 }
@@ -72,17 +68,14 @@ void	create_append_files(t_const *node)
 	i = 0;
 	while (node->redirect_append[i])
 	{
-		if (node->redirect_append[i + 1] != NULL)
+		fd = open(node->redirect_append[i], O_WRONLY
+				| O_CREAT | O_APPEND, 0644);
+		if (fd < 0)
 		{
-			fd = open(node->redirect_append[i], O_WRONLY
-					| O_CREAT | O_APPEND, 0644);
-			if (fd < 0)
-			{
-				perror("open");
-				return ;
-			}
-			close(fd);
+			perror("open");
+			return ;
 		}
+		close(fd);
 		i++;
 	}
 }

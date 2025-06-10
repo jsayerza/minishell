@@ -96,6 +96,7 @@ void	display_shell(t_shell *shell)
 	t_const	*current;
 
 	assign_pipes(shell);
+	constructor_print(shell->constructor);
 	process_commands(shell);
 	current = shell->constructor;
 	while (current && current->prev)
