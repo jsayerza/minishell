@@ -32,7 +32,7 @@ static int	parse_pipe_error_check(t_token **tokens)
 {
 	if (!tokens || !*tokens)
 	{
-		printf("minishell: syntax error unexpected token `|`\n");
+		ft_putstr_fd("minishell: syntax error unexpected token `|`\n", 2);
 		return (1);
 	}
 	return (0);
@@ -42,7 +42,7 @@ static int	parse_pipe_unexpected_eof(t_token **tokens)
 {
 	if (!*tokens || (*tokens)->type == TOKEN_EOF)
 	{
-		printf("minishell: syntax error near unexpected token `newline'\n");
+		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
 		return (1);
 	}
 	return (0);
@@ -50,7 +50,7 @@ static int	parse_pipe_unexpected_eof(t_token **tokens)
 
 static int	parse_pipe_error_after_pipe(void)
 {
-	printf("minishell: syntax error unexpected token after `|`\n");
+	ft_putstr_fd("minishell: syntax error unexpected token after `|`\n", 2);
 	return (1);
 }
 

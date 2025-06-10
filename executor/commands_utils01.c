@@ -36,7 +36,7 @@ int	handle_command_not_found(t_const *node, char *path)
 {
 	if (!path)
 	{
-		ft_putstr_fd("Command not found\n", 2);
+		ft_putstr_fd("command not found\n", 2);
 		node->shell->last_exit = 127;
 		return (1);
 	}

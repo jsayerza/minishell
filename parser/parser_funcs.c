@@ -39,8 +39,9 @@ static int	parse_cmd_hle_redir(t_token **tokens, t_token *curr,
 	target = curr->next;
 	if (!target || target->type != TOKEN_WORD)
 	{
-		printf("minishell: syntax error near unexpected token `%s`\n",
-			curr->value);
+		ft_putstr_fd("minishell: syntax error near unexpected token ", 2);
+		ft_putstr_fd(curr->value, 2);
+		ft_putstr_fd("\n", 2);
 		return (true);
 	}
 	redir_node = init_redir_node(collector, curr, target);
