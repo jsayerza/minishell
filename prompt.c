@@ -40,8 +40,8 @@ static void	*safe_join(char **dst, char *s1, char *s2, t_collector **collector)
 	return (*dst);
 }
 
-static char	*join_prompt_parts(char *user, char *short_pwd,\
-	t_collector **collector)
+static char	*join_prompt_parts(char *user, char *short_pwd,
+			t_collector **collector)
 {
 	char	*part1;
 	char	*part2;

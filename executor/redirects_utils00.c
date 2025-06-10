@@ -79,3 +79,63 @@ void	create_append_files(t_const *node)
 		i++;
 	}
 }
+
+int	validate_all_input_redirections(t_const *node)
+{
+	int	fd;
+	int	i;
+
+	if (!node || !node->redirect_in)
+		return (1);
+	i = 0;
+	while (node->redirect_in[i])
+	{
+		fd = open(node->redirect_in[i], O_RDONLY);
+		if (fd < 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(node->redirect_in[i], 2);
+			ft_putstr_fd(": No such file or directory\n", 2);
+			return (0);
+		}
+		close(fd);
+		i++;
+	}
+	return (1);
+}
+
+int	validate_file_array(char **files, int flags)
+{
+	int	fd;
+	int	i;
+
+	if (!files)
+		return (1);
+	i = 0;
+	while (files[i])
+	{
+		fd = open(files[i], flags, 0644);
+		if (fd < 0)
+		{
+			ft_putstr_fd("minishell: ", 2);
+			ft_putstr_fd(files[i], 2);
+			ft_putstr_fd(": Permission denied\n", 2);
+			return (0);
+		}
+		close(fd);
+		i++;
+	}
+	return (1);
+}
+
+int	validate_all_output_redirections(t_const *node)
+{
+	if (!node)
+		return (1);
+	if (!validate_file_array(node->redirect_out, O_WRONLY | O_CREAT | O_TRUNC))
+		return (0);
+	if (!validate_file_array(node->redirect_append, O_WRONLY | O_CREAT | O_APPEND))
+		return (0);
+
+	return (1);
+}

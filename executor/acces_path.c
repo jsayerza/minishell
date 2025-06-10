@@ -1,13 +1,13 @@
 /* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::   */
-/*	 acces_path.c										:+:		 :+:	:+:   */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2025/03/23 12:13:24 by acarranz		   #+#	  #+#			  */
-/*	 Updated: 2025/03/23 12:13:24 by acarranz		  ###	########.fr		  */
-/*																			  */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   acces_path.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/23 12:13:24 by acarranz          #+#    #+#             */
+/*   Updated: 2025/06/10 18:21:33 by acarranz         ###   ########.fr       */
+/*                                                                            */
 /* ************************************************************************** */
 
 #include "../minishell.h"
@@ -41,26 +41,64 @@ static char	*find_path_value(char **env)
 	return (NULL);
 }
 
-static char	*search_executable(char **paths, char *command)
+// Nueva función que retorna el código de error apropiado
+static int	check_file_access(char *path)
+{
+	if (access(path, F_OK) != 0)
+		return (127);  // Archivo no encontrado
+	if (access(path, X_OK) != 0)
+		return (126);  // Archivo existe pero no es ejecutable
+	return (0);        // Todo OK
+}
+
+static char	*search_executable_with_error(char **paths, char *command, int *error_code)
 {
 	char	*exec;
 	int		i;
+	int		access_result;
 
+	*error_code = 0;
+
+	// Si es ruta absoluta o relativa
 	if (command[0] == '/' || command[0] == '.')
 	{
-		if (access(command, X_OK) == 0)
+		access_result = check_file_access(command);
+		if (access_result == 0)
 			return (ft_strdup(command));
+		*error_code = access_result;
 		return (NULL);
 	}
+
+	// Buscar en PATH
+	if (!paths)
+	{
+		*error_code = 127;  // No hay PATH definido
+		return (NULL);
+	}
+
 	i = 0;
-	while (paths && paths[i])
+	while (paths[i])
 	{
 		exec = construct_exec(paths[i], command);
-		if (exec && access(exec, X_OK) == 0)
-			return (exec);
-		free(exec);
+		if (exec)
+		{
+			access_result = check_file_access(exec);
+			if (access_result == 0)
+				return (exec);
+
+			// Guardamos el primer error encontrado
+			if (*error_code == 0)
+				*error_code = access_result;
+
+			free(exec);
+		}
 		i++;
 	}
+
+	// Si no encontramos ningún archivo, asumimos comando no encontrado
+	if (*error_code == 0)
+		*error_code = 127;
+
 	return (NULL);
 }
 
@@ -88,8 +126,17 @@ void	check_path(t_shell *shell)
 	}
 }
 
-char	*acces_path(t_const *node)
+// Función modificada que también retorna el código de error
+char	*acces_path_with_error(t_const *node, int *error_code)
 {
 	check_path(node->shell);
-	return (search_executable(node->shell->paths, node->executable[0]));
+	return (search_executable_with_error(node->shell->paths,
+										 node->executable[0], error_code));
+}
+
+// Mantener compatibilidad con la función original
+char	*acces_path(t_const *node)
+{
+	int error_code;
+	return (acces_path_with_error(node, &error_code));
 }

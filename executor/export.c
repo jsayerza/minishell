@@ -90,12 +90,12 @@ void	export(t_const *node)
 		j = 1;
 		while (j < node->size_exec)
 		{
-			if (!(ft_isalpha(node->executable[j][0])
-				|| node->executable[j][0] == '_'))
+			if (!is_valid_identifier(node->executable[j]))
 			{
-				ft_putstr_fd("minishell: export: ", 2);
+				ft_putstr_fd("minishell: export: `", 2);
 				ft_putstr_fd(node->executable[j], 2);
-				ft_putstr_fd(": not a valid identifier\n", 2);
+				ft_putstr_fd("': not a valid identifier\n", 2);
+				node->shell->last_exit = 1;
 			}
 			else
 				process_export_var(node, node->executable[j]);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_pipeline.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/07 19:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/05/09 11:05:48 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/10 17:45:14 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ static int	parse_pipe_unexpected_eof(t_token **tokens)
 {
 	if (!*tokens || (*tokens)->type == TOKEN_EOF)
 	{
-		ft_putstr_fd("minishell: syntax error near unexpected token `newline'\n", 2);
+		ft_putstr_fd("minishell: syntax error near", 2);
+		ft_putstr_fd(" unexpected token `newline'\n", 2);
 		return (1);
 	}
 	return (0);

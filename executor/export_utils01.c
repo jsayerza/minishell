@@ -12,6 +12,24 @@
 
 #include "../minishell.h"
 
+int	is_valid_identifier(char *str)
+{
+	int		i;
+	char	*equal_pos;
+
+	equal_pos = ft_strchr(str, '=');
+	if (!(ft_isalpha(str[0]) || str[0] == '_'))
+		return (0);
+	i = 1;
+	while (str[i] && (equal_pos == NULL || &str[i] < equal_pos))
+	{
+		if (!(ft_isalnum(str[i]) || str[i] == '_'))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
 void	add_to_export(char ***export, char *var)
 {
 	int		len;

@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/07 10:23:12 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/10 18:22:56 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@
 # include <pwd.h>
 # include <limits.h>
 # include <sys/stat.h>
-# include <errno.h>  
+# include <errno.h>
 # include <readline/readline.h>
 # include <readline/history.h>
 # include "libft/libft.h"
@@ -39,17 +39,17 @@
 # define CYAN     "\001\033[36m\002"
 # define BOLD     "\001\033[1m\002"
 
-# define MAX_CMD_ARGS 256		
+# define MAX_CMD_ARGS 256
 
 typedef enum e_token_type
 {
-	TOKEN_EOF,			
-	TOKEN_WORD,			
-	TOKEN_PIPE,			
-	TOKEN_REDIRECT_IN,	
-	TOKEN_REDIRECT_OUT,	
-	TOKEN_APPEND,		
-	TOKEN_HEREDOC,		
+	TOKEN_EOF,
+	TOKEN_WORD,
+	TOKEN_PIPE,
+	TOKEN_REDIRECT_IN,
+	TOKEN_REDIRECT_OUT,
+	TOKEN_APPEND,
+	TOKEN_HEREDOC,
 	TOKEN_AND,
 	TOKEN_OR,
 	TOKEN_WILDCARD,
@@ -85,11 +85,11 @@ typedef struct s_token
 typedef struct s_ast
 {
 	t_token_type	type;
-	char			**args;	
-	char			*file;	
+	char			**args;
+	char			*file;
 	char			*heredoc_content;
 	struct s_ast	*left;
-	struct s_ast	*right;	
+	struct s_ast	*right;
 }	t_ast;
 
 typedef struct s_collector
@@ -102,15 +102,15 @@ typedef struct s_constructor	t_const;
 
 typedef struct s_shell
 {
-	char			**env;				
-	char			**export;			
-	char			*path;				
-	char			**paths;			
-	int				last_exit;			
-	int				interactive;		
-	char			*output;			
-	int				node_size;		
-	t_const			*constructor;		
+	char			**env;
+	char			**export;
+	char			*path;
+	char			**paths;
+	int				last_exit;
+	int				interactive;
+	char			*output;
+	int				node_size;
+	t_const			*constructor;
 	t_collector		*collector;
 }	t_shell;
 
@@ -118,23 +118,23 @@ extern t_shell					*g_shell;
 
 typedef struct s_constructor
 {
-	char			**executable;	
-	int				size_exec;			
-	int				fd[2];				
-	char			**redirect_in;		
-	char			**redirect_out;		
-	char			**redirect_append;	
-	char			**heredoc;			
+	char			**executable;
+	int				size_exec;
+	int				fd[2];
+	char			**redirect_in;
+	char			**redirect_out;
+	char			**redirect_append;
+	char			**heredoc;
 	t_token_type	redirect_in_type;
 	t_token_type	redirect_out_type;
-	int				pipe_in;			
-	int				pipe_out;			
-	pid_t			pid;				
-	t_builtin		builtin;			
-	t_token_type	type;				
-	t_shell			*shell;				
-	t_const			*next;				
-	t_const			*prev;				
+	int				pipe_in;
+	int				pipe_out;
+	pid_t			pid;
+	t_builtin		builtin;
+	t_token_type	type;
+	t_shell			*shell;
+	t_const			*next;
+	t_const			*prev;
 }	t_const;
 
 // minishell_funcs.c
@@ -146,8 +146,8 @@ void	freer(char *ptr);
 bool	has_unclosed_quotes(const char *line);
 int		is_only_whitespace(const char *str);
 void	print_error(const char *msg);
-void	exit_program(t_collector **collector, const char *msg,\
-	bool should_exit);
+void	exit_program(t_collector **collector, const char *msg,
+			bool should_exit);
 
 // prompt.c
 char	*prompt_generate(t_collector **collector);
@@ -285,7 +285,7 @@ void	add_redirections(t_collector **collector, t_ast *ast,
 t_const	*constructor_node_create(t_collector **collector,
 			t_ast *ast, t_shell *shell);
 
-// constructor/constructor_cmd_node_create.c	
+// constructor/constructor_cmd_node_create.c
 t_const	*find_or_create_command_node(t_collector **collector,
 			t_ast *ast, t_shell *shell, t_const **first_node);
 
@@ -364,7 +364,7 @@ void	add_or_update_env_var(char ***env, char *key, char *value);
 void	check_heredoc(t_const *node);
 char	*acces_path(t_const *node);
 void	wait_for_child_processes(t_const *node);
-void	execute_command_with_path(t_const *node,
+int		execute_command_with_path(t_const *node,
 			char *path, void (*setup_pipes)(t_const *));
 void	setup_last_command_pipes(t_const *node);
 void	setup_middle_command_pipes(t_const *node);
@@ -373,6 +373,8 @@ int		handle_fork_error(t_const *node, char *path);
 int		handle_command_not_found(t_const *node, char *path);
 void	close_all_pipes_except(t_const *node, int keep_in, int keep_out);
 void	execute_in_child(t_const *node, char *path);
+int		is_valid_identifier(char *str);
+char	*acces_path_with_error(t_const *node, int *error_code);
 
 //funcions fd
 void	read_fd(t_const *node);
@@ -389,6 +391,8 @@ void	apply_redirect_in(t_const *node);
 void	apply_all_redirections(t_const *node);
 void	create_append_files(t_const *node);
 void	create_output_files(t_const *node);
+int		validate_all_output_redirections(t_const *node);
+int		validate_all_input_redirections(t_const *node);
 
 /* Función principal exportada */
 void	path(t_shell *shell);
