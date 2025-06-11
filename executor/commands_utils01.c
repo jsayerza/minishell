@@ -57,8 +57,6 @@ int	handle_fork_error(t_const *node, char *path)
 
 void	execute_in_child(t_const *node, char *path)
 {
-	setup_child_signals();
-	apply_all_redirections(node);
 	if (node->redirect_in_type == 6)
 		check_heredoc(node);
 	add_or_update_env_var(&(node->shell->env), "_", path);

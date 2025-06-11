@@ -48,7 +48,7 @@ void	cd_oldpwd(t_const *node)
 		ft_putstr_fd("cd: ", 2);
 		ft_putstr_fd(oldpwd, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		node->shell->last_exit = 2;
+		node->shell->last_exit = 1;
 		return ;
 	}
 	refresh_directori(node->shell, oldpwd, 1);
@@ -65,7 +65,7 @@ void	cd_directori(t_const *node)
 		ft_putstr_fd("cd: ", 2);
 		ft_putstr_fd(target_path, 2);
 		ft_putstr_fd(": No such file or directory\n", 2);
-		node->shell->last_exit = 2;
+		node->shell->last_exit = 1;
 		return ;
 	}
 	is_absolute = (target_path[0] == '/');

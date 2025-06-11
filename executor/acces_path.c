@@ -42,13 +42,29 @@ static char	*find_path_value(char **env)
 }
 
 // Nueva función que retorna el código de error apropiado
+
+// Función mejorada que detecta directorios
 static int	check_file_access(char *path)
 {
+	struct stat	path_stat;
+	
+	// Verificar si el archivo/directorio existe
 	if (access(path, F_OK) != 0)
-		return (127);  // Archivo no encontrado
+		return (127);  // No such file or directory
+	
+	// Obtener información del archivo
+	if (stat(path, &path_stat) != 0)
+		return (127);  // Error al obtener información
+	
+	// Verificar si es un directorio
+	if (S_ISDIR(path_stat.st_mode))
+		return (126);  // Is a directory (no ejecutable)
+	
+	// Verificar si es ejecutable
 	if (access(path, X_OK) != 0)
-		return (126);  // Archivo existe pero no es ejecutable
-	return (0);        // Todo OK
+		return (126);  // Permission denied
+	
+	return (0);  // Todo OK
 }
 
 static char	*search_executable_with_error(char **paths, char *command, int *error_code)

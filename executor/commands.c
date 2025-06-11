@@ -12,35 +12,22 @@
 
 #include "../minishell.h"
 
-// Nueva función para manejar errores específicos
-static int	handle_command_error(t_const *node, char *path, int error_code)
+// Función para verificar si un comando está vacío o es solo espacios
+int	is_empty_or_whitespace_command(char *cmd)
 {
-	if (!path)
-	{
-		if (error_code == 127)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(node->executable[0], STDERR_FILENO);
-			ft_putstr_fd(": command not found\n", STDERR_FILENO);
-			node->shell->last_exit = 127;
-		}
-		else if (error_code == 126)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(node->executable[0], STDERR_FILENO);
-			ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
-			node->shell->last_exit = 126;
-		}
-		else if (error_code == 2)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(node->executable[0], STDERR_FILENO);
-			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
-			node->shell->last_exit = 2;
-		}
+	int i;
+	
+	if (!cmd)
 		return (1);
+	
+	i = 0;
+	while (cmd[i])
+	{
+		if (cmd[i] != ' ' && cmd[i] != '\t' && cmd[i] != '\n')
+			return (0);
+		i++;
 	}
-	return (0);
+	return (1);
 }
 
 void	execute_command(t_const *node)
@@ -52,11 +39,23 @@ void	execute_command(t_const *node)
 		|| !node->executable[0])
 		return ;
 
-	path = acces_path_with_error(node, &error_code);
-	if (handle_command_error(node, path, error_code))
+	if (is_empty_or_whitespace_command(node->executable[0]))
+	{
+		// Para comandos vacíos, SIEMPRE hacer fork para mantener la pipeline
+		node->pid = fork();
+		if (node->pid == 0)
+		{
+			setup_child_signals();
+			// Aplicar redirecciones aunque el comando esté vacío
+			if (!validate_and_apply_redirections(node))
+				exit(1);
+			exit(0);  // Comando vacío = exit 0
+		}
 		return ;
+	}
 
-	execute_command_with_path(node, path, NULL);
+	path = acces_path_with_error(node, &error_code);
+	execute_command_with_path(node, path, error_code, NULL);
 }
 
 void	execute_first_command(t_const *node)
@@ -68,12 +67,22 @@ void	execute_first_command(t_const *node)
 		|| !node->executable[0])
 		return ;
 
-	path = acces_path_with_error(node, &error_code);
-	if (handle_command_error(node, path, error_code))
+	if (is_empty_or_whitespace_command(node->executable[0]))
+	{
+		node->pid = fork();
+		if (node->pid == 0)
+		{
+			setup_child_signals();
+			setup_first_command_pipes(node);
+			if (!validate_and_apply_redirections(node))
+				exit(1);
+			exit(0);
+		}
 		return ;
+	}
 
-	if (!execute_command_with_path(node, path, setup_first_command_pipes))
-		return ;
+	path = acces_path_with_error(node, &error_code);
+	execute_command_with_path(node, path, error_code, setup_first_command_pipes);
 }
 
 void	execute_middle_command(t_const *node)
@@ -85,12 +94,22 @@ void	execute_middle_command(t_const *node)
 		|| !node->executable[0])
 		return ;
 
-	path = acces_path_with_error(node, &error_code);
-	if (handle_command_error(node, path, error_code))
+	if (is_empty_or_whitespace_command(node->executable[0]))
+	{
+		node->pid = fork();
+		if (node->pid == 0)
+		{
+			setup_child_signals();
+			setup_middle_command_pipes(node);
+			if (!validate_and_apply_redirections(node))
+				exit(1);
+			exit(0);
+		}
 		return ;
+	}
 
-	if (!execute_command_with_path(node, path, setup_middle_command_pipes))
-		return ;
+	path = acces_path_with_error(node, &error_code);
+	execute_command_with_path(node, path, error_code, setup_middle_command_pipes);
 }
 
 void	execute_last_command(t_const *node)
@@ -102,12 +121,22 @@ void	execute_last_command(t_const *node)
 		|| !node->executable[0])
 		return ;
 
-	path = acces_path_with_error(node, &error_code);
-	if (handle_command_error(node, path, error_code))
+	if (is_empty_or_whitespace_command(node->executable[0]))
+	{
+		node->pid = fork();
+		if (node->pid == 0)
+		{
+			setup_child_signals();
+			setup_last_command_pipes(node);
+			if (!validate_and_apply_redirections(node))
+				exit(1);
+			exit(0);
+		}
 		return ;
+	}
 
-	if (!execute_command_with_path(node, path, setup_last_command_pipes))
-		return ;
+	path = acces_path_with_error(node, &error_code);
+	execute_command_with_path(node, path, error_code, setup_last_command_pipes);
 }
 
 void	token_commands(t_const *node)

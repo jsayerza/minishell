@@ -1,109 +1,120 @@
 /* ************************************************************************** */
-/*																			  */
-/*														  :::	   ::::::::   */
-/*	 display_shell.c									:+:		 :+:	:+:   */
-/*													  +:+ +:+		  +:+	  */
-/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
-/*												  +#+#+#+#+#+	+#+			  */
-/*	 Created: 2025/03/23 12:13:48 by acarranz		   #+#	  #+#			  */
-/*	 Updated: 2025/03/23 12:13:48 by acarranz		  ###	########.fr		  */
-/*																			  */
+/*                                                         */
+/*                                                         :::       ::::::::   */
+/*       display_shell.c                                 :+:               :+:    :+:   */
+/*                                                         +:+ +:+                  +:+     */
+/*       By: acarranz <marvin@42.fr>                     +#+  +:+    +#+            */
+/*                                                         +#+#+#+#+#+    +#+                       */
+/*       Created: 2025/03/23 12:13:48 by acarranz           #+#     #+#                     */
+/*       Updated: 2025/03/23 12:13:48 by acarranz          ###    ########.fr               */
+/*                                                         */
 /* ************************************************************************** */
 
 #include "../minishell.h"
 
-void	assign_pipes(t_shell *shell)
+void    assign_pipes(t_shell *shell)
 {
-	t_const	*current;
+        t_const *current;
 
-	current = shell->constructor;
-	while (current)
-	{
-		if (current->pipe_out == 1)
-			pipe(current->fd);
-		current = current->next;
-	}
+        current = shell->constructor;
+        while (current)
+        {
+                if (current->pipe_out == 1)
+                        pipe(current->fd);
+                current = current->next;
+        }
 }
 
-void	close_pipes(t_shell *shell)
+void    close_pipes(t_shell *shell)
 {
-	t_const	*current;
+        t_const *current;
 
-	current = shell->constructor;
-	while (current)
-	{
-		if (current->pipe_out == 1)
-		{
-			close(current->fd[0]);
-			close(current->fd[1]);
-		}
-		current = current->next;
-	}
+        current = shell->constructor;
+        while (current)
+        {
+                if (current->pipe_out == 1)
+                {
+                        close(current->fd[0]);
+                        close(current->fd[1]);
+                }
+                current = current->next;
+        }
 }
 
-void	wait_processes(t_shell *shell)
+void    process_commands(t_shell *shell)
 {
-	t_const	*current;
-	int		status;
+        t_const *current;
 
-	current = shell->constructor;
-	while (current && current->prev)
-		current = current->prev;
-	while (current)
-	{
-		check_redirect_in_file_exists(current);
-		if (current->pid > 0)
-		{
-			waitpid(current->pid, &status, 0);
-			if (WIFEXITED(status) && current->next == NULL)
-				shell->last_exit = WEXITSTATUS(status);
-		}
-		current = current->next;
-	}
+        current = shell->constructor;
+        while (current)
+        {
+                if (current->type == TOKEN_COMMAND)
+                {
+                        if (current->builtin
+                                && ft_strcmp(current->executable[0], "env") == 0
+                                && current->executable[1]
+                                && ft_strcmp(current->executable[1], "-i") == 0
+                                && current->executable[2]
+                                && ft_strcmp(current->executable[2], "bash") == 0)
+                        {
+                                current->builtin = 0;
+                                token_commands(current);
+                        }
+                        else if (current->builtin)
+                                token_builtins(current);
+                        else
+                                token_commands(current);
+                }
+                current = current->next;
+        }
+        close_pipes(shell);
 }
 
-void	process_commands(t_shell *shell)
+void    wait_for_child_processes_fixed(t_shell *shell)
 {
-	t_const	*current;
+        t_const *current;
+        t_const *last_command;
+        int             status;
 
-	current = shell->constructor;
-	while (current)
-	{
-		if (current->type == TOKEN_COMMAND)
-		{
-			if (current->builtin
-				&& ft_strcmp(current->executable[0], "env") == 0
-				&& current->executable[1]
-				&& ft_strcmp(current->executable[1], "-i") == 0
-				&& current->executable[2]
-				&& ft_strcmp(current->executable[2], "bash") == 0)
-			{
-				current->builtin = 0;
-				token_commands(current);
-			}
-			else if (current->builtin)
-				token_builtins(current);
-			else
-				token_commands(current);
-		}
-		current = current->next;
-	}
-	close_pipes(shell);
+        current = shell->constructor;
+        last_command = NULL;
+        while (current)
+        {
+                if (current->type == TOKEN_COMMAND && current->pid > 0)
+                        last_command = current;
+                current = current->next;
+        }
+        current = shell->constructor;
+        while (current && current->prev)
+                current = current->prev;
+
+        while (current)
+        {
+                if (current->pid > 0)
+                {
+                        waitpid(current->pid, &status, 0);
+                        if (current == last_command)
+                        {
+                                if (WIFEXITED(status))
+                                        shell->last_exit = WEXITSTATUS(status);
+                                else if (WIFSIGNALED(status))
+                                {
+                                        if (WTERMSIG(status) == SIGPIPE)
+                                                shell->last_exit = 0;
+                                        else
+                                                shell->last_exit = 128 + WTERMSIG(status);
+                                }
+                        }
+                }
+                current = current->next;
+        }
 }
 
-void	display_shell(t_shell *shell)
+void    display_shell(t_shell *shell)
 {
-	t_const	*current;
 
-	assign_pipes(shell);
-	process_commands(shell);
-	current = shell->constructor;
-	while (current && current->prev)
-		current = current->prev;
-	while (current)
-	{
-		wait_for_child_processes(current);
-		current = current->next;
-	}
-	close_pipes(shell);
+        assign_pipes(shell);
+        process_commands(shell);
+        wait_for_child_processes_fixed(shell);
+        close_pipes(shell);
 }

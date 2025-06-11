@@ -110,6 +110,7 @@ typedef struct s_shell
 	int				interactive;
 	char			*output;
 	int				node_size;
+	int				redirect_error;
 	t_const			*constructor;
 	t_collector		*collector;
 }	t_shell;
@@ -364,8 +365,6 @@ void	add_or_update_env_var(char ***env, char *key, char *value);
 void	check_heredoc(t_const *node);
 char	*acces_path(t_const *node);
 void	wait_for_child_processes(t_const *node);
-int		execute_command_with_path(t_const *node,
-			char *path, void (*setup_pipes)(t_const *));
 void	setup_last_command_pipes(t_const *node);
 void	setup_middle_command_pipes(t_const *node);
 void	setup_first_command_pipes(t_const *node);
@@ -393,6 +392,25 @@ void	create_append_files(t_const *node);
 void	create_output_files(t_const *node);
 int		validate_all_output_redirections(t_const *node);
 int		validate_all_input_redirections(t_const *node);
+int		validate_pipeline_redirections(t_shell *shell);
+void	create_all_redirect_files(t_shell *shell);
+// Nuevas funciones para manejar errores en el proceso hijo
+void	handle_child_command_error(t_const *node, int error_code);
+int		validate_and_apply_redirections(t_const *node);
+
+// Nueva función para validar permisos de salida
+int		validate_output_permissions(char **files);
+
+// Modificar la signatura de execute_command_with_path:
+int		execute_command_with_path(t_const *node, char *path, int error_code,
+			void (*setup_pipes)(t_const *));
+int		validate_all_output_redirections_no_delete(t_const *node);
+int		is_empty_or_whitespace_command(char *cmd);
+// Nueva función para manejar wait processes con SIGPIPE
+void	wait_for_child_processes_fixed(t_shell *shell);
+
+// Función para validar sin eliminar archivos
+int		validate_output_permissions_no_delete(char **files);
 
 /* Función principal exportada */
 void	path(t_shell *shell);
