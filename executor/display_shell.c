@@ -41,33 +41,33 @@ void    close_pipes(t_shell *shell)
         }
 }
 
-void    process_commands(t_shell *shell)
+void process_commands(t_shell *shell)
 {
-        t_const *current;
+    t_const *current;
 
-        current = shell->constructor;
-        while (current)
+    current = shell->constructor;
+    while (current)
+    {
+        if (current->type == TOKEN_COMMAND)
         {
-                if (current->type == TOKEN_COMMAND)
-                {
-                        if (current->builtin
-                                && ft_strcmp(current->executable[0], "env") == 0
-                                && current->executable[1]
-                                && ft_strcmp(current->executable[1], "-i") == 0
-                                && current->executable[2]
-                                && ft_strcmp(current->executable[2], "bash") == 0)
-                        {
-                                current->builtin = 0;
-                                token_commands(current);
-                        }
-                        else if (current->builtin)
-                                token_builtins(current);
-                        else
-                                token_commands(current);
-                }
-                current = current->next;
+            if (current->builtin
+                && ft_strcmp(current->executable[0], "env") == 0
+                && current->executable[1]
+                && ft_strcmp(current->executable[1], "-i") == 0
+                && current->executable[2]
+                && ft_strcmp(current->executable[2], "bash") == 0)
+            {
+                current->builtin = 0;
+                token_commands(current);
+            }
+            else if (current->builtin)
+                token_builtins(current);
+            else
+                token_commands(current);
         }
-        close_pipes(shell);
+        current = current->next;
+    }
+    close_pipes(shell);
 }
 
 void    wait_for_child_processes_fixed(t_shell *shell)

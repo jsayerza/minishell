@@ -1,5 +1,5 @@
 /* ************************************************************************** */
-/*                                                                            */
+/*  */
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -55,7 +55,7 @@ void	execute_command(t_const *node)
 	}
 
 	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code, NULL);
+	execute_command_with_path(node, path, error_code,  NULL);
 }
 
 void	execute_first_command(t_const *node)
@@ -82,7 +82,7 @@ void	execute_first_command(t_const *node)
 	}
 
 	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code, setup_first_command_pipes);
+	execute_command_with_path(node, path, error_code,  setup_first_command_pipes);
 }
 
 void	execute_middle_command(t_const *node)
@@ -109,7 +109,7 @@ void	execute_middle_command(t_const *node)
 	}
 
 	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code, setup_middle_command_pipes);
+	execute_command_with_path(node, path, error_code,  setup_middle_command_pipes);
 }
 
 void	execute_last_command(t_const *node)
