@@ -6,7 +6,7 @@
 /*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
 /*												  +#+#+#+#+#+	+#+			  */
 /*	 Created: 2025/04/29 12:00:00 by acarranz		   #+#	  #+#			  */
-/*	 Updated: 2025/04/29 12:00:00 by acarranz		  ###	########.fr		  */
+/*	 Updated: 2025/06/12 17:00:00 by acarranz		  ###	########.fr		  */
 /*																			  */
 /* ************************************************************************** */
 
@@ -53,39 +53,36 @@ void	execute_echo(char **args)
 		ft_putstr_fd("\n", 1);
 }
 
-void	redirect_echo(t_const *node)
+void	echo_with_redirections(t_const *node)
 {
-	pid_t	pid;
-	int		status;
-
-	pid = fork();
-	if (pid == -1)
+	node->pid = fork();
+	if (node->pid == -1)
 	{
-		perror("Error al crear el proceso hijo");
+		perror("Error al crear el proceso hijo para echo");
 		node->shell->last_exit = 1;
 		return ;
 	}
-	if (pid == 0)
+	if (node->pid == 0)
 	{
-		dup2(node->fd[1], STDOUT_FILENO);
-		close(node->fd[0]);
-		close(node->fd[1]);
+		setup_child_signals();
+		if (node->pipe_in == 0 && node->pipe_out == 1)
+			setup_first_command_pipes(node);
+		else if (node->pipe_in == 1 && node->pipe_out == 1)
+			setup_middle_command_pipes(node);
+		else if (node->pipe_in == 1 && node->pipe_out == 0)
+			setup_last_command_pipes(node);
+		if (!validate_and_apply_redirections(node))
+			exit(1);
 		execute_echo(node->executable);
 		exit(0);
-	}
-	else
-	{
-		close(node->fd[1]);
-		waitpid(pid, &status, 0);
-		if (WIFEXITED(status))
-			node->shell->last_exit = WEXITSTATUS(status);
 	}
 }
 
 void	echo(t_const *node)
 {
-	if (node->pipe_out)
-		redirect_echo(node);
+	if (node->pipe_in || node->pipe_out || node->redirect_out
+		|| node->redirect_append || node->redirect_in)
+		echo_with_redirections(node);
 	else
 		execute_echo(node->executable);
 }

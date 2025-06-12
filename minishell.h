@@ -411,6 +411,10 @@ void	wait_for_child_processes_fixed(t_shell *shell);
 
 // Función para validar sin eliminar archivos
 int		validate_output_permissions_no_delete(char **files);
+// En minishell.h, agregar estas declaraciones:
+void    apply_input_redirection(t_const *node);
+void    apply_output_redirection(t_const *node);
+void    apply_append_redirection(t_const *node);
 
 /* Función principal exportada */
 void	path(t_shell *shell);

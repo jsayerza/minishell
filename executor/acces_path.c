@@ -41,41 +41,29 @@ static char	*find_path_value(char **env)
 	return (NULL);
 }
 
-// Nueva función que retorna el código de error apropiado
-
-// Función mejorada que detecta directorios
 static int	check_file_access(char *path)
 {
 	struct stat	path_stat;
 	
-	// Verificar si el archivo/directorio existe
 	if (access(path, F_OK) != 0)
-		return (127);  // No such file or directory
-	
-	// Obtener información del archivo
+		return (127);
 	if (stat(path, &path_stat) != 0)
-		return (127);  // Error al obtener información
-	
-	// Verificar si es un directorio
+		return (127);
 	if (S_ISDIR(path_stat.st_mode))
-		return (126);  // Is a directory (no ejecutable)
-	
-	// Verificar si es ejecutable
+		return (126);
 	if (access(path, X_OK) != 0)
-		return (126);  // Permission denied
-	
-	return (0);  // Todo OK
+		return (126);
+	return (0);
 }
 
-static char	*search_executable_with_error(char **paths, char *command, int *error_code)
+static char	*search_executable_with_error(char **paths,
+			char *command, int *error_code)
 {
 	char	*exec;
 	int		i;
 	int		access_result;
 
 	*error_code = 0;
-
-	// Si es ruta absoluta o relativa
 	if (command[0] == '/' || command[0] == '.')
 	{
 		access_result = check_file_access(command);
@@ -84,14 +72,11 @@ static char	*search_executable_with_error(char **paths, char *command, int *erro
 		*error_code = access_result;
 		return (NULL);
 	}
-
-	// Buscar en PATH
 	if (!paths)
 	{
-		*error_code = 127;  // No hay PATH definido
+		*error_code = 127;
 		return (NULL);
 	}
-
 	i = 0;
 	while (paths[i])
 	{
@@ -101,20 +86,14 @@ static char	*search_executable_with_error(char **paths, char *command, int *erro
 			access_result = check_file_access(exec);
 			if (access_result == 0)
 				return (exec);
-
-			// Guardamos el primer error encontrado
 			if (*error_code == 0)
 				*error_code = access_result;
-
 			free(exec);
 		}
 		i++;
 	}
-
-	// Si no encontramos ningún archivo, asumimos comando no encontrado
 	if (*error_code == 0)
 		*error_code = 127;
-
 	return (NULL);
 }
 
@@ -142,17 +121,16 @@ void	check_path(t_shell *shell)
 	}
 }
 
-// Función modificada que también retorna el código de error
 char	*acces_path_with_error(t_const *node, int *error_code)
 {
 	check_path(node->shell);
 	return (search_executable_with_error(node->shell->paths,
-										 node->executable[0], error_code));
+			node->executable[0], error_code));
 }
 
-// Mantener compatibilidad con la función original
 char	*acces_path(t_const *node)
 {
-	int error_code;
+	int	error_code;
+	
 	return (acces_path_with_error(node, &error_code));
 }
