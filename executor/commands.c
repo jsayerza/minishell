@@ -1,5 +1,5 @@
 /* ************************************************************************** */
-/*  */
+/*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   commands.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
@@ -28,57 +28,45 @@ int	is_empty_or_whitespace_command(char *cmd)
 	return (1);
 }
 
-void	execute_command(t_const *node)
+static void	handle_child_process(t_const *node, char *path, int error_code,
+		void (*setup_pipes)(t_const *))
 {
-	char	*path;
-	int		error_code;
-
-	if (node->type != TOKEN_COMMAND || !node->executable
-		|| !node->executable[0])
-		return ;
-	if (is_empty_or_whitespace_command(node->executable[0]))
+	setup_child_signals();
+	if (setup_pipes)
+		setup_pipes(node);
+	if (!validate_and_apply_redirections(node))
+		exit(1);
+	if (!path)
 	{
-		node->pid = fork();
-		if (node->pid == 0)
-		{
-			setup_child_signals();
-			if (!validate_and_apply_redirections(node))
-				exit(1);
-			exit(0);
-		}
-		return ;
+		handle_child_command_error(node, error_code);
+		if (error_code == 127)
+			exit(127);
+		else
+			exit(126);
 	}
-	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code, NULL);
+	execute_in_child(node, path);
+	exit(1);
 }
 
-void	execute_first_command(t_const *node)
+int	execute_command_with_path(t_const *node, char *path, int error_code,
+		void (*setup_pipes)(t_const *))
 {
-	char	*path;
-	int		error_code;
-
-	if (node->type != TOKEN_COMMAND || !node->executable
-		|| !node->executable[0])
-		return ;
-	if (is_empty_or_whitespace_command(node->executable[0]))
+	node->pid = fork();
+	if (node->pid == -1)
 	{
-		node->pid = fork();
-		if (node->pid == 0)
-		{
-			setup_child_signals();
-			setup_first_command_pipes(node);
-			if (!validate_and_apply_redirections(node))
-				exit(1);
-			exit(0);
-		}
-		return ;
+		perror("Error al crear el proceso hijo");
+		free(path);
+		node->shell->last_exit = 1;
+		return (0);
 	}
-	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code,
-		setup_first_command_pipes);
+	if (node->pid == 0)
+		handle_child_process(node, path, error_code, setup_pipes);
+	free(path);
+	return (1);
 }
 
-void	execute_middle_command(t_const *node)
+static void	execute_command_generic(t_const *node,
+		void (*setup_pipes)(t_const *))
 {
 	char	*path;
 	int		error_code;
@@ -92,7 +80,8 @@ void	execute_middle_command(t_const *node)
 		if (node->pid == 0)
 		{
 			setup_child_signals();
-			setup_middle_command_pipes(node);
+			if (setup_pipes)
+				setup_pipes(node);
 			if (!validate_and_apply_redirections(node))
 				exit(1);
 			exit(0);
@@ -100,34 +89,7 @@ void	execute_middle_command(t_const *node)
 		return ;
 	}
 	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code,
-		setup_middle_command_pipes);
-}
-
-void	execute_last_command(t_const *node)
-{
-	char	*path;
-	int		error_code;
-
-	if (node->type != TOKEN_COMMAND || !node->executable
-		|| !node->executable[0])
-		return ;
-	if (is_empty_or_whitespace_command(node->executable[0]))
-	{
-		node->pid = fork();
-		if (node->pid == 0)
-		{
-			setup_child_signals();
-			setup_last_command_pipes(node);
-			if (!validate_and_apply_redirections(node))
-				exit(1);
-			exit(0);
-		}
-		return ;
-	}
-	path = acces_path_with_error(node, &error_code);
-	execute_command_with_path(node, path, error_code,
-		setup_last_command_pipes);
+	execute_command_with_path(node, path, error_code, setup_pipes);
 }
 
 void	token_commands(t_const *node)
@@ -135,11 +97,11 @@ void	token_commands(t_const *node)
 	if (node->type != TOKEN_COMMAND)
 		return ;
 	if (node->pipe_in == 0 && node->pipe_out == 0)
-		execute_command(node);
+		execute_command_generic(node, NULL);
 	else if (node->pipe_in == 0 && node->pipe_out == 1)
-		execute_first_command(node);
+		execute_command_generic(node, setup_first_command_pipes);
 	else if (node->pipe_in == 1 && node->pipe_out == 1)
-		execute_middle_command(node);
+		execute_command_generic(node, setup_middle_command_pipes);
 	else if (node->pipe_in == 1 && node->pipe_out == 0)
-		execute_last_command(node);
+		execute_command_generic(node, setup_last_command_pipes);
 }

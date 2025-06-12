@@ -12,57 +12,52 @@
 
 #include "../minishell.h"
 
-static void	handle_normal_exit(t_shell *shell, int status)
+static t_const	*find_last_command(t_shell *shell)
 {
-	int	exit_code;
+	t_const	*current;
+	t_const	*last_command;
 
-	exit_code = WEXITSTATUS(status);
-	shell->last_exit = exit_code;
-}
-
-static void	handle_signal_exit(t_shell *shell, int status)
-{
-	int	sig;
-
-	sig = WTERMSIG(status);
-	if (sig == SIGINT)
-		shell->last_exit = 130;
-	else if (sig == SIGQUIT)
+	current = shell->constructor;
+	last_command = NULL;
+	while (current)
 	{
-		shell->last_exit = 131;
-		if (WCOREDUMP(status))
-			ft_putstr_fd("Quit (core dumped)\n", 2);
-		else
-			ft_putstr_fd("Quit\n", 2);
+		if (current->type == TOKEN_COMMAND && current->pid > 0)
+			last_command = current;
+		current = current->next;
 	}
-	else
-		shell->last_exit = 128 + sig;
+	return (last_command);
 }
 
-static void	process_child_status(t_const *current, int status)
+static void	set_exit_status(t_shell *shell, int status)
 {
 	if (WIFEXITED(status))
-		handle_normal_exit(current->shell, status);
+		shell->last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
-		handle_signal_exit(current->shell, status);
-	else
-		ft_putstr_fd("DEBUG: Error terminacion\n", 2);
+	{
+		if (WTERMSIG(status) == SIGPIPE)
+			shell->last_exit = 0;
+		else
+			shell->last_exit = 128 + WTERMSIG(status);
+	}
 }
 
-void	wait_for_child_processes(t_const *node)
+void	wait_for_child_processes(t_shell *shell)
 {
-	int		status;
 	t_const	*current;
+	t_const	*last_command;
+	int		status;
 
-	current = node;
+	last_command = find_last_command(shell);
+	current = shell->constructor;
 	while (current && current->prev)
 		current = current->prev;
 	while (current)
 	{
-		if (current->type == TOKEN_COMMAND && current->pid > 0)
+		if (current->pid > 0)
 		{
 			waitpid(current->pid, &status, 0);
-			process_child_status(current, status);
+			if (current == last_command)
+				set_exit_status(shell, status);
 		}
 		current = current->next;
 	}

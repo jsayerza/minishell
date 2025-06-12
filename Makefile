@@ -65,11 +65,14 @@ EXEC_SRC =	$(EXEC_DIR)/init_shell.c \
 			$(EXEC_DIR)/commands.c \
 			$(EXEC_DIR)/commands_utils00.c \
 			$(EXEC_DIR)/commands_utils01.c \
+			$(EXEC_DIR)/commands_utils02.c \
 			$(EXEC_DIR)/redirects.c \
 			$(EXEC_DIR)/redirects_utils00.c \
+			$(EXEC_DIR)/redirects_utils01.c \
 			$(EXEC_DIR)/signals.c \
 			$(EXEC_DIR)/heredoc.c \
 			$(EXEC_DIR)/acces_path.c \
+			$(EXEC_DIR)/acces_path_utils00.c \
 			$(EXEC_DIR)/wait_children.c \
 			$(EXEC_DIR)/clean_shell.c
 

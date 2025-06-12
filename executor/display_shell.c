@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*																			  */
+/*														  :::	   ::::::::   */
+/*	 display_shell.c									:+:		 :+:	:+:   */
+/*													  +:+ +:+		  +:+	  */
+/*	 By: acarranz <marvin@42.fr>					+#+  +:+	   +#+		  */
+/*												  +#+#+#+#+#+	+#+			  */
+/*	 Created: 2025/03/23 12:14:40 by acarranz		   #+#	  #+#			  */
+/*	 Updated: 2025/03/23 12:14:40 by acarranz		  ###	########.fr		  */
+/*																			  */
+/* ************************************************************************** */
+
 #include "../minishell.h"
 
 void	assign_pipes(t_shell *shell)
@@ -57,49 +69,10 @@ void	process_commands(t_shell *shell)
 	close_pipes(shell);
 }
 
-void	wait_for_child_processes_fixed(t_shell *shell)
-{
-	t_const	*current;
-	t_const	*last_command;
-	int		status;
-
-	current = shell->constructor;
-	last_command = NULL;
-	while (current)
-	{
-		if (current->type == TOKEN_COMMAND && current->pid > 0)
-			last_command = current;
-		current = current->next;
-	}
-	current = shell->constructor;
-	while (current && current->prev)
-		current = current->prev;
-	while (current)
-	{
-		if (current->pid > 0)
-		{
-			waitpid(current->pid, &status, 0);
-			if (current == last_command)
-			{
-				if (WIFEXITED(status))
-					shell->last_exit = WEXITSTATUS(status);
-				else if (WIFSIGNALED(status))
-				{
-					if (WTERMSIG(status) == SIGPIPE)
-						shell->last_exit = 0;
-					else
-						shell->last_exit = 128 + WTERMSIG(status);
-				}
-			}
-		}
-		current = current->next;
-	}
-}
-
 void	display_shell(t_shell *shell)
 {
 	assign_pipes(shell);
 	process_commands(shell);
-	wait_for_child_processes_fixed(shell);
+	wait_for_child_processes(shell);
 	close_pipes(shell);
 }
