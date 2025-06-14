@@ -1,5 +1,5 @@
 CC				=	cc
-FLAGS			=	-g -Wextra -Werror -Wall
+FLAGS			=	-g -Wextra -Werror -Wall --sanitize=address
 USE_READLINE	=	1
 ifeq ($(USE_READLINE), 1)
 	READLINE_LIB = -lreadline
@@ -11,7 +11,8 @@ INCLUDES		=	-I. -Ilibft -Ignl
 EXEC_DIR		=	executor
 NAME			=	minishell
 PROG_SRC		=	minishell.c minishell_funcs.c \
-					collector.c utils.c prompt.c\
+					collector.c prompt.c\
+					utils.c utils_str.c \
 					lexer/lexer.c lexer/lexer_funcs.c \
 					lexer/lexer_funcs_operator.c \
 					lexer/lexer_funcs_handle.c \
@@ -19,6 +20,7 @@ PROG_SRC		=	minishell.c minishell_funcs.c \
 					lexer/lexer_expand_var.c \
 					lexer/lexer_expand_str.c \
 					lexer/lexer_expand_quotes.c \
+					lexer/lexer_expand_quotes_funcs.c \
 					lexer/lexer_expand_ass_quote.c \
 					lexer/tokens.c lexer/tokens_funcs.c \
 					lexer/tokens_funcs_insert.c \

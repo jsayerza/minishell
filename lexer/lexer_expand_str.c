@@ -19,12 +19,12 @@ static char	*append_to_result(char *result, char *expanded,
 	char	*new_result;
 
 	tmp = ft_strjoin(result, expanded);
-	freer(expanded);
+	freer((void **)&expanded);
 	if (!tmp)
 		exit_program(collector, err_msg, true);
-	freer(result);
+	freer((void **)&result);
 	new_result = ft_strdup(tmp);
-	freer(tmp);
+	freer((void **)&tmp);
 	if (!new_result)
 		exit_program(collector, err_msg, true);
 	return (new_result);

@@ -60,7 +60,7 @@ void	get_quoted_str(const char *input, t_collector **collector,
 	if (!quoted)
 		exit_program(collector, "Error malloc get val for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, quoted, head);
-	freer(quoted);
+	freer((void **)&quoted);
 	token_create(collector, token_type, quote_str, head);
 	(*i)++;
 }
@@ -79,5 +79,5 @@ void	get_word(const char *input, t_collector **collector,
 	if (!value)
 		exit_program(collector, "Error malloc get val for token", EXIT_FAILURE);
 	token_create(collector, TOKEN_WORD, value, head);
-	freer(value);
+	freer((void **)&value);
 }

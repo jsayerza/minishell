@@ -16,7 +16,7 @@ static int	is_delimiter(char *line, const char *delim)
 {
 	if (ft_strcmp(line, delim) == 0)
 	{
-		freer(line);
+		freer((void **)&line);
 		return (true);
 	}
 	return (false);

@@ -30,7 +30,7 @@ static char	*construct_exec(char *path, char *command)
 static int	check_file_access(char *path)
 {
 	struct stat	path_stat;
-	
+
 	if (access(path, F_OK) != 0)
 		return (127);
 	if (stat(path, &path_stat) != 0)

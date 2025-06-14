@@ -21,7 +21,7 @@ static void	process_line(char *line, t_shell *shell, t_collector **cycle)
 	add_history(line);
 	tokens = NULL;
 	tokens = lexer(line, cycle, &tokens, shell);
-	freer(line);
+	freer((void **)&line);
 	if (!tokens)
 		return ;
 	ast = parser(cycle, tokens);
@@ -39,14 +39,14 @@ static int	handle_line_errors(char *line, t_collector **cycle)
 {
 	if (line[0] == '\0' || is_only_whitespace(line))
 	{
-		freer(line);
+		freer((void **)&line);
 		collector_cleanup(cycle);
 		return (1);
 	}
 	if (has_unclosed_quotes(line))
 	{
 		print_error("minishell: unclosed quotes");
-		freer(line);
+		freer((void **)&line);
 		collector_cleanup(cycle);
 		return (1);
 	}

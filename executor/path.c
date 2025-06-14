@@ -18,8 +18,7 @@ static void	clean_existing_paths(t_shell *shell)
 		return ;
 	if (shell->path)
 	{
-		freer(shell->path);
-		shell->path = NULL;
+		freer((void **)&shell->path);
 	}
 	if (shell->paths)
 	{

@@ -13,7 +13,7 @@
 #include "minishell.h"
 
 void	token_inserted_fill(t_token *new_token, t_token_type type,
-	const char *value, t_collector **collector)
+	char *value, t_collector **collector)
 {
 	new_token->type = type;
 	new_token->value = ft_strdup(value);

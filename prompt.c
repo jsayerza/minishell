@@ -50,15 +50,15 @@ static char	*join_prompt_parts(char *user, char *short_pwd,
 
 	safe_join(&part1, BOLD GREEN "", user, collector);
 	safe_join(&part2, part1, RESET "@", collector);
-	freer(part1);
+	freer((void **)&part1);
 	safe_join(&part1, part2, CYAN "minishell" RESET ":", collector);
-	freer(part2);
+	freer((void **)&part2);
 	safe_join(&part2, part1, YELLOW, collector);
-	freer(part1);
+	freer((void **)&part1);
 	safe_join(&part3, part2, short_pwd, collector);
-	freer(part2);
+	freer((void **)&part2);
 	safe_join(&prompt, part3, RESET "$ ", collector);
-	freer(part3);
+	freer((void **)&part3);
 	return (prompt);
 }
 
@@ -75,7 +75,7 @@ char	*prompt_generate(t_collector **collector)
 		user = "unknown";
 	short_pwd = get_short_pwd(cwd, collector);
 	prompt = join_prompt_parts(user, short_pwd, collector);
-	freer(short_pwd);
+	freer((void **)&short_pwd);
 	collector_append(collector, prompt);
 	return (prompt);
 }

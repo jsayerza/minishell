@@ -40,8 +40,7 @@ char	**find_path(t_shell *shell)
 		return (NULL);
 	if (shell->path)
 	{
-		freer(shell->path);
-		shell->path = NULL;
+		freer((void **)&shell->path);
 	}
 	shell->path = ft_strdup(path_value);
 	if (!shell->path)

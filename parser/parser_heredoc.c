@@ -25,12 +25,12 @@ static void	heredoc_read_ctrl(char *heredoc, char *heredoc_old, char *line,
 {
 	if (heredoc_old)
 	{
-		freer(heredoc_old);
+		freer((void **)&heredoc_old);
 		heredoc_old = NULL;
 	}
 	if (!heredoc)
 	{
-		freer(line);
+		freer((void **)&line);
 		exit_program(collector, "Error reading heredoc cont", EXIT_FAILURE);
 	}
 }
@@ -89,7 +89,7 @@ char	*heredoc_read(const char *delim, t_collector **collector)
 		if (heredoc_should_break(line, delim))
 			break ;
 		heredoc_update_vars(&heredoc, line, &total_len, collector);
-		freer(line);
+		freer((void **)&line);
 	}
 	if (!heredoc)
 		return (ft_strdup(""));

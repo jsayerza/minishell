@@ -66,7 +66,7 @@ static char	*expand_env_variable(const char *str, int *i,
 	if (!var_name)
 		exit_program(collector, "Error malloc expand_variable varname", true);
 	var_value = get_env_value_lexer(var_name, shell);
-	freer(var_name);
+	freer((void **)&var_name);
 	if (var_value)
 		result = ft_strdup(var_value);
 	else

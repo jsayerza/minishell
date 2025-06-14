@@ -26,7 +26,7 @@ void	tokens_free(t_token *head)
 
 void	token_print(t_token *token)
 {
-	printf("Type: %d, Value: '%s'\n", token->type, token->value);
+	printf("Type: %d, Value: %s\n", token->type, token->value);
 }
 
 void	tokens_print(t_token **head)

@@ -28,7 +28,7 @@ void	collector_remove_ptr(t_collector **collector, void *ptr)
 			else
 				*collector = curr->next;
 			if (curr->ptr)
-				freer(curr->ptr);
+				freer(&curr->ptr);
 			free(curr);
 			return ;
 		}
@@ -47,7 +47,7 @@ void	collector_cleanup(t_collector **collector)
 	{
 		next = current->next;
 		if (current->ptr)
-			freer(current->ptr);
+			freer(&current->ptr);
 		if (current)
 			free(current);
 		current = next;

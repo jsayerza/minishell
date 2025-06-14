@@ -15,7 +15,7 @@
 int	is_empty_or_whitespace_command(char *cmd)
 {
 	int	i;
-	
+
 	if (!cmd)
 		return (1);
 	i = 0;

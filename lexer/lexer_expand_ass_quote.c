@@ -34,10 +34,10 @@ static void	expand_ass_quote_join_prev(t_token *prev,
 
 	tmp = ft_strjoin(prev->value, joined);
 	if (!collector_contains(*collector, prev->value))
-		freer(prev->value);
+		freer((void **)&prev->value);
 	prev->value = tmp;
 	collector_append(collector, prev->value);
-	freer(joined);
+	freer((void **)&joined);
 }
 
 static void	expand_ass_quote_join_expanded(char *expanded,
@@ -46,10 +46,10 @@ static void	expand_ass_quote_join_expanded(char *expanded,
 	char	*tmp;
 
 	tmp = ft_strjoin(*joined, expanded);
-	freer(expanded);
+	freer((void **)&expanded);
 	if (!tmp)
 		exit_program(collector, "Error join ass+quote", true);
-	freer(*joined);
+	freer((void **)&*joined);
 	*joined = tmp;
 }
 

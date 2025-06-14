@@ -12,19 +12,23 @@
 
 #include "minishell.h"
 
-static void	process_input_tokens(const char *input, t_collector **collector,
+static bool	process_input_tokens(const char *input, t_collector **collector,
 	int *i, t_token **head)
 {
 	while (input[*i])
 	{
 		if (handle_invalidchars(input, *i))
+		{
 			exit_program(collector, "minishell: invalid character", false);
-		if (handle_whitespace(input, i)
+			return (false);
+		}
+		if (handle_whitespace(input, collector, i, head)
 			|| handle_operator(input, collector, i, head)
 			|| handle_quotes(input, collector, i, head))
 			continue ;
 		get_word(input, collector, i, head);
 	}
+	return (true);
 }
 
 static t_token	*finalize_tokens(t_token **head, t_collector **collector,
@@ -51,6 +55,7 @@ t_token	*lexer(const char *input, t_collector **collector,
 	int	i;
 
 	i = 0;
-	process_input_tokens(input, collector, &i, head);
+	if (!process_input_tokens(input, collector, &i, head))
+		return (NULL);
 	return (finalize_tokens(head, collector, shell));
 }

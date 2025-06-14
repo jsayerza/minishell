@@ -12,14 +12,49 @@
 
 #include "minishell.h"
 
-int	handle_whitespace(const char *input, int *i)
+static bool	is_quote_open(const char *input, int pos)
 {
-	if (ft_strchr(" \f\r\n\t\v", input[*i]))
+	bool	in_squote;
+	bool	in_dquote;
+	int		i;
+
+	in_squote = false;
+	in_dquote = false;
+	i = 0;
+	while (i < pos)
 	{
-		(*i)++;
-		return (1);
+		if (input[i] == '\'' && !in_dquote)
+			in_squote = !in_squote;
+		else if (input[i] == '"' && !in_squote)
+			in_dquote = !in_dquote;
+		i++;
 	}
-	return (0);
+	return (in_squote || in_dquote);
+}
+
+int	handle_whitespace(const char *input,
+	t_collector **collector, int *i, t_token **head)
+{
+	int	start;
+	int	before;
+	int	after;
+
+	if (!input[*i] || !ft_strchr(" \f\r\n\t\v", input[*i]))
+		return (0);
+	start = *i;
+	while (input[*i] && ft_strchr(" \f\r\n\t\v", input[*i]))
+		(*i)++;
+	if (is_quote_open(input, start))
+		return (1);
+	before = start - 1;
+	after = *i;
+	while (before >= 0 && ft_strchr(" \f\r\n\t\v", input[before]))
+		before--;
+	while (input[after] && ft_strchr(" \f\r\n\t\v", input[after]))
+		after++;
+	if (before >= 0 && input[after] != '\0')
+		token_create(collector, TOKEN_WHITESPACE, "_", head);
+	return (1);
 }
 
 int	handle_operator(const char *input, t_collector **collector,

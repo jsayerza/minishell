@@ -180,12 +180,15 @@ char	*concatenate_export(char *export, char *temp, char *declare);
 /* ========================================================================== */
 
 /* utils.c */
-void	freer(char *ptr);
-bool	has_unclosed_quotes(const char *line);
-int		is_only_whitespace(const char *str);
+void	ptr_print(void **ptr, char *msg);
+void	freer(void **ptr);
 void	print_error(const char *msg);
 void	exit_program(t_collector **collector, const char *msg,
 			bool should_exit);
+
+/* utils_str.c */
+bool	has_unclosed_quotes(const char *line);
+int		is_only_whitespace(const char *str);
 
 /* prompt.c */
 char	*prompt_generate(t_collector **collector);
@@ -222,7 +225,8 @@ void	get_word(const char *input, t_collector **collector,
 			int *i, t_token **head);
 
 /* lexer/lexer_funcs_handle.c */
-int		handle_whitespace(const char *input, int *i);
+int		handle_whitespace(const char *input,
+			t_collector **collector, int *i, t_token **head);
 int		handle_operator(const char *input, t_collector **collector,
 			int *i, t_token **head);
 int		handle_quotes(const char *input, t_collector **collector,
@@ -246,7 +250,7 @@ void	token_remove(t_token **head, t_token *target, t_collector **collector);
 
 /* lexer/tokens_funcs_insert.c */
 void	token_inserted_fill(t_token *new_token, t_token_type type,
-			const char *value, t_collector **collector);
+			char *value, t_collector **collector);
 t_token	*token_insert_before(t_token **head, t_token *pos,
 			t_collector **collector);
 void	token_insert_after(t_token *prev, t_token *new_token);
@@ -264,6 +268,16 @@ char	*expand_string(const char *str, t_shell *shell,
 
 /* lexer/lexer_expand_quotes.c */
 t_token	*expand_quotes(t_token **head, t_token *curr, t_shell *shell,
+			t_collector **collector);
+
+/* lexer/lexer_expand_quotes_funcs.c */
+void	expand_quote_token_remove(t_token **head, t_token	*start,
+			t_token	*next, t_collector **collector);
+void	expand_quotes_token_insert(t_token **head, t_token *start,
+			char *joined, t_collector **collector);
+char	*expand_quotes_token_dquote(char *joined, t_token *curr,
+			t_shell *shell, t_collector **collector);
+void	expand_quotes_tmp_ctrl(char *tmp, char **joined,
 			t_collector **collector);
 
 /* lexer/lexer_expand_ass_quote.c */
