@@ -74,18 +74,21 @@ static bool	expand_quotes_merge_adjacent(t_token *prev, t_collector **collector)
 	return (true);
 }
 
-static void	expand_quotes_merge_adjacent_proc(t_token **head, t_token *next,
-	bool	merged_into_prev, t_collector **collector)
+static t_token	*expand_quotes_merge_adjacent_proc(t_token **head,
+	t_token *next, bool merged_into_prev, t_collector **collector)
 {
 	t_token	*prev;
+	t_token	*tmp_next;
 
 	prev = token_get_prev(*head, next);
 	merged_into_prev = expand_quotes_merge_adjacent(prev, collector);
 	if (merged_into_prev)
 	{
-		next = prev->next->next;
+		tmp_next = prev->next->next;
 		token_remove(head, prev->next, collector);
+		return (tmp_next);
 	}
+	return (next);
 }
 
 t_token	*expand_quotes(t_token **head, t_token *curr,
@@ -108,8 +111,8 @@ t_token	*expand_quotes(t_token **head, t_token *curr,
 		expand_quote_token_remove(head, start, next, collector);
 	}
 	if (joined && *joined)
-		expand_quotes_merge_adjacent_proc(head, next,
-			merged_into_prev, collector);
+		next = expand_quotes_merge_adjacent_proc(head, next,
+				merged_into_prev, collector);
 	freer((void **)&joined);
 	return (next);
 }
