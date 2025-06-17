@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   commands_utils_exec.c                              :+:      :+:    :+:   */
+/*   commands_utils02.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: acarranz <marvin@42.fr>                    +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:13:24 by acarranz          #+#    #+#             */
-/*   Updated: 2025/06/11 XX:XX:XX by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/17 18:44:23 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,7 @@ static int	validate_files_array(char **files, int flags)
 	{
 		fd = open(files[i], flags, 0644);
 		if (fd < 0)
-		{
-			ft_putstr_fd("minishell: ", STDERR_FILENO);
-			ft_putstr_fd(files[i], STDERR_FILENO);
-			ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
 			return (0);
-		}
 		close(fd);
 		i++;
 	}
