@@ -48,31 +48,43 @@ void	update_env_var(t_const *node, char *arg, int index_env)
 	}
 }
 
-void	process_var_with_value(t_const *node, char *arg,
-						int index_env, int index_export)
-{
-	char	*new_var;
-
-	new_var = NULL;
-	update_env_var(node, arg, index_env);
-	new_var = process_value(new_var, arg);
-	update_export_var(node, new_var, index_export);
-	free(new_var);
-}
-
 void	process_export_var(t_const *node, char *arg)
 {
 	int		index_env;
 	int		index_export;
 	char	*var_name;
+	char	*new_var;
 
 	var_name = extract_var_name(arg);
 	index_env = find_in_env(node->shell->env, var_name);
 	index_export = find_in_export(node->shell->export, var_name);
+	
 	if (var_value(arg) == 1)
-		process_var_with_value(node, arg, index_env, index_export);
-	else if (index_export == -1)
-		add_to_export(&(node->shell->export), arg);
+	{
+		// Variable con valor explícito (ej: export VAR=value)
+		update_env_var(node, arg, index_env);
+		new_var = process_value(NULL, arg);
+		update_export_var(node, new_var, index_export);
+		free(new_var);
+	}
+	else 
+	{
+		// Variable sin valor explícito (ej: export VAR)
+		if (index_env != -1)
+		{
+			// La variable YA existe en env, exportarla con su valor actual
+			// No actualizamos env porque ya está ahí
+			new_var = process_value(NULL, node->shell->env[index_env]);
+			update_export_var(node, new_var, index_export);
+			free(new_var);
+		}
+		else
+		{
+			// La variable NO existe en env, solo añadir el nombre a export
+			if (index_export == -1)
+				add_to_export(&(node->shell->export), arg);
+		}
+	}
 	free(var_name);
 	sort_export(node->shell);
 }

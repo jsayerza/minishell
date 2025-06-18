@@ -65,7 +65,13 @@ void	env(t_const *node)
 	if (!node || !node->executable || !node->shell)
 		return ;
 	if (node->pipe_out)
+	{
 		redirect_builtin(node, node->shell->env);
-	else if (!node->executable[1])
+		node->shell->last_exit = 0;
+	}
+	else 
+	{	
 		print_builtin(node->shell->env);
+		node->shell->last_exit = 0;
+	}
 }
