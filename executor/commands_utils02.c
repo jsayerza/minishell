@@ -66,21 +66,3 @@ int	validate_and_create_output_files(t_const *node)
 		return (0);
 	return (1);
 }
-
-int	validate_redirections(t_const *node)
-{
-	if (!validate_all_output_redirections_no_delete(node))
-		return (0);
-	if (!validate_all_input_redirections(node))
-		return (0);
-	return (1);
-}
-
-void	apply_redirections(t_const *node)
-{	
-	if (node->redirect_out_type == TOKEN_REDIRECT_OUT)
-		apply_output_redirection(node);
-	else if (node->redirect_out_type == TOKEN_APPEND)
-		apply_append_redirection(node);
-	apply_input_redirection(node);
-}

@@ -69,8 +69,8 @@ void	env(t_const *node)
 		redirect_builtin(node, node->shell->env);
 		node->shell->last_exit = 0;
 	}
-	else 
-	{	
+	else
+	{
 		print_builtin(node->shell->env);
 		node->shell->last_exit = 0;
 	}

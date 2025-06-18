@@ -489,7 +489,7 @@ int		validate_output_permissions_no_delete(char **files);
 int		validate_input_file_access(char *filename);
 
 /* Redirection application */
-int	validate_redirections(t_const *node);
+int		validate_redirections(t_const *node);
 void	apply_all_redirections(t_const *node);
 void	apply_input_redirection(t_const *node);
 void	apply_output_redirection(t_const *node);

@@ -41,9 +41,27 @@ void	close_pipes(t_shell *shell)
 	}
 }
 
+void	handle_command_execution(t_const *current)
+{
+	if (current->type == TOKEN_COMMAND)
+	{
+		if (current->builtin && ft_strcmp(current->executable[0],
+				"env") == 0 && current->executable[1]
+			&& ft_strcmp(current->executable[1], "-i") == 0
+			&& current->executable[2] && ft_strcmp(current->executable[2],
+				"bash") == 0)
+			token_commands(current);
+		else if (current->builtin)
+			token_builtins(current);
+		else
+			token_commands(current);
+	}
+}
+
 void	process_commands(t_shell *shell)
 {
 	t_const	*current;
+	pid_t	pid;
 
 	current = shell->constructor;
 	while (current)
@@ -53,30 +71,16 @@ void	process_commands(t_shell *shell)
 			shell->last_exit = 1;
 			if (current->pipe_out == 1 || current->pipe_in == 1)
 			{
-				pid_t pid = fork();
+				pid = fork();
 				if (pid == 0)
-					exit(1); 
+					exit(1);
 				current->pid = pid;
 			}
 			current = current->next;
-		}	
-		else 
-		{	
-			if (current->type == TOKEN_COMMAND)
-			{
-				if (current->builtin && ft_strcmp(current->executable[0], "env")
-					== 0 && current->executable[1]
-					&& ft_strcmp(current->executable[1], "-i")
-					== 0 && current->executable[2]
-					&& ft_strcmp(current->executable[2], "bash") == 0)
-				{
-					token_commands(current);
-				}
-				else if (current->builtin)
-					token_builtins(current);
-				else
-					token_commands(current);
-			}
+		}
+		else
+		{
+			handle_command_execution(current);
 			current = current->next;
 		}
 	}
