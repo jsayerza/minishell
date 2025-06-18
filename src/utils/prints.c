@@ -12,7 +12,7 @@
 
 #include "../../includes/minishell.h"
 
-void	print_builtin(char **builtin)
+void	print_builtin(t_const *node, char **builtin)
 {
 	int	i;
 
@@ -22,4 +22,5 @@ void	print_builtin(char **builtin)
 		ft_putstr_fd(builtin[i++], 1);
 		ft_putstr_fd("\n", 1);
 	}
+	node->shell->last_exit = 0;
 }

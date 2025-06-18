@@ -29,7 +29,7 @@ void	redirect_builtin(t_const *node, char **builtin)
 		dup2(node->fd[1], STDOUT_FILENO);
 		close(node->fd[0]);
 		close(node->fd[1]);
-		print_builtin(builtin);
+		print_builtin(node, builtin);
 		exit(1);
 	}
 	close(node->fd[1]);

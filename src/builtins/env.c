@@ -70,8 +70,5 @@ void	env(t_const *node)
 		node->shell->last_exit = 0;
 	}
 	else
-	{
-		print_builtin(node->shell->env);
-		node->shell->last_exit = 0;
-	}
+		print_builtin(node, node->shell->env);
 }

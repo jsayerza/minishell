@@ -30,15 +30,16 @@ static char	*construct_exec(char *path, char *command)
 static int	check_file_access(char *path)
 {
 	struct stat	path_stat;
+	int			fd;
 
-	if (access(path, F_OK) != 0)
-		return (127);
 	if (stat(path, &path_stat) != 0)
 		return (127);
 	if (S_ISDIR(path_stat.st_mode))
 		return (126);
-	if (access(path, X_OK) != 0)
+	fd = open(path, O_RDONLY);
+	if (fd == -1)
 		return (126);
+	close(fd);
 	return (0);
 }
 

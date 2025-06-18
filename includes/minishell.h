@@ -523,7 +523,7 @@ void	signal_handler_child(int sig);
 void	display_shell(t_shell *shell);
 
 /* Print functions */
-void	print_builtin(char **builtin);
+void	print_builtin(t_const *node, char **builtin);
 void	print_token_list(t_shell *shell);
 void	print_const(t_shell *shell);
 void	print_path(t_shell *shell);

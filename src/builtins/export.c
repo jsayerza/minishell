@@ -97,10 +97,7 @@ void	export(t_const *node)
 	if (node->pipe_out)
 		redirect_builtin(node, node->shell->export);
 	else if (!node->executable[1])
-	{
-		print_builtin(node->shell->export);
-		node->shell->last_exit = 0;
-	}
+		print_builtin(node, node->shell->export);
 	else
 	{
 		j = 1;

@@ -84,6 +84,5 @@ void	echo(t_const *node)
 		echo_with_redirections(node);
 	else
 		execute_echo(node->executable);
-
 	node->shell->last_exit = 0;
 }
