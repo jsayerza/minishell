@@ -48,9 +48,16 @@ void	process_commands(t_shell *shell)
 	current = shell->constructor;
 	while (current)
 	{
-		if(!validate_redirections(current))
+		if (!validate_redirections(current))
 		{
-			shell->last_exit = 1;	
+			shell->last_exit = 1;
+			if (current->pipe_out == 1 || current->pipe_in == 1)
+			{
+				pid_t pid = fork();
+				if (pid == 0)
+					exit(1); 
+				current->pid = pid;
+			}
 			current = current->next;
 		}	
 		else 
