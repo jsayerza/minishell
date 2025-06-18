@@ -14,7 +14,6 @@
 
 int	validate_all_input_redirections(t_const *node)
 {
-	int	fd;
 	int	i;
 
 	if (!node || !node->redirect_in)
@@ -22,15 +21,20 @@ int	validate_all_input_redirections(t_const *node)
 	i = 0;
 	while (node->redirect_in[i])
 	{
-		fd = open(node->redirect_in[i], O_RDONLY);
-		if (fd < 0)
+		if (access(node->redirect_in[i], F_OK) != 0)
 		{
 			ft_putstr_fd("minishell: ", STDERR_FILENO);
 			ft_putstr_fd(node->redirect_in[i], STDERR_FILENO);
 			ft_putstr_fd(": No such file or directory\n", STDERR_FILENO);
 			return (0);
 		}
-		close(fd);
+		if (access(node->redirect_in[i], R_OK) != 0)
+		{
+			ft_putstr_fd("minishell: ", STDERR_FILENO);
+			ft_putstr_fd(node->redirect_in[i], STDERR_FILENO);
+			ft_putstr_fd(": Permission denied\n", STDERR_FILENO);
+			return (0);
+		}
 		i++;
 	}
 	return (1);

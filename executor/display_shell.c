@@ -48,23 +48,30 @@ void	process_commands(t_shell *shell)
 	current = shell->constructor;
 	while (current)
 	{
-		if (current->type == TOKEN_COMMAND)
+		if(!validate_redirections(current))
 		{
-			if (current->builtin && ft_strcmp(current->executable[0], "env")
-				== 0 && current->executable[1]
-				&& ft_strcmp(current->executable[1], "-i")
-				== 0 && current->executable[2]
-				&& ft_strcmp(current->executable[2], "bash") == 0)
+			shell->last_exit = 1;	
+			current = current->next;
+		}	
+		else 
+		{	
+			if (current->type == TOKEN_COMMAND)
 			{
-				current->builtin = 0;
-				token_commands(current);
+				if (current->builtin && ft_strcmp(current->executable[0], "env")
+					== 0 && current->executable[1]
+					&& ft_strcmp(current->executable[1], "-i")
+					== 0 && current->executable[2]
+					&& ft_strcmp(current->executable[2], "bash") == 0)
+				{
+					token_commands(current);
+				}
+				else if (current->builtin)
+					token_builtins(current);
+				else
+					token_commands(current);
 			}
-			else if (current->builtin)
-				token_builtins(current);
-			else
-				token_commands(current);
+			current = current->next;
 		}
-		current = current->next;
 	}
 	close_pipes(shell);
 }

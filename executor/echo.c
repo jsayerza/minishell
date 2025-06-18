@@ -71,10 +71,9 @@ void	echo_with_redirections(t_const *node)
 			setup_middle_command_pipes(node);
 		else if (node->pipe_in == 1 && node->pipe_out == 0)
 			setup_last_command_pipes(node);
-		if (!validate_and_apply_redirections(node))
-			exit(1);
+		apply_redirections(node);
 		execute_echo(node->executable);
-		exit(0);
+		exit (0);
 	}
 }
 

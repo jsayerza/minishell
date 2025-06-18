@@ -34,8 +34,7 @@ static void	handle_child_process(t_const *node, char *path, int error_code,
 	setup_child_signals();
 	if (setup_pipes)
 		setup_pipes(node);
-	if (!validate_and_apply_redirections(node))
-		exit(1);
+	apply_redirections(node);
 	if (!path)
 	{
 		handle_child_command_error(node, error_code);
@@ -82,8 +81,6 @@ static void	execute_command_generic(t_const *node,
 			setup_child_signals();
 			if (setup_pipes)
 				setup_pipes(node);
-			if (!validate_and_apply_redirections(node))
-				exit(1);
 			exit(0);
 		}
 		return ;
