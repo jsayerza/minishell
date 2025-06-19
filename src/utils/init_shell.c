@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/03/23 12:14:31 by acarranz          #+#    #+#             */
-/*   Updated: 2025/06/07 08:13:05 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:26:46 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ static int	init_shell_fields(t_shell *shell, t_collector **collector)
 	shell->interactive = 1;
 	shell->output = NULL;
 	shell->node_size = 0;
+	shell->heredoc_signal = 0;
 	if (collector)
 		shell->collector = *collector;
 	else

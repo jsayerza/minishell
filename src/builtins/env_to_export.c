@@ -48,28 +48,47 @@ int	copy_exp_variable(char **exp, char *envv, int index)
 	return (1);
 }
 
+static int	count_valid_env_vars(char **env)
+{
+	int	i;
+	int	count;
+
+	i = 0;
+	count = 0;
+	while (env && env[i])
+	{
+		if (!(env[i][0] == '_' && env[i][1] == '='))
+			count++;
+		i++;
+	}
+	return (count);
+}
+
 void	env_to_export(t_shell *shell)
 {
 	int		i;
-	int		env_count;
+	int		j;
 	char	**exp;
 
-	env_count = 0;
-	while (shell->env && shell->env[env_count])
-		env_count++;
-	exp = allocate_exp(env_count);
+	exp = allocate_exp(count_valid_env_vars(shell->env));
 	if (!exp)
 		return ;
 	i = 0;
-	while (i < env_count)
+	j = 0;
+	while (shell->env && shell->env[i])
 	{
-		if (!copy_exp_variable(exp, shell->env[i], i))
+		if (shell->env[i][0] == '_' && shell->env[i][1] == '=')
 		{
-			free_exp(exp, i);
+			i++;
+			continue ;
+		}
+		if (!copy_exp_variable(exp, shell->env[i], j++))
+		{
+			free_exp(exp, j - 1);
 			return ;
 		}
 		i++;
 	}
-	exp[i] = NULL;
+	exp[j] = NULL;
 	shell->export = exp;
 }

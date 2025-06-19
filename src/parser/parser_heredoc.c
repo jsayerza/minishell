@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parser_heredoc.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: jsayerza <jsayerza@student.42barcelona.fr> +#+  +:+       +#+        */
+/*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 11:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/07 10:55:37 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 19:12:01 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

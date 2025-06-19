@@ -30,11 +30,13 @@ static t_const	*find_last_command(t_shell *shell)
 
 static void	set_exit_status(t_shell *shell, int status)
 {
+	int	sig;
+
 	if (WIFEXITED(status))
 		shell->last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
-		int sig = WTERMSIG(status);
+		sig = WTERMSIG(status);
 		if (sig == SIGPIPE)
 			shell->last_exit = 0;
 		else

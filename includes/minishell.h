@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/19 18:05:47 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 19:13:38 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -112,6 +112,7 @@ typedef struct s_collector
 {
 	void				*ptr;
 	struct s_collector	*next;
+
 }	t_collector;
 
 typedef struct s_constructor	t_const;
@@ -127,6 +128,7 @@ typedef struct s_shell
 	char			*output;
 	int				node_size;
 	int				redirect_error;
+	int				heredoc_signal;
 	t_const			*constructor;
 	t_collector		*collector;
 }	t_shell;
