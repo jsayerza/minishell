@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/19 19:13:38 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 20:20:19 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,6 +312,13 @@ t_token	*build_test_tokens(void);
 
 /* parser/parser_heredoc.c */
 char	*heredoc_read(const char *delim, t_collector **collector);
+void	heredoc_update_vars(char **heredoc, char *line,
+			size_t *len, t_collector **collector);
+char	*heredoc_read_line(void);
+char	*heredoc_read(const char *delim, t_collector **collector);
+char	*heredoc_read_child(const char *delim, t_collector **collector);
+void	heredoc_child_process(int *pipe_fd, const char *delim,
+			t_collector **collector);
 
 /* parser/parser_heredoc_should_break.c */
 int		heredoc_should_break(char *line, const char *delim);

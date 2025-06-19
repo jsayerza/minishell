@@ -53,6 +53,7 @@ PARSER_SRC = $(SRCDIR)/parser/parser.c \
              $(SRCDIR)/parser/parser_funcs.c \
              $(SRCDIR)/parser/parser_utils_token_invalid.c \
              $(SRCDIR)/parser/parser_heredoc.c \
+             $(SRCDIR)/parser/parser_heredoc_signals.c \
              $(SRCDIR)/parser/parser_heredoc_should_break.c \
              $(SRCDIR)/parser/parser_ast_print.c \
              $(SRCDIR)/parser/parser_ast_print_type.c

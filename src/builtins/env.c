@@ -60,10 +60,31 @@ void	remove_env_var(char ***env, const char *var_name)
 	*env = new_env;
 }
 
+int	size_exe(t_const *node)
+{
+	int	i;
+
+	i = 0;
+	while (node->executable[i])
+		i++;
+	return (i);
+}
+
 void	env(t_const *node)
 {
+	int	size;
+
+	size = 0;
 	if (!node || !node->executable || !node->shell)
 		return ;
+	size = size_exe(node);
+	if (size != 1)
+	{
+		ft_putstr_fd("No such file or directory", 2);
+		ft_putstr_fd("\n", 2);
+		node->shell->last_exit = 127;
+		return ;
+	}
 	if (node->pipe_out)
 	{
 		redirect_builtin(node, node->shell->env);

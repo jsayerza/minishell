@@ -6,13 +6,13 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/19 11:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/19 19:12:01 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 20:15:34 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "minishell.h"
 
-static char	*heredoc_read_line(void)
+char	*heredoc_read_line(void)
 {
 	char	*line;
 
@@ -62,7 +62,7 @@ static char	*heredoc_read_new(char *line, char *heredoc,
 	return (new_heredoc);
 }
 
-static void	heredoc_update_vars(char **heredoc, char *line,
+void	heredoc_update_vars(char **heredoc, char *line,
 	size_t *len, t_collector **collector)
 {
 	size_t		line_len;
@@ -75,23 +75,17 @@ static void	heredoc_update_vars(char **heredoc, char *line,
 	*len += line_len + 1;
 }
 
-char	*heredoc_read(const char *delim, t_collector **collector)
+void	heredoc_child_process(int *pipe_fd, const char *delim,
+		t_collector **collector)
 {
-	char		*line;
-	char		*heredoc;
-	size_t		total_len;
+	char	*heredoc;
 
-	heredoc = NULL;
-	total_len = 0;
-	while (1)
-	{
-		line = heredoc_read_line();
-		if (heredoc_should_break(line, delim))
-			break ;
-		heredoc_update_vars(&heredoc, line, &total_len, collector);
-		freer((void **)&line);
-	}
-	if (!heredoc)
-		return (ft_strdup(""));
-	return (heredoc);
+	close(pipe_fd[0]);
+	setup_child_signals();
+	heredoc = heredoc_read_child(delim, collector);
+	write(pipe_fd[1], heredoc, ft_strlen(heredoc));
+	close(pipe_fd[1]);
+	if (heredoc)
+		free(heredoc);
+	exit(0);
 }
