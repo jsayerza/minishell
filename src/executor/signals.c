@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/06/06 12:00:00 by acarranz          #+#    #+#             */
-/*   Updated: 2025/06/07 10:39:58 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:02:54 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,20 +27,6 @@ void	signal_handler(int sig)
 	}
 }
 
-void	signal_handler_child(int sig)
-{
-	if (sig == SIGINT)
-	{
-		ft_putstr_fd("\n", 1);
-		exit(130);
-	}
-	else if (sig == SIGQUIT)
-	{
-		ft_putstr_fd("Quit: 3\n", 1);
-		exit(131);
-	}
-}
-
 void	setup_signals(void)
 {
 	signal(SIGINT, signal_handler);
@@ -51,4 +37,10 @@ void	setup_child_signals(void)
 {
 	signal(SIGINT, SIG_DFL);
 	signal(SIGQUIT, SIG_DFL);
+}
+
+void	setup_heredoc_signals(void)
+{
+	signal(SIGINT, signal_handler);
+	signal(SIGQUIT, SIG_IGN);
 }

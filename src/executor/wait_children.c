@@ -34,10 +34,15 @@ static void	set_exit_status(t_shell *shell, int status)
 		shell->last_exit = WEXITSTATUS(status);
 	else if (WIFSIGNALED(status))
 	{
-		if (WTERMSIG(status) == SIGPIPE)
+		int sig = WTERMSIG(status);
+		if (sig == SIGPIPE)
 			shell->last_exit = 0;
 		else
-			shell->last_exit = 128 + WTERMSIG(status);
+		{
+			if (sig == SIGQUIT)
+				ft_putstr_fd("Quit (core dumped)\n", 1);
+			shell->last_exit = 128 + sig;
+		}
 	}
 }
 

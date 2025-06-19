@@ -6,7 +6,7 @@
 /*   By: acarranz <acarranz@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/15 15:00:00 by jsayerza          #+#    #+#             */
-/*   Updated: 2025/06/10 18:22:56 by acarranz         ###   ########.fr       */
+/*   Updated: 2025/06/19 18:05:47 by acarranz         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -510,6 +510,7 @@ void	create_output_files(t_const *node);
 /* Signal setup */
 void	setup_signals(void);
 void	setup_child_signals(void);
+void	setup_heredoc_signals(void);
 
 /* Signal handlers */
 void	signal_handler(int sig);
