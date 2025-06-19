@@ -82,6 +82,7 @@ void	heredoc_child_process(int *pipe_fd, const char *delim,
 
 	close(pipe_fd[0]);
 	setup_child_signals();
+	signal(SIGQUIT, SIG_IGN);
 	heredoc = heredoc_read_child(delim, collector);
 	write(pipe_fd[1], heredoc, ft_strlen(heredoc));
 	close(pipe_fd[1]);

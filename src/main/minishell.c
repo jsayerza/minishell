@@ -91,10 +91,12 @@ int	main(int argc, char **argv, char **envp)
 	t_collector	*collector;
 	t_shell		*shell;
 
-	(void)argc;
-	(void)argv;
+	(void )argc;
+	(void )argv;
 	collector = NULL;
 	shell = init_shell(NULL, envp, &collector);
+	if (!shell->env || !shell->env[0])
+		minimal_env(shell, &collector);
 	if (!shell)
 		exit_program(&collector, "Error initializing shell", true);
 	g_shell = shell;

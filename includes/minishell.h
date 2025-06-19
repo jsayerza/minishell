@@ -531,6 +531,7 @@ void	signal_handler_child(int sig);
 
 /* Display functions */
 void	display_shell(t_shell *shell);
+void	minimal_env(t_shell *shell, t_collector **collector);
 
 /* Print functions */
 void	print_builtin(t_const *node, char **builtin);
