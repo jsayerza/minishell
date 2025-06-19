@@ -62,6 +62,14 @@ void	process_exit(t_const *node)
 {
 	if (node->size_exec > 2)
 	{
+		if (!is_numeric(node->executable[1]))
+		{
+			ft_putstr_fd("exit: ", 2);
+			ft_putstr_fd(node->executable[1], 2);
+			ft_putstr_fd(": numeric argument required\n", 2);
+			exit (2);
+			return;
+		}
 		handle_too_many_args(node);
 		return ;
 	}
