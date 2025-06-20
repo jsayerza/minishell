@@ -128,7 +128,6 @@ typedef struct s_shell
 	char			*output;
 	int				node_size;
 	int				redirect_error;
-	int				heredoc_signal;
 	t_const			*constructor;
 	t_collector		*collector;
 }	t_shell;
@@ -524,6 +523,9 @@ void	setup_heredoc_signals(void);
 /* Signal handlers */
 void	signal_handler(int sig);
 void	signal_handler_child(int sig);
+void	setup_execution_signals(void);
+void	setup_heredoc_signals(void);
+void	heredoc_signal_handler(int sig);
 
 /* ========================================================================== */
 /*                           DEBUG AND DISPLAY                                */

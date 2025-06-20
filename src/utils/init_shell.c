@@ -54,7 +54,6 @@ static int	init_shell_fields(t_shell *shell, t_collector **collector)
 	shell->interactive = 1;
 	shell->output = NULL;
 	shell->node_size = 0;
-	shell->heredoc_signal = 0;
 	if (collector)
 		shell->collector = *collector;
 	else
